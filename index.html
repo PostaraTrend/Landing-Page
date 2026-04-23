@@ -5,207 +5,362 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PostaraTrend Technologies — Trend Intelligence for the Digital Age</title>
 <meta name="description" content="PostaraTrend helps brands, creators, and organizations identify and act on cultural and commercial trends before the competition does.">
+<meta name="theme-color" content="#112B54">
 <meta property="og:title" content="PostaraTrend Technologies — Trend Intelligence for the Digital Age">
 <meta property="og:description" content="We help brands, creators, and organizations identify and act on cultural and commercial trends before the competition does.">
 <meta property="og:url" content="https://postaratrend.ca">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#1A3A6B;--nd:#112B54;--nbg:#13305A;--green:#1D9E75;--dkg:#0F6E56;--ltg:#5DCAA5;--plg:#A3E4CC;--w:#FFF;--dim:rgba(255,255,255,0.7);--mut:rgba(255,255,255,0.4);--ln:rgba(29,158,117,0.25);--lnd:rgba(255,255,255,0.06)}
+:root{
+  --navy:#1A3A6B;--nd:#112B54;--nbg:#13305A;
+  --green:#1D9E75;--dkg:#0F6E56;--ltg:#5DCAA5;--plg:#A3E4CC;
+  --w:#FFF;--dim:rgba(255,255,255,0.78);--mut:rgba(255,255,255,0.5);
+  --ln:rgba(29,158,117,0.25);--lnd:rgba(255,255,255,0.08);
+  --err:#F87171;
+}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-body{font-family:'DM Sans',sans-serif;background:var(--nbg);color:var(--w);overflow-x:hidden}
+html{
+  scroll-behavior:smooth;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  font-feature-settings:'kern','liga','calt';
+}
+body{
+  font-family:'Geist','Inter','Helvetica Neue',sans-serif;
+  background:var(--nbg);color:var(--w);
+  overflow-x:hidden;
+  font-weight:400;
+  letter-spacing:-0.005em;
+}
+
+/* Subtle film-grain overlay — adds perceived depth & sharpness */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:950;
+  opacity:.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* SCROLL PROGRESS */
+.prog{position:fixed;top:0;left:0;right:0;height:2px;z-index:999;background:transparent}
+.prog-b{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--ltg));transition:width .08s linear;box-shadow:0 0 8px rgba(29,158,117,.6)}
 
 /* NAV */
-.nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:68px;background:rgba(17,43,84,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--ln)}
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:68px;background:rgba(17,43,84,.88);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border-bottom:1px solid var(--ln)}
 .nl{display:flex;align-items:center;gap:14px;text-decoration:none}
-.nm{width:40px;height:40px}
+.nm{width:40px;height:40px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.3))}
 .nt{display:flex;flex-direction:column}
-.nb{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--w);line-height:1.15}
+.nb{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:20px;color:var(--w);line-height:1.15;letter-spacing:-.3px}
 .nb em{font-style:normal;color:var(--green)}
-.ns{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ltg);font-weight:500;margin-top:1px}
-.nr{display:flex;align-items:center;gap:24px}
-.nk{color:var(--dim);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s}
-.nk:hover{color:var(--green)}
-.nc{padding:10px 24px;background:var(--green);color:var(--w);border:none;border-radius:6px;font-weight:600;font-size:14px;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s}
-.nc:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(29,158,117,0.35)}
+.ns{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ltg);font-weight:500;margin-top:1px;font-family:'Geist',sans-serif}
+.nr{display:flex;align-items:center;gap:28px}
+.nk{color:var(--dim);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s;position:relative}
+.nk::after{content:'';position:absolute;bottom:-6px;left:0;right:0;height:1.5px;background:var(--green);transform:scaleX(0);transform-origin:right;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.nk:hover{color:var(--w)}
+.nk:hover::after{transform:scaleX(1);transform-origin:left}
+.nc{padding:10px 22px;background:var(--green);color:var(--w);border:none;border-radius:8px;font-weight:600;font-size:14px;font-family:'Geist',sans-serif;cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .25s,background .2s;letter-spacing:-.01em}
+.nc:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(29,158,117,.4);background:#22B485}
 
 /* SHARED */
-.sec{padding:100px 24px;position:relative;overflow:hidden}
-.wrap{max-width:1000px;margin:0 auto;position:relative;z-index:1}
-.sh{text-align:center;max-width:600px;margin:0 auto 64px}
-.sl{font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--green);margin-bottom:16px;display:inline-block}
-.sh h2{font-family:'Syne',sans-serif;font-size:clamp(26px,4vw,38px);font-weight:800;line-height:1.15;margin-bottom:6px;letter-spacing:-0.7px}
-.gu{display:inline;position:relative}.gu::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:2px;background:var(--green)}
-.sh p{font-size:16px;color:var(--dim);line-height:1.7;margin-top:16px}
+.sec{padding:110px 24px;position:relative;overflow:hidden}
+.wrap{max-width:1040px;margin:0 auto;position:relative;z-index:1}
+.sh{text-align:center;max-width:620px;margin:0 auto 64px}
+.sl{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--ltg);margin-bottom:18px;display:inline-block;padding:6px 14px;background:rgba(29,158,117,.08);border:1px solid rgba(29,158,117,.2);border-radius:100px}
+.sh h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,4.2vw,42px);font-weight:700;line-height:1.12;margin-bottom:6px;letter-spacing:-.025em}
+.gu{display:inline;position:relative;color:var(--ltg)}
+.gu::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--green),var(--ltg));border-radius:2px}
+.sh p{font-size:16px;color:var(--dim);line-height:1.7;margin-top:18px;font-weight:400}
 .bg1{background:linear-gradient(155deg,#0F2847 0%,#1A3A6B 40%,#173461 100%)}
 .bg2{background:linear-gradient(180deg,#112B54 0%,#0F2847 100%)}
 .bg3{background:linear-gradient(180deg,#0F2847 0%,var(--navy) 100%)}
 .bg4{background:linear-gradient(180deg,var(--navy) 0%,#112B54 100%)}
 
-/* Blueprint grid */
-.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(29,158,117,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(29,158,117,0.04) 1px,transparent 1px);background-size:48px 48px}
-
-/* Arcs */
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(29,158,117,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(29,158,117,.04) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%)}
 .arc{position:absolute;border-radius:50%;border:1.5px solid var(--ln)}
-.arc-sm{border-width:1px;opacity:0.6}
-
-/* Dot grid */
-.dots{position:absolute;display:grid;grid-template-columns:repeat(7,1fr);gap:12px;opacity:0.25}
+.arc-sm{border-width:1px;opacity:.6}
+.dots{position:absolute;display:grid;grid-template-columns:repeat(7,1fr);gap:12px;opacity:.25}
 .dots span{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.hl{position:absolute;height:1.5px;background:var(--green);opacity:.15}
 
-/* H lines */
-.hl{position:absolute;height:1.5px;background:var(--green);opacity:0.15}
-
-/* Buttons */
-.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 30px;border-radius:8px;font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;text-decoration:none;cursor:pointer;border:none;transition:transform .25s,box-shadow .25s}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 28px;border-radius:10px;font-size:15px;font-weight:600;font-family:'Geist',sans-serif;text-decoration:none;cursor:pointer;border:none;transition:transform .25s cubic-bezier(.4,0,.2,1),box-shadow .3s,background .2s;letter-spacing:-.01em}
 .btn:hover{transform:translateY(-2px)}
-.bp{background:var(--green);color:var(--w);box-shadow:0 4px 16px rgba(29,158,117,0.3)}
-.bp:hover{box-shadow:0 8px 28px rgba(29,158,117,0.4)}
-.bs{background:rgba(255,255,255,0.06);color:var(--w);border:1px solid rgba(255,255,255,0.15)}
-.bs:hover{background:rgba(255,255,255,0.1)}
-.ba{transition:transform .2s}.btn:hover .ba{transform:translateX(3px)}
+.btn:active{transform:translateY(0)}
+.bp{background:var(--green);color:var(--w);box-shadow:0 4px 16px rgba(29,158,117,.3),inset 0 1px 0 rgba(255,255,255,.15)}
+.bp:hover{box-shadow:0 10px 30px rgba(29,158,117,.45),inset 0 1px 0 rgba(255,255,255,.2);background:#22B485}
+.bs{background:rgba(255,255,255,.06);color:var(--w);border:1px solid rgba(255,255,255,.15);backdrop-filter:blur(10px)}
+.bs:hover{background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.25)}
+.ba{transition:transform .25s cubic-bezier(.4,0,.2,1);display:inline-block}
+.btn:hover .ba{transform:translateX(4px)}
 
-/* ═══ HERO ═══ */
+/* HERO */
 .hero{min-height:100vh;display:flex;align-items:center;padding:68px 0 0}
 .hero-c{max-width:1100px;margin:0 auto;padding:80px 60px;width:100%;position:relative;z-index:1}
-.hero-logo{display:flex;align-items:center;gap:16px;margin-bottom:20px}
-.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(42px,6vw,72px);line-height:1.05;letter-spacing:-2px;margin-bottom:4px}
-.ht{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(20px,3vw,32px);color:var(--green);display:inline-block;position:relative;margin-bottom:6px}
-.ht::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:2px;background:var(--green)}
-.htl{font-size:clamp(16px,2vw,20px);color:var(--dim);margin:24px 0 12px;font-weight:400}
-.hu{color:var(--ltg);font-size:16px;font-weight:500;text-decoration:none;display:inline-block;margin-bottom:48px;position:relative}
-.hu::after{content:'';position:absolute;bottom:-3px;left:0;width:100%;height:1.5px;background:var(--green);opacity:0.5}
-.hsub{font-size:clamp(15px,1.5vw,17px);color:var(--dim);max-width:520px;line-height:1.8;margin-bottom:40px}
+.hero-logo{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.hero h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(44px,6.2vw,76px);line-height:1.02;letter-spacing:-.035em;margin-bottom:4px;font-variation-settings:'opsz' 96}
+.ht{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(20px,3vw,32px);color:var(--ltg);display:inline-block;position:relative;margin-bottom:6px;letter-spacing:-.02em}
+.ht::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--green),var(--ltg))}
+.htl{font-size:clamp(16px,2vw,20px);color:var(--dim);margin:26px 0 12px;font-weight:400;letter-spacing:-.005em}
+.hu{color:var(--ltg);font-size:16px;font-weight:500;text-decoration:none;display:inline-block;margin-bottom:44px;position:relative}
+.hu::after{content:'';position:absolute;bottom:-3px;left:0;width:100%;height:1.5px;background:var(--green);opacity:.5;transition:opacity .25s}
+.hu:hover::after{opacity:1}
+.hsub{font-size:clamp(15px,1.5vw,17px);color:var(--dim);max-width:540px;line-height:1.75;margin-bottom:42px;font-weight:400}
 .ha{display:flex;gap:16px;flex-wrap:wrap}
-.hi{position:absolute;right:60px;top:50%;transform:translateY(-50%);text-align:right;z-index:1}
-.hi-l{font-size:13px;color:var(--ltg);font-weight:500;letter-spacing:1px;margin-bottom:8px}
-.hi-u{font-family:'Syne',sans-serif;font-weight:700;font-size:22px;color:var(--w);margin-bottom:12px}
-.hi-e{font-size:14px;color:var(--dim);margin-bottom:24px}
-.hi-c{font-size:13px;color:var(--mut);letter-spacing:0.5px}
+.hi{position:absolute;right:60px;top:50%;transform:translateY(-50%);text-align:right;z-index:1;padding:24px 28px;background:rgba(15,40,71,.4);border:1px solid var(--ln);border-radius:14px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.hi-l{font-size:10px;color:var(--ltg);font-weight:600;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px}
+.hi-u{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px;color:var(--w);margin-bottom:12px;letter-spacing:-.02em}
+.hi-e{font-size:13px;color:var(--dim);margin-bottom:18px}
+.hi-c{font-size:12px;color:var(--mut);letter-spacing:.3px}
+.hi-status{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding-top:14px;border-top:1px solid var(--ln);font-size:11px;color:var(--ltg);font-weight:500;letter-spacing:.5px}
+.hi-dot{width:7px;height:7px;border-radius:50%;background:var(--ltg);box-shadow:0 0 8px var(--ltg);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* ═══ PILLARS ═══ */
+/* SIGNAL SCOPE — trend detection visualization */
+.scope{position:absolute;right:40px;top:50%;transform:translateY(-50%);z-index:1;width:420px;display:flex;flex-direction:column;align-items:center;gap:18px;pointer-events:none}
+.scope-svg{width:100%;height:auto;max-width:400px;filter:drop-shadow(0 10px 40px rgba(29,158,117,.15))}
+.scope-label{display:inline-flex;align-items:center;gap:10px;font-size:11px;color:var(--ltg);font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:8px 16px;background:rgba(15,40,71,.55);border:1px solid var(--ln);border-radius:100px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.scope-label-dot{width:7px;height:7px;border-radius:50%;background:var(--ltg);box-shadow:0 0 10px var(--ltg);animation:pulse 1.8s infinite}
+/* Sweep rotation */
+.scope-sweep{transform-origin:200px 200px;transform-box:view-box;animation:sweep-rotate 9s linear infinite}
+@keyframes sweep-rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+/* Signal pulses — staggered */
+.sig{transform-box:fill-box;transform-origin:center;animation:sig-pulse 3.2s ease-in-out infinite}
+.sig-1{animation-delay:0s}
+.sig-2{animation-delay:.4s}
+.sig-3{animation-delay:.9s}
+.sig-4{animation-delay:1.4s}
+.sig-5{animation-delay:1.9s}
+.sig-6{animation-delay:2.3s}
+.sig-7{animation-delay:2.7s}
+.sig-8{animation-delay:3.1s}
+@keyframes sig-pulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:1;transform:scale(1.45)}}
+/* Rising trend arrows */
+.rise{animation:rise-fade 4.5s ease-in-out infinite}
+.rise-1{animation-delay:.8s}
+.rise-2{animation-delay:2.6s}
+@keyframes rise-fade{0%,70%,100%{opacity:0;transform:translateY(6px)}25%,45%{opacity:.85;transform:translateY(0)}}
+/* Center indicator */
+.scope-center-ring{transform-box:fill-box;transform-origin:center;animation:center-pulse 2.4s ease-in-out infinite}
+@keyframes center-pulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:.1;transform:scale(1.5)}}
+/* Connection lines flicker subtly */
+.scope-lines{animation:lines-flicker 5s ease-in-out infinite}
+@keyframes lines-flicker{0%,100%{opacity:.12}50%{opacity:.22}}
+
+/* PILLARS */
 .pills{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.pill{background:rgba(255,255,255,0.03);border:1px solid rgba(29,158,117,0.12);border-radius:12px;padding:36px 28px;transition:transform .3s,border-color .3s,background .3s;position:relative;overflow:hidden}
-.pill:hover{transform:translateY(-4px);border-color:rgba(29,158,117,0.35);background:rgba(29,158,117,0.04)}
-.pill::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--green);opacity:0;transition:opacity .3s}
-.pill:hover::before{opacity:1}
-.pi{width:48px;height:48px;border-radius:10px;background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
-.pi svg{width:22px;height:22px;stroke:var(--green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.pill h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:10px}
+.pill{background:rgba(255,255,255,.035);border:1px solid rgba(29,158,117,.14);border-radius:14px;padding:36px 28px;transition:transform .35s cubic-bezier(.4,0,.2,1),border-color .35s,background .35s;position:relative;overflow:hidden}
+.pill:hover{transform:translateY(-6px);border-color:rgba(29,158,117,.4);background:rgba(29,158,117,.05)}
+.pill::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0;transition:opacity .35s;transform:scaleX(.3);transform-origin:center}
+.pill:hover::before{opacity:1;transform:scaleX(1)}
+.pi{width:48px;height:48px;border-radius:10px;background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.22);display:flex;align-items:center;justify-content:center;margin-bottom:22px;transition:background .3s}
+.pill:hover .pi{background:rgba(29,158,117,.2)}
+.pi svg{width:22px;height:22px;stroke:var(--ltg);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pill h3{font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:700;margin-bottom:10px;letter-spacing:-.015em}
 .pill p{font-size:14px;color:var(--dim);line-height:1.7}
 
-/* ═══ ABOUT ═══ */
+/* ABOUT */
 .about-story{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;margin-bottom:80px}
-.about-story h2{font-family:'Syne',sans-serif;font-size:clamp(26px,3.5vw,36px);font-weight:800;line-height:1.15;margin-bottom:20px;letter-spacing:-0.7px}
+.about-story h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,3.8vw,38px);font-weight:800;line-height:1.12;margin-bottom:22px;letter-spacing:-.025em}
 .about-story p{font-size:15px;color:var(--dim);line-height:1.8;margin-bottom:16px}
-.about-values{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.av{background:rgba(29,158,117,0.06);border:1px solid rgba(29,158,117,0.15);border-radius:10px;padding:20px;display:flex;gap:14px;align-items:flex-start}
-.av-i{width:36px;height:36px;min-width:36px;border-radius:8px;background:rgba(29,158,117,0.12);display:flex;align-items:center;justify-content:center;margin-top:2px}
-.av-i svg{width:18px;height:18px;stroke:var(--green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.av h4{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px}
-.av p{font-size:13px;color:var(--dim);line-height:1.5}
+.about-values{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.av{background:rgba(29,158,117,.05);border:1px solid rgba(29,158,117,.15);border-radius:10px;padding:20px;display:flex;gap:14px;align-items:flex-start;transition:border-color .25s,background .25s}
+.av:hover{border-color:rgba(29,158,117,.3);background:rgba(29,158,117,.08)}
+.av-i{width:36px;height:36px;min-width:36px;border-radius:8px;background:rgba(29,158,117,.14);display:flex;align-items:center;justify-content:center;margin-top:2px}
+.av-i svg{width:18px;height:18px;stroke:var(--ltg);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.av h4{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;letter-spacing:-.01em}
+.av p{font-size:13px;color:var(--dim);line-height:1.55;margin:0}
 
-/* Team */
-.team-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:700px;margin:0 auto}
-.tc{background:rgba(255,255,255,0.03);border:1px solid var(--lnd);border-radius:12px;padding:32px 28px;text-align:center;transition:border-color .3s,transform .3s}
-.tc:hover{border-color:rgba(29,158,117,0.25);transform:translateY(-3px)}
-.tc-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--dkg));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Syne',sans-serif;font-weight:800;font-size:24px;color:var(--w);border:2px solid rgba(29,158,117,0.3)}
-.tc h3{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:2px}
-.tc-role{font-size:13px;color:var(--green);font-weight:600;margin-bottom:4px}
-.tc-loc{font-size:12px;color:var(--mut);margin-bottom:12px}
-.tc p{font-size:13px;color:var(--dim);line-height:1.6}
+/* TEAM */
+.team-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:720px;margin:0 auto}
+.tc{background:rgba(255,255,255,.035);border:1px solid var(--lnd);border-radius:14px;padding:34px 28px;text-align:center;transition:border-color .3s,transform .3s,background .3s}
+.tc:hover{border-color:rgba(29,158,117,.3);transform:translateY(-4px);background:rgba(29,158,117,.03)}
+.tc-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--dkg));display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:24px;color:var(--w);border:2px solid rgba(29,158,117,.35);box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.tc h3{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:700;margin-bottom:4px;letter-spacing:-.015em}
+.tc-role{font-size:13px;color:var(--ltg);font-weight:600;margin-bottom:4px;letter-spacing:-.005em}
+.tc-loc{font-size:12px;color:var(--mut);margin-bottom:14px}
+.tc p{font-size:13px;color:var(--dim);line-height:1.65}
 
-/* ═══ HOW IT WORKS ═══ */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;max-width:900px;margin:0 auto;position:relative}
-.steps::before{content:'';position:absolute;top:52px;left:16%;right:16%;height:2px;background:linear-gradient(90deg,var(--green),var(--dkg));opacity:0.3}
+/* GOVERNANCE — compact strip, quieter than founder tier */
+.board-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:820px;margin:0 auto}
+.bc{background:rgba(255,255,255,.025);border:1px solid var(--lnd);border-radius:12px;padding:22px 22px 20px;transition:border-color .3s,background .3s,transform .3s;position:relative;overflow:hidden}
+.bc::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--green);opacity:.6}
+.bc.bc-ops::before{background:var(--ltg);opacity:.5}
+.bc:hover{border-color:rgba(29,158,117,.3);background:rgba(29,158,117,.04);transform:translateY(-2px)}
+.bc-tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.22);border-radius:100px;color:var(--ltg);margin-bottom:14px}
+.bc-tag.bc-tag-ops{background:rgba(93,202,165,.06);border-color:rgba(93,202,165,.18);color:var(--plg)}
+.bc h4{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;margin-bottom:8px;letter-spacing:-.015em;color:var(--w);line-height:1.3}
+.bc-loc{font-size:13px;color:var(--dim);display:flex;align-items:center;gap:8px;font-weight:500}
+.bc-loc::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--ltg);opacity:.7}
+
+/* STEPS */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;max-width:920px;margin:0 auto;position:relative}
+.steps::before{content:'';position:absolute;top:52px;left:16%;right:16%;height:2px;background:linear-gradient(90deg,var(--green),var(--ltg),var(--dkg));opacity:.3}
 .step{text-align:center;padding:0 24px;position:relative}
-.step-num{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--dkg));display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--w);border:3px solid rgba(29,158,117,0.3);position:relative;z-index:1}
-.step h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:8px}
-.step-sub{font-size:13px;color:var(--green);font-weight:600;margin-bottom:12px}
+.step-num{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--dkg));display:flex;align-items:center;justify-content:center;margin:0 auto 26px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:22px;color:var(--w);border:3px solid rgba(29,158,117,.35);position:relative;z-index:1;box-shadow:0 6px 20px rgba(29,158,117,.25)}
+.step h3{font-family:'Bricolage Grotesque',sans-serif;font-size:19px;font-weight:700;margin-bottom:8px;letter-spacing:-.015em}
+.step-sub{font-size:13px;color:var(--ltg);font-weight:600;margin-bottom:12px;letter-spacing:-.005em}
 .step p{font-size:14px;color:var(--dim);line-height:1.7}
 
-/* ═══ STATS ═══ */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:64px}
-.sc{background:rgba(29,158,117,0.06);border:1px solid rgba(29,158,117,0.15);border-radius:12px;padding:28px 16px;text-align:center;transition:border-color .3s,transform .3s}
-.sc:hover{border-color:rgba(29,158,117,0.35);transform:translateY(-2px)}
-.sc-n{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--green);margin-bottom:4px}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:68px}
+.sc{background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.18);border-radius:14px;padding:28px 16px;text-align:center;transition:border-color .3s,transform .3s,background .3s}
+.sc:hover{border-color:rgba(29,158,117,.4);transform:translateY(-3px);background:rgba(29,158,117,.09)}
+.sc-n{font-family:'Bricolage Grotesque',sans-serif;font-size:34px;font-weight:800;color:var(--ltg);margin-bottom:4px;letter-spacing:-.025em;font-feature-settings:'tnum'}
 .sc-l{font-size:12px;color:var(--dim);font-weight:500;line-height:1.4}
 
-/* ═══ SIGNUP ═══ */
-.signup-inner{position:relative;z-index:1}
-.signup h2{font-family:'Syne',sans-serif;font-size:clamp(26px,4vw,40px);font-weight:800;margin-bottom:6px;letter-spacing:-0.7px}
-.st{font-family:'Syne',sans-serif;font-size:20px;color:var(--green);display:inline-block;position:relative;margin-bottom:20px}
-.st::after{content:'';position:absolute;bottom:-3px;left:0;width:100%;height:2px;background:var(--green)}
-.sd{font-size:16px;color:var(--dim);max-width:460px;margin:0 auto 36px;line-height:1.7}
-.sf{display:flex;gap:12px;max-width:460px;margin:0 auto 16px;flex-wrap:wrap;justify-content:center}
-.si{flex:1;min-width:250px;padding:14px 18px;border-radius:8px;border:1px solid rgba(29,158,117,0.2);background:rgba(255,255,255,0.04);color:var(--w);font-size:15px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
-.si:focus{border-color:var(--green)}.si::placeholder{color:var(--mut)}
-.sb{padding:14px 28px;border-radius:8px;background:var(--green);color:var(--w);border:none;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:transform .2s,box-shadow .2s}
-.sb:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(29,158,117,0.35)}
-.sn{font-size:12px;color:var(--mut);margin-top:8px}
-.ss{display:none;padding:24px;background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.25);border-radius:10px;max-width:460px;margin:0 auto}
-.ss h3{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--green);margin-bottom:6px}
-.ss p{font-size:15px;color:var(--dim)}
+/* FAQ */
+.faq-list{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.faq{background:rgba(255,255,255,.03);border:1px solid var(--lnd);border-radius:12px;transition:border-color .25s,background .25s;overflow:hidden}
+.faq:hover{border-color:rgba(29,158,117,.25)}
+.faq[open]{border-color:rgba(29,158,117,.3);background:rgba(29,158,117,.04)}
+.faq summary{cursor:pointer;padding:20px 24px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:16px;color:var(--w);letter-spacing:-.01em}
+.faq summary::-webkit-details-marker{display:none}
+.faq-ic{width:22px;height:22px;min-width:22px;border-radius:50%;border:1.5px solid var(--ltg);display:flex;align-items:center;justify-content:center;color:var(--ltg);font-size:14px;font-weight:400;transition:transform .3s,background .25s}
+.faq[open] .faq-ic{transform:rotate(45deg);background:var(--green);color:var(--w);border-color:var(--green)}
+.faq-a{padding:0 24px 22px;font-size:14px;color:var(--dim);line-height:1.75}
 
-/* ═══ CONTACT ═══ */
+/* SIGNUP */
+.signup-inner{position:relative;z-index:1;max-width:560px;margin:0 auto}
+.signup h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:6px;letter-spacing:-.025em}
+.st{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;color:var(--ltg);display:inline-block;position:relative;margin-bottom:22px;letter-spacing:-.015em}
+.st::after{content:'';position:absolute;bottom:-3px;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--green),var(--ltg))}
+.sd{font-size:16px;color:var(--dim);max-width:480px;margin:0 auto 38px;line-height:1.7}
+.sf{display:flex;gap:12px;max-width:480px;margin:0 auto 14px;flex-wrap:wrap;justify-content:center}
+.si{flex:1;min-width:250px;padding:15px 18px;border-radius:10px;border:1px solid rgba(29,158,117,.22);background:rgba(255,255,255,.05);color:var(--w);font-size:15px;font-family:'Geist',sans-serif;outline:none;transition:border-color .2s,background .2s;letter-spacing:-.005em}
+.si:focus{border-color:var(--green);background:rgba(255,255,255,.07);box-shadow:0 0 0 3px rgba(29,158,117,.12)}
+.si::placeholder{color:var(--mut)}
+.sb{padding:15px 26px;border-radius:10px;background:var(--green);color:var(--w);border:none;font-size:15px;font-weight:600;font-family:'Geist',sans-serif;cursor:pointer;transition:transform .2s,box-shadow .25s,background .2s;letter-spacing:-.01em;position:relative;min-width:180px}
+.sb:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 24px rgba(29,158,117,.4);background:#22B485}
+.sb:disabled{opacity:.65;cursor:wait}
+.sn{font-size:12px;color:var(--mut);margin-top:10px;letter-spacing:.2px}
+.hp{position:absolute;left:-9999px;opacity:0;pointer-events:none}
+
+/* CONTACT */
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
-.cg-left h2{font-family:'Syne',sans-serif;font-size:clamp(26px,3.5vw,34px);font-weight:800;margin-bottom:20px;letter-spacing:-0.7px}
-.cg-left p{font-size:15px;color:var(--dim);line-height:1.8;margin-bottom:32px}
-.ci{display:flex;gap:14px;align-items:center;margin-bottom:20px}
-.ci-i{width:44px;height:44px;min-width:44px;border-radius:10px;background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);display:flex;align-items:center;justify-content:center}
-.ci-i svg{width:20px;height:20px;stroke:var(--green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.ci-t{font-size:12px;color:var(--mut);margin-bottom:2px}
-.ci-v{font-size:15px;color:var(--w);font-weight:500}
-.ci-v a{color:var(--ltg);text-decoration:none}
-.ci-v a:hover{color:var(--green)}
-.cf{background:rgba(255,255,255,0.03);border:1px solid var(--lnd);border-radius:12px;padding:36px 32px}
-.cf h3{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:20px}
+.cg-left h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,3.8vw,36px);font-weight:800;margin-bottom:20px;letter-spacing:-.025em}
+.cg-left p{font-size:15px;color:var(--dim);line-height:1.8;margin-bottom:34px}
+.ci{display:flex;gap:14px;align-items:center;margin-bottom:20px;transition:transform .25s}
+.ci:hover{transform:translateX(4px)}
+.ci-i{width:44px;height:44px;min-width:44px;border-radius:10px;background:rgba(29,158,117,.08);border:1px solid rgba(29,158,117,.22);display:flex;align-items:center;justify-content:center;transition:background .25s}
+.ci:hover .ci-i{background:rgba(29,158,117,.15)}
+.ci-i svg{width:20px;height:20px;stroke:var(--ltg);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ci-t{font-size:11px;color:var(--mut);margin-bottom:2px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
+.ci-v{font-size:15px;color:var(--w);font-weight:500;letter-spacing:-.005em}
+.ci-v a{color:var(--ltg);text-decoration:none;transition:color .2s}
+.ci-v a:hover{color:var(--w)}
+.cf{background:rgba(255,255,255,.035);border:1px solid var(--lnd);border-radius:14px;padding:36px 32px}
+.cf h3{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:700;margin-bottom:22px;letter-spacing:-.015em}
 .cf-field{margin-bottom:16px}
-.cf-field label{display:block;font-size:12px;color:var(--mut);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
-.cf-field input,.cf-field textarea{width:100%;padding:12px 16px;border-radius:8px;border:1px solid rgba(29,158,117,0.15);background:rgba(255,255,255,0.04);color:var(--w);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
-.cf-field input:focus,.cf-field textarea:focus{border-color:var(--green)}
-.cf-field textarea{resize:vertical;min-height:100px}
-.cf-btn{width:100%;padding:14px;border-radius:8px;background:var(--green);color:var(--w);border:none;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:transform .2s,box-shadow .2s;margin-top:8px}
-.cf-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(29,158,117,0.35)}
+.cf-field label{display:block;font-size:11px;color:var(--mut);font-weight:600;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:6px}
+.cf-field input,.cf-field textarea,.cf-field select{width:100%;padding:12px 16px;border-radius:10px;border:1px solid rgba(29,158,117,.18);background:rgba(255,255,255,.04);color:var(--w);font-size:14px;font-family:'Geist',sans-serif;outline:none;transition:border-color .2s,background .2s;letter-spacing:-.005em}
+.cf-field input:focus,.cf-field textarea:focus,.cf-field select:focus{border-color:var(--green);background:rgba(255,255,255,.06);box-shadow:0 0 0 3px rgba(29,158,117,.12)}
+.cf-field textarea{resize:vertical;min-height:110px;font-family:'Geist',sans-serif}
+.cf-field select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%235DCAA5' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px;cursor:pointer}
+.cf-field select option{background:var(--nd);color:var(--w)}
+.cf-btn{width:100%;padding:15px;border-radius:10px;background:var(--green);color:var(--w);border:none;font-size:15px;font-weight:600;font-family:'Geist',sans-serif;cursor:pointer;transition:transform .2s,box-shadow .25s,background .2s;margin-top:8px;letter-spacing:-.01em}
+.cf-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 24px rgba(29,158,117,.4);background:#22B485}
+.cf-btn:disabled{opacity:.65;cursor:wait}
 
-/* ═══ FOOTER ═══ */
-.ft{padding:48px 48px 32px;background:#0C2240;border-top:1px solid var(--ln)}
-.ft-in{max-width:1000px;margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:36px}
-.ft-br{max-width:340px}
+/* Loading spinner for buttons */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:var(--w);border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Toast notifications */
+.toast-box{position:fixed;bottom:24px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{background:rgba(15,40,71,.96);border:1px solid rgba(29,158,117,.4);border-radius:12px;padding:14px 18px 14px 16px;display:flex;align-items:center;gap:12px;min-width:280px;max-width:380px;box-shadow:0 12px 40px rgba(0,0,0,.4);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);transform:translateX(120%);opacity:0;transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .4s;pointer-events:auto}
+.toast.show{transform:translateX(0);opacity:1}
+.toast-ic{width:28px;height:28px;min-width:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(29,158,117,.2);color:var(--ltg)}
+.toast.err{border-color:rgba(248,113,113,.5)}
+.toast.err .toast-ic{background:rgba(248,113,113,.15);color:var(--err)}
+.toast-t{font-size:14px;font-weight:600;color:var(--w);margin-bottom:2px;letter-spacing:-.005em}
+.toast-m{font-size:13px;color:var(--dim);line-height:1.5}
+
+/* FOOTER */
+.ft{padding:56px 48px 32px;background:#0C2240;border-top:1px solid var(--ln);position:relative}
+.ft::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent)}
+.ft-in{max-width:1040px;margin:0 auto;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:36px}
+.ft-br{max-width:360px}
 .ft-logo{display:flex;align-items:center;gap:12px;margin-bottom:14px;text-decoration:none}
 .ft-br>p{font-size:13px;color:var(--mut);line-height:1.7}
-.ft-links{display:flex;gap:48px}
-.ft-col h4{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+.ft-links{display:flex;gap:52px}
+.ft-col h4{font-family:'Bricolage Grotesque',sans-serif;font-size:11px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
 .ft-col a{display:block;font-size:13px;color:var(--mut);text-decoration:none;margin-bottom:8px;transition:color .2s}
-.ft-col a:hover{color:var(--green)}
-.ft-bt{max-width:1000px;margin:32px auto 0;padding-top:20px;border-top:1px solid rgba(29,158,117,0.1);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.ft-col a:hover{color:var(--ltg)}
+.ft-bt{max-width:1040px;margin:32px auto 0;padding-top:22px;border-top:1px solid rgba(29,158,117,.1);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .ft-bt p{font-size:12px;color:var(--mut)}
 .ft-loc{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut)}
 
+/* FOCUS */
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--ltg);outline-offset:2px;border-radius:6px}
+
 /* RESPONSIVE */
-@media(max-width:900px){.hi{display:none}.hero-c{padding:60px 32px}.pills{grid-template-columns:1fr;max-width:420px}.about-story{grid-template-columns:1fr;gap:48px}.team-grid{grid-template-columns:1fr}.steps{grid-template-columns:1fr;gap:48px}.steps::before{display:none}.stats{grid-template-columns:repeat(2,1fr)}.contact-grid{grid-template-columns:1fr;gap:48px}.why-g{grid-template-columns:1fr;gap:48px}}
-@media(max-width:600px){.nav{padding:0 20px;height:60px}.nb{font-size:17px}.nk{display:none}.hero-c{padding:48px 20px}.hero h1{font-size:36px;letter-spacing:-1px}.ha{flex-direction:column;width:100%}.btn{width:100%;justify-content:center}.sf{flex-direction:column}.si{min-width:unset}.sb{width:100%}.stats{grid-template-columns:1fr}.about-values{grid-template-columns:1fr}.ft{padding:32px 20px 24px}.ft-in{flex-direction:column}.ft-bt{flex-direction:column;text-align:center}.dots{display:none}}
+@media(max-width:900px){
+  .hi{display:none}
+  .scope{display:none}
+  .hero-c{padding:60px 32px}
+  .pills{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+  .about-story{grid-template-columns:1fr;gap:48px}
+  .team-grid{grid-template-columns:1fr}
+  .board-grid{grid-template-columns:1fr;max-width:420px}
+  .steps{grid-template-columns:1fr;gap:48px}
+  .steps::before{display:none}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .contact-grid{grid-template-columns:1fr;gap:48px}
+}
+@media(max-width:600px){
+  .nav{padding:0 20px;height:60px}
+  .nb{font-size:17px}
+  .nk{display:none}
+  .hero-c{padding:48px 20px}
+  .hero h1{font-size:38px;letter-spacing:-.03em}
+  .ha{flex-direction:column;width:100%}
+  .btn{width:100%;justify-content:center}
+  .sf{flex-direction:column}
+  .si{min-width:unset}
+  .sb{width:100%}
+  .stats{grid-template-columns:1fr}
+  .about-values{grid-template-columns:1fr}
+  .ft{padding:36px 20px 24px}
+  .ft-in{flex-direction:column}
+  .ft-bt{flex-direction:column;text-align:center}
+  .dots{display:none}
+  .toast-box{left:16px;right:16px;bottom:16px}
+  .toast{min-width:0;max-width:100%}
+  .sec{padding:80px 20px}
+  .cf{padding:28px 22px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+}
 </style>
 </head>
 <body>
 
+<!-- Scroll progress bar -->
+<div class="prog"><div class="prog-b" id="progBar"></div></div>
+
 <!-- NAV -->
 <nav class="nav">
-  <a href="#" class="nl">
-    <svg class="nm" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" rx="24" fill="#1A3A6B"/><rect x="20" y="70" width="16" height="30" rx="3" fill="#5DCAA5"/><rect x="42" y="50" width="16" height="50" rx="3" fill="#1D9E75"/><rect x="64" y="30" width="16" height="70" rx="3" fill="#0F6E56"/><rect x="86" y="14" width="16" height="86" rx="3" fill="#FFF"/><polygon points="94,10 84,18 104,18" fill="#0F6E56"/></svg>
+  <a href="#" class="nl" aria-label="PostaraTrend home">
+    <svg class="nm" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="120" height="120" rx="24" fill="#1A3A6B"/><rect x="20" y="70" width="16" height="30" rx="3" fill="#5DCAA5"/><rect x="42" y="50" width="16" height="50" rx="3" fill="#1D9E75"/><rect x="64" y="30" width="16" height="70" rx="3" fill="#0F6E56"/><rect x="86" y="14" width="16" height="86" rx="3" fill="#FFF"/><polygon points="94,10 84,18 104,18" fill="#0F6E56"/></svg>
     <div class="nt"><div class="nb">Postara<em>Trend</em></div><div class="ns">Technologies</div></div>
   </a>
   <div class="nr">
     <a href="#about" class="nk">About</a>
     <a href="#how" class="nk">How It Works</a>
+    <a href="#faq" class="nk">FAQ</a>
     <a href="#contact" class="nk">Contact</a>
     <a href="#signup" class="nc">Get Early Access</a>
   </div>
 </nav>
 
-<!-- ═══ HERO ═══ -->
+<!-- HERO -->
 <section class="hero sec bg1">
   <div class="grid-bg"></div>
   <div class="arc" style="width:700px;height:700px;bottom:-350px;left:-150px"></div>
@@ -216,10 +371,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--nbg);color:var(--w);overf
   <div class="hl" style="width:100%;top:40%;left:0"></div>
   <div class="hl" style="width:70%;top:62%;left:0"></div>
   <div class="hl" style="width:45%;top:78%;right:0;left:auto"></div>
-  <div style="position:absolute;width:2px;background:linear-gradient(180deg,transparent,var(--green),var(--green),transparent);height:60%;top:20%;right:28%;opacity:0.15"></div>
+  <div style="position:absolute;width:2px;background:linear-gradient(180deg,transparent,var(--green),var(--green),transparent);height:60%;top:20%;right:28%;opacity:.15"></div>
 
   <div class="hero-c">
-    <div class="hero-logo"><svg width="64" height="64" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" rx="24" fill="#1A3A6B" stroke="rgba(29,158,117,0.3)" stroke-width="1.5"/><rect x="20" y="70" width="16" height="30" rx="3" fill="#5DCAA5"/><rect x="42" y="50" width="16" height="50" rx="3" fill="#1D9E75"/><rect x="64" y="30" width="16" height="70" rx="3" fill="#0F6E56"/><rect x="86" y="14" width="16" height="86" rx="3" fill="#FFF"/><polygon points="94,10 84,18 104,18" fill="#0F6E56"/></svg></div>
+    <div class="hero-logo"><svg width="64" height="64" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="120" height="120" rx="24" fill="#1A3A6B" stroke="rgba(29,158,117,0.3)" stroke-width="1.5"/><rect x="20" y="70" width="16" height="30" rx="3" fill="#5DCAA5"/><rect x="42" y="50" width="16" height="50" rx="3" fill="#1D9E75"/><rect x="64" y="30" width="16" height="70" rx="3" fill="#0F6E56"/><rect x="86" y="14" width="16" height="86" rx="3" fill="#FFF"/><polygon points="94,10 84,18 104,18" fill="#0F6E56"/></svg></div>
     <h1>PostaraTrend</h1>
     <div class="ht">Technologies</div>
     <p class="htl">Trend intelligence for the digital age</p>
@@ -230,10 +385,117 @@ body{font-family:'DM Sans',sans-serif;background:var(--nbg);color:var(--w);overf
       <a href="#about" class="btn bs">Learn More</a>
     </div>
   </div>
-  <div class="hi"><p class="hi-l">Visit us</p><p class="hi-u">postaratrend.ca</p><p class="hi-e">admin@postaratrend.ca</p><p class="hi-c">Calgary · Alberta · Canada</p></div>
+  <div class="scope" aria-hidden="true">
+    <svg class="scope-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="scope-bg" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(29,158,117,0.1)"/>
+          <stop offset="60%" stop-color="rgba(29,158,117,0.03)"/>
+          <stop offset="100%" stop-color="rgba(29,158,117,0)"/>
+        </radialGradient>
+        <linearGradient id="sweep-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="rgba(93,202,165,0)"/>
+          <stop offset="100%" stop-color="rgba(93,202,165,0.55)"/>
+        </linearGradient>
+        <filter id="sig-glow" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="2.5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Ambient background glow -->
+      <circle cx="200" cy="200" r="190" fill="url(#scope-bg)"/>
+
+      <!-- Concentric rings -->
+      <circle cx="200" cy="200" r="185" fill="none" stroke="rgba(29,158,117,0.14)" stroke-width="1"/>
+      <circle cx="200" cy="200" r="145" fill="none" stroke="rgba(29,158,117,0.18)" stroke-width="1"/>
+      <circle cx="200" cy="200" r="95" fill="none" stroke="rgba(29,158,117,0.22)" stroke-width="1"/>
+      <circle cx="200" cy="200" r="45" fill="none" stroke="rgba(29,158,117,0.28)" stroke-width="1"/>
+
+      <!-- Crosshair guides -->
+      <line x1="15" y1="200" x2="385" y2="200" stroke="rgba(29,158,117,0.08)" stroke-width="1" stroke-dasharray="2 5"/>
+      <line x1="200" y1="15" x2="200" y2="385" stroke="rgba(29,158,117,0.08)" stroke-width="1" stroke-dasharray="2 5"/>
+
+      <!-- Tick marks at 12 clock positions on outer ring -->
+      <g stroke="rgba(93,202,165,0.5)" stroke-width="1.5" stroke-linecap="round">
+        <line x1="200" y1="15" x2="200" y2="25"/>
+        <line x1="292.5" y1="40" x2="288.8" y2="48.7"/>
+        <line x1="360" y1="107.5" x2="351.3" y2="111.2"/>
+        <line x1="385" y1="200" x2="375" y2="200"/>
+        <line x1="360" y1="292.5" x2="351.3" y2="288.8"/>
+        <line x1="292.5" y1="360" x2="288.8" y2="351.3"/>
+        <line x1="200" y1="385" x2="200" y2="375"/>
+        <line x1="107.5" y1="360" x2="111.2" y2="351.3"/>
+        <line x1="40" y1="292.5" x2="48.7" y2="288.8"/>
+        <line x1="15" y1="200" x2="25" y2="200"/>
+        <line x1="40" y1="107.5" x2="48.7" y2="111.2"/>
+        <line x1="107.5" y1="40" x2="111.2" y2="48.7"/>
+      </g>
+
+      <!-- Connection lines from center to selected signals -->
+      <g class="scope-lines" stroke="#1D9E75" stroke-width="0.6" fill="none">
+        <line x1="200" y1="200" x2="295" y2="105"/>
+        <line x1="200" y1="200" x2="340" y2="245"/>
+        <line x1="200" y1="200" x2="125" y2="310"/>
+      </g>
+
+      <!-- Sweep arm (rotating) -->
+      <g class="scope-sweep">
+        <path d="M 200 200 L 200 18 A 182 182 0 0 1 354 110 Z" fill="url(#sweep-grad)" opacity="0.55"/>
+        <line x1="200" y1="200" x2="200" y2="18" stroke="#5DCAA5" stroke-width="1.5" opacity="0.9"/>
+      </g>
+
+      <!-- Signal detection dots -->
+      <g>
+        <circle class="sig sig-1" cx="295" cy="105" r="4.5" fill="#5DCAA5" filter="url(#sig-glow)"/>
+        <circle class="sig sig-2" cx="340" cy="245" r="5.5" fill="#5DCAA5" filter="url(#sig-glow)"/>
+        <circle class="sig sig-3" cx="125" cy="310" r="4.5" fill="#5DCAA5" filter="url(#sig-glow)"/>
+        <circle class="sig sig-4" cx="75" cy="165" r="3.5" fill="#5DCAA5" filter="url(#sig-glow)"/>
+        <circle class="sig sig-5" cx="200" cy="62" r="4" fill="#5DCAA5" filter="url(#sig-glow)"/>
+        <circle class="sig sig-6" cx="315" cy="175" r="3" fill="#5DCAA5" filter="url(#sig-glow)"/>
+        <circle class="sig sig-7" cx="235" cy="335" r="4" fill="#5DCAA5" filter="url(#sig-glow)"/>
+        <circle class="sig sig-8" cx="150" cy="120" r="3" fill="#5DCAA5" filter="url(#sig-glow)"/>
+      </g>
+
+      <!-- Rising trend indicators (small ↑ markers) -->
+      <g stroke="#FFFFFF" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g class="rise rise-1" transform="translate(306 88)">
+          <line x1="0" y1="10" x2="0" y2="0"/>
+          <polyline points="-3.5,3.5 0,0 3.5,3.5"/>
+        </g>
+        <g class="rise rise-2" transform="translate(355 230)">
+          <line x1="0" y1="10" x2="0" y2="0"/>
+          <polyline points="-3.5,3.5 0,0 3.5,3.5"/>
+        </g>
+      </g>
+
+      <!-- Center indicator: pulsing ring + solid core -->
+      <circle class="scope-center-ring" cx="200" cy="200" r="18" fill="none" stroke="#1D9E75" stroke-width="1.5"/>
+      <circle cx="200" cy="200" r="7" fill="#1D9E75"/>
+      <circle cx="200" cy="200" r="3" fill="#FFFFFF" opacity="0.9"/>
+
+      <!-- Status readout -->
+      <g font-family="Geist, sans-serif" fill="#5DCAA5" text-anchor="middle">
+        <text x="200" y="240" font-size="8.5" letter-spacing="2.5" font-weight="600">MONITORING</text>
+        <text x="200" y="253" font-size="7.5" letter-spacing="1.5" opacity="0.55">24 / 7 · REAL-TIME</text>
+      </g>
+
+      <!-- Corner coordinates (adds a "control system" feel) -->
+      <g font-family="Geist, sans-serif" fill="rgba(93,202,165,0.45)" font-size="7" letter-spacing="1">
+        <text x="22" y="30">N · 51.0447</text>
+        <text x="378" y="30" text-anchor="end">W · 114.0719</text>
+        <text x="22" y="380">SIG · 08</text>
+        <text x="378" y="380" text-anchor="end">↑ RISING · 02</text>
+      </g>
+    </svg>
+    <div class="scope-label">
+      <span class="scope-label-dot"></span>
+      <span>Live Signal Detection</span>
+    </div>
+  </div>
 </section>
 
-<!-- ═══ WHAT WE DO ═══ -->
+<!-- WHAT WE DO -->
 <section class="sec bg2" id="what">
   <div class="arc arc-sm" style="width:400px;height:400px;bottom:-200px;right:-100px"></div>
   <div class="wrap">
@@ -243,16 +505,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--nbg);color:var(--w);overf
       <p>PostaraTrend combines real-time data, AI-powered content workflows, and strategic analytics into a single platform.</p>
     </div>
     <div class="pills">
-      <div class="pill"><div class="pi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div><h3>Trend Intelligence</h3><p>Real-time detection of cultural and commercial trends across social media, news, search, and public data — so you see what's rising before it peaks.</p></div>
-      <div class="pill"><div class="pi"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><h3>Content Automation</h3><p>AI-powered content creation, scheduling, and publishing workflows that eliminate manual social media management and keep your brand consistently visible.</p></div>
-      <div class="pill"><div class="pi"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><h3>Strategic Insights</h3><p>Performance analytics and market intelligence that help you understand what is working, what is emerging, and where to invest your attention next.</p></div>
+      <div class="pill"><div class="pi"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div><h3>Trend Intelligence</h3><p>Real-time detection of cultural and commercial trends across social media, news, search, and public data — so you see what's rising before it peaks.</p></div>
+      <div class="pill"><div class="pi"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><h3>Content Automation</h3><p>AI-powered content creation, scheduling, and publishing workflows that eliminate manual social media management and keep your brand consistently visible.</p></div>
+      <div class="pill"><div class="pi"><svg viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><h3>Strategic Insights</h3><p>Performance analytics and market intelligence that help you understand what is working, what is emerging, and where to invest your attention next.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ═══ ABOUT ═══ -->
+<!-- ABOUT -->
 <section class="sec bg3" id="about">
-  <div class="grid-bg" style="opacity:0.5"></div>
+  <div class="grid-bg" style="opacity:.3"></div>
   <div class="arc arc-sm" style="width:500px;height:500px;top:-250px;right:-200px"></div>
   <div class="wrap">
     <div class="about-story">
@@ -261,44 +523,67 @@ body{font-family:'DM Sans',sans-serif;background:var(--nbg);color:var(--w);overf
         <h2>Built from a decade of <span class="gu">enterprise systems</span> experience.</h2>
         <p>PostaraTrend was born from a simple observation: brands and agencies are always one step behind the trend curve — reacting to what's already peaked instead of predicting what's about to rise.</p>
         <p>Our founding team spent over a decade building enterprise-grade technology systems at some of Canada's largest organisations. We took that same discipline — systematic, measurable, built to operate at scale — and applied it to a problem that affects every brand in the market: staying ahead of trends and turning them into content, fast.</p>
-        <p>PostaraTrend Technologies Inc. is federally incorporated under the CBCA and headquartered in Calgary, Alberta, with operations extending into Ontario and West Africa.</p>
+        <p>PostaraTrend Technologies Inc. is federally incorporated under the CBCA and headquartered in Calgary, Alberta, with operations extending into the United States and Africa — starting with West Africa, and Nigeria to be precise.</p>
       </div>
       <div class="about-values">
-        <div class="av"><div class="av-i"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>Enterprise Grade</h4><p>Built with the same rigour as critical business systems — not stitched together from consumer tools.</p></div></div>
-        <div class="av"><div class="av-i"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><h4>Always On</h4><p>24/7 trend monitoring and automated publishing. The platform works while you sleep.</p></div></div>
-        <div class="av"><div class="av-i"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><h4>AI Native</h4><p>Intelligence is the product, not a feature. Every decision in the pipeline is AI-informed.</p></div></div>
-        <div class="av"><div class="av-i"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><h4>Transparent</h4><p>Clear analytics and reporting. You see exactly what the platform does and why.</p></div></div>
+        <div class="av"><div class="av-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>Enterprise Grade</h4><p>Built with the same rigour as critical business systems — not stitched together from consumer tools.</p></div></div>
+        <div class="av"><div class="av-i"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><h4>Always On</h4><p>24/7 trend monitoring and automated publishing. The platform works while you sleep.</p></div></div>
+        <div class="av"><div class="av-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><h4>AI Native</h4><p>Intelligence is the product, not a feature. Every decision in the pipeline is AI-informed.</p></div></div>
+        <div class="av"><div class="av-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div><div><h4>Transparent</h4><p>Clear analytics and reporting. You see exactly what the platform does and why.</p></div></div>
       </div>
     </div>
 
-    <!-- Team -->
     <div class="sh" style="margin-top:40px">
       <div class="sl">Leadership</div>
       <h2>Built by people who've done this <span class="gu">at scale</span>.</h2>
     </div>
     <div class="team-grid">
       <div class="tc">
-        <div class="tc-avatar" style="font-size:20px">⚙️</div>
+        <div class="tc-avatar" style="font-size:22px" aria-hidden="true">⚙︎</div>
         <h3>Enterprise Operations</h3>
-        <div class="tc-role">Founder & CEO</div>
+        <div class="tc-role">Founder &amp; CEO</div>
         <div class="tc-loc">Calgary, Alberta</div>
         <p>Over a decade of senior IT service management leadership at some of Canada's largest organisations — managing teams of 60+ analysts, designing enterprise governance frameworks, and building systems that run without human intervention.</p>
       </div>
       <div class="tc">
-        <div class="tc-avatar" style="font-size:20px">📊</div>
+        <div class="tc-avatar" style="font-size:22px" aria-hidden="true">◎</div>
         <h3>Business Process Integration</h3>
-        <div class="tc-role">Co-Founder & COO</div>
+        <div class="tc-role">Co-Founder &amp; COO</div>
         <div class="tc-loc">Greater Toronto Area</div>
         <p>13 years of enterprise consulting specialising in business process integration, system governance, and operations management. The same rigour that governs enterprise ERP systems now powers PostaraTrend's platform delivery.</p>
+      </div>
+    </div>
+
+    <!-- Governance & Regional Leadership -->
+    <div class="sh" style="margin-top:72px;margin-bottom:40px">
+      <div class="sl">Governance</div>
+      <h2>Board and operations spanning <span class="gu">North America and Africa</span>.</h2>
+      <p>A multi-jurisdictional governance and leadership structure reflecting the markets we serve.</p>
+    </div>
+    <div class="board-grid">
+      <div class="bc">
+        <span class="bc-tag">Board of Directors</span>
+        <h4>Non-Executive Director</h4>
+        <div class="bc-loc">United States of America</div>
+      </div>
+      <div class="bc">
+        <span class="bc-tag">Board of Directors</span>
+        <h4>Non-Executive Board Member</h4>
+        <div class="bc-loc">United States of America</div>
+      </div>
+      <div class="bc bc-ops">
+        <span class="bc-tag bc-tag-ops">Regional Leadership</span>
+        <h4>Africa Regional Lead</h4>
+        <div class="bc-loc">Nigeria</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ HOW IT WORKS ═══ -->
+<!-- HOW IT WORKS -->
 <section class="sec bg4" id="how">
   <div class="arc arc-sm" style="width:600px;height:600px;bottom:-300px;left:-200px"></div>
-  <div class="dots" style="bottom:60px;right:40px;opacity:0.15"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="dots" style="bottom:60px;right:40px;opacity:.15"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
   <div class="wrap">
     <div class="sh">
       <div class="sl">How It Works</div>
@@ -306,35 +591,40 @@ body{font-family:'DM Sans',sans-serif;background:var(--nbg);color:var(--w);overf
       <p>PostaraTrend runs a continuous intelligence-to-publishing pipeline that operates without manual intervention.</p>
     </div>
     <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h3>Detect</h3>
-        <div class="step-sub">Trend Intelligence</div>
-        <p>The platform continuously monitors social media, news, search trends, and public data to identify cultural and commercial trends as they emerge — before they peak.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h3>Create</h3>
-        <div class="step-sub">AI Content Generation</div>
-        <p>Detected trends are transformed into branded content — captions, graphics, and video — tailored to your brand voice, audience, and platform requirements. All AI-generated, all brand-safe.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h3>Publish</h3>
-        <div class="step-sub">Automated Distribution</div>
-        <p>Finished content is automatically published across your social channels on an optimised schedule. Performance data feeds back into the system to improve future output.</p>
-      </div>
+      <div class="step"><div class="step-num">1</div><h3>Detect</h3><div class="step-sub">Trend Intelligence</div><p>The platform continuously monitors social media, news, search trends, and public data to identify cultural and commercial trends as they emerge — before they peak.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Create</h3><div class="step-sub">AI Content Generation</div><p>Detected trends are transformed into branded content — captions, graphics, and video — tailored to your brand voice, audience, and platform requirements. All AI-generated, all brand-safe.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Publish</h3><div class="step-sub">Automated Distribution</div><p>Finished content is automatically published across your social channels on an optimised schedule. Performance data feeds back into the system to improve future output.</p></div>
     </div>
     <div class="stats">
-      <div class="sc"><div class="sc-n">24/7</div><div class="sc-l">Real-time monitoring</div></div>
-      <div class="sc"><div class="sc-n">5x</div><div class="sc-l">Faster content delivery</div></div>
-      <div class="sc"><div class="sc-n">100%</div><div class="sc-l">Automated publishing</div></div>
+      <div class="sc"><div class="sc-n" data-count="24" data-suffix="/7">24/7</div><div class="sc-l">Real-time monitoring</div></div>
+      <div class="sc"><div class="sc-n" data-count="5" data-suffix="x">5x</div><div class="sc-l">Faster content delivery</div></div>
+      <div class="sc"><div class="sc-n" data-count="100" data-suffix="%">100%</div><div class="sc-l">Automated publishing</div></div>
       <div class="sc"><div class="sc-n">AI</div><div class="sc-l">Powered intelligence</div></div>
     </div>
   </div>
 </section>
 
-<!-- ═══ SIGNUP ═══ -->
+<!-- FAQ -->
+<section class="sec bg3" id="faq">
+  <div class="grid-bg" style="opacity:.3"></div>
+  <div class="wrap">
+    <div class="sh">
+      <div class="sl">Questions</div>
+      <h2>Frequently <span class="gu">asked</span>.</h2>
+      <p>Everything you need to know about PostaraTrend before launch.</p>
+    </div>
+    <div class="faq-list">
+      <details class="faq"><summary>When will PostaraTrend be available?<span class="faq-ic" aria-hidden="true">+</span></summary><div class="faq-a">We're currently in pre-launch with a select group of early partners. Public onboarding opens in phases — join the early access list below and you'll be among the first notified as we open new cohorts.</div></details>
+      <details class="faq"><summary>Who is the platform for?<span class="faq-ic" aria-hidden="true">+</span></summary><div class="faq-a">Brands, creators, agencies, and organisations that need to stay visible and relevant across social channels without building a full in-house content operation. If your team is always racing to catch up with trends, PostaraTrend is built for you.</div></details>
+      <details class="faq"><summary>How is this different from a social scheduler?<span class="faq-ic" aria-hidden="true">+</span></summary><div class="faq-a">Schedulers post what you give them. PostaraTrend detects emerging trends, generates brand-safe content around them, and publishes on an optimised schedule — closing the loop from intelligence to output without manual intervention.</div></details>
+      <details class="faq"><summary>Will I have control over what gets published?<span class="faq-ic" aria-hidden="true">+</span></summary><div class="faq-a">Yes. You define your brand voice, approval rules, and publishing cadence. The platform can run in fully automated mode, human-in-the-loop review mode, or anywhere in between — depending on your governance requirements.</div></details>
+      <details class="faq"><summary>What does early access include?<span class="faq-ic" aria-hidden="true">+</span></summary><div class="faq-a">Priority onboarding when we open the next cohort, preferred pricing for founding customers, direct input into the product roadmap, and hands-on support from our team during your initial rollout.</div></details>
+      <details class="faq"><summary>Are you open to partnerships and investment?<span class="faq-ic" aria-hidden="true">+</span></summary><div class="faq-a">Yes — we're actively in conversation with agencies exploring white-label arrangements and with investors interested in the content intelligence category. Use the contact form below and we'll set up a call.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNUP -->
 <section class="sec bg2" id="signup" style="text-align:center">
   <div class="arc arc-sm" style="width:500px;height:500px;bottom:-250px;left:-150px"></div>
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 100%,rgba(26,58,107,0.3) 0%,transparent 70%)"></div>
@@ -342,34 +632,49 @@ body{font-family:'DM Sans',sans-serif;background:var(--nbg);color:var(--w);overf
     <div class="sl">Early Access</div>
     <h2>Be the first to know.</h2>
     <div class="st">Pre-Launch</div>
-    <p class="sd">PostaraTrend is currently in pre-launch. Sign up to get early access and be notified when we go live.</p>
-    <div id="fw"><form class="sf" onsubmit="hs(event)"><input class="si" type="email" placeholder="Enter your email address" required><button type="submit" class="sb">Get Early Access</button></form><p class="sn">We respect your privacy. No spam, ever.</p></div>
-    <div class="ss" id="sm"><h3>You're on the list!</h3><p>We'll notify you as soon as PostaraTrend is ready. Thank you for your interest.</p></div>
+    <p class="sd">PostaraTrend is currently in pre-launch. Join the list to get early access and be notified when we go live.</p>
+    <form class="sf" id="signupForm" novalidate>
+      <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label for="signupEmail" style="position:absolute;left:-9999px">Email address</label>
+      <input id="signupEmail" class="si" type="email" name="email" placeholder="Enter your email address" required autocomplete="email">
+      <button type="submit" class="sb" id="signupBtn">Get Early Access</button>
+    </form>
+    <p class="sn">We respect your privacy. No spam, ever.</p>
   </div>
 </section>
 
-<!-- ═══ CONTACT ═══ -->
+<!-- CONTACT -->
 <section class="sec bg3" id="contact">
-  <div class="grid-bg" style="opacity:0.3"></div>
+  <div class="grid-bg" style="opacity:.3"></div>
   <div class="wrap">
     <div class="contact-grid">
       <div class="cg-left">
         <div class="sl">Contact</div>
         <h2>Let's <span class="gu">connect</span>.</h2>
         <p>Whether you're a brand looking for trend intelligence, an agency interested in partnership, or an investor exploring opportunities — we'd love to hear from you.</p>
-        <div class="ci"><div class="ci-i"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="ci-t">Email</div><div class="ci-v"><a href="mailto:admin@postaratrend.ca">admin@postaratrend.ca</a></div></div></div>
-        <div class="ci"><div class="ci-i"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="ci-t">Location</div><div class="ci-v">Calgary, Alberta, Canada</div></div></div>
-        <div class="ci"><div class="ci-i"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div><div><div class="ci-t">LinkedIn</div><div class="ci-v"><a href="https://linkedin.com/company/postaratrend-technologies" target="_blank">PostaraTrend Technologies</a></div></div></div>
-        <div class="ci"><div class="ci-i"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></div><div><div class="ci-t">Facebook</div><div class="ci-v"><a href="https://facebook.com/PostaraTrendTechnologies" target="_blank">PostaraTrend Technologies</a></div></div></div>
+        <div class="ci"><div class="ci-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="ci-t">Email</div><div class="ci-v"><a href="mailto:inquiries@postaratrend.ca">inquiries@postaratrend.ca</a></div></div></div>
+        <div class="ci"><div class="ci-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><div class="ci-t">Location</div><div class="ci-v">Calgary, Alberta, Canada</div></div></div>
+        <div class="ci"><div class="ci-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div><div><div class="ci-t">LinkedIn</div><div class="ci-v"><a href="https://linkedin.com/company/postaratrend-technologies" target="_blank" rel="noopener">PostaraTrend Technologies</a></div></div></div>
+        <div class="ci"><div class="ci-i"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></div><div><div class="ci-t">Facebook</div><div class="ci-v"><a href="https://facebook.com/PostaraTrendTechnologies" target="_blank" rel="noopener">PostaraTrend Technologies</a></div></div></div>
       </div>
-      <div class="cf">
+      <form class="cf" id="contactForm" novalidate>
         <h3>Send us a message</h3>
-        <div class="cf-field"><label>Name</label><input type="text" placeholder="Your name"></div>
-        <div class="cf-field"><label>Email</label><input type="email" placeholder="your@email.com"></div>
-        <div class="cf-field"><label>Subject</label><input type="text" placeholder="Partnership / Investment / General Inquiry"></div>
-        <div class="cf-field"><label>Message</label><textarea placeholder="Tell us what you're interested in..."></textarea></div>
-        <button class="cf-btn" onclick="this.textContent='Message Sent ✓';this.style.background='#0F6E56'">Send Message</button>
-      </div>
+        <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="cf-field"><label for="cName">Name</label><input id="cName" type="text" name="name" placeholder="Your name" required autocomplete="name"></div>
+        <div class="cf-field"><label for="cEmail">Email</label><input id="cEmail" type="email" name="email" placeholder="your@email.com" required autocomplete="email"></div>
+        <div class="cf-field"><label for="cSubject">Inquiry Type</label>
+          <select id="cSubject" name="inquiry_type" required>
+            <option value="" disabled selected>Select a topic</option>
+            <option value="Partnership">Partnership</option>
+            <option value="Investment">Investment</option>
+            <option value="Early Access / Demo">Early Access / Demo</option>
+            <option value="Press & Media">Press &amp; Media</option>
+            <option value="General Inquiry">General Inquiry</option>
+          </select>
+        </div>
+        <div class="cf-field"><label for="cMsg">Message</label><textarea id="cMsg" name="message" placeholder="Tell us what you're interested in..." required></textarea></div>
+        <button type="submit" class="cf-btn" id="contactBtn">Send Message</button>
+      </form>
     </div>
   </div>
 </section>
@@ -378,21 +683,172 @@ body{font-family:'DM Sans',sans-serif;background:var(--nbg);color:var(--w);overf
 <footer class="ft">
   <div class="ft-in">
     <div class="ft-br">
-      <a href="#" class="ft-logo"><svg width="32" height="32" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" rx="24" fill="#1A3A6B"/><rect x="20" y="70" width="16" height="30" rx="3" fill="#5DCAA5"/><rect x="42" y="50" width="16" height="50" rx="3" fill="#1D9E75"/><rect x="64" y="30" width="16" height="70" rx="3" fill="#0F6E56"/><rect x="86" y="14" width="16" height="86" rx="3" fill="#FFF"/><polygon points="94,10 84,18 104,18" fill="#0F6E56"/></svg><span class="nb" style="font-size:17px">Postara<em>Trend</em></span></a>
+      <a href="#" class="ft-logo" aria-label="PostaraTrend home"><svg width="32" height="32" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="120" height="120" rx="24" fill="#1A3A6B"/><rect x="20" y="70" width="16" height="30" rx="3" fill="#5DCAA5"/><rect x="42" y="50" width="16" height="50" rx="3" fill="#1D9E75"/><rect x="64" y="30" width="16" height="70" rx="3" fill="#0F6E56"/><rect x="86" y="14" width="16" height="86" rx="3" fill="#FFF"/><polygon points="94,10 84,18 104,18" fill="#0F6E56"/></svg><span class="nb" style="font-size:17px">Postara<em>Trend</em></span></a>
       <p>Trend intelligence for the digital age. We help brands, creators, and organizations identify and act on cultural and commercial trends before the competition does.</p>
     </div>
     <div class="ft-links">
-      <div class="ft-col"><h4>Company</h4><a href="#about">About</a><a href="#how">How It Works</a><a href="#signup">Early Access</a><a href="#contact">Contact</a></div>
-      <div class="ft-col"><h4>Connect</h4><a href="https://linkedin.com/company/postaratrend-technologies" target="_blank">LinkedIn</a><a href="https://facebook.com/PostaraTrendTechnologies" target="_blank">Facebook</a><a href="mailto:admin@postaratrend.ca">admin@postaratrend.ca</a></div>
+      <div class="ft-col"><h4>Company</h4><a href="#about">About</a><a href="#how">How It Works</a><a href="#faq">FAQ</a><a href="#signup">Early Access</a><a href="#contact">Contact</a></div>
+      <div class="ft-col"><h4>Connect</h4><a href="https://linkedin.com/company/postaratrend-technologies" target="_blank" rel="noopener">LinkedIn</a><a href="https://facebook.com/PostaraTrendTechnologies" target="_blank" rel="noopener">Facebook</a><a href="mailto:inquiries@postaratrend.ca">inquiries@postaratrend.ca</a></div>
     </div>
   </div>
-  <div class="ft-bt"><p>&copy; 2026 PostaraTrend Technologies Inc. All rights reserved.</p><div class="ft-loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Calgary · Alberta · Canada</div></div>
+  <div class="ft-bt"><p>&copy; 2026 PostaraTrend Technologies Inc. All rights reserved.</p><div class="ft-loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Calgary · Alberta · Canada</div></div>
 </footer>
 
+<!-- Toast container -->
+<div class="toast-box" id="toastBox" aria-live="polite" aria-atomic="true"></div>
+
 <script>
-function hs(e){e.preventDefault();document.getElementById('fw').style.display='none';document.getElementById('sm').style.display='block'}
-const ob=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.style.opacity='1';x.target.style.transform='translateY(0)'}})},{threshold:0.1});
-document.querySelectorAll('.pill,.sc,.tc,.step,.av,.why-c,.ci').forEach((el,i)=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition=`opacity .5s ease ${i*.05}s,transform .5s ease ${i*.05}s`;ob.observe(el)});
+(function(){
+  'use strict';
+
+  /* Form endpoint — routes inbound submissions to inquiries@postaratrend.ca.
+     IMPORTANT: on first submission, a one-time activation link is emailed
+     to that address. Open it once, and every future submission lands in
+     the inbox silently. */
+  var FORM_ENDPOINT = 'https://formsubmit.co/ajax/inquiries@postaratrend.ca';
+
+  /* Scroll progress */
+  var bar = document.getElementById('progBar');
+  function updateProgress(){
+    var h = document.documentElement;
+    var scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, scrolled)) * 100 + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  updateProgress();
+
+  /* Toast */
+  var toastBox = document.getElementById('toastBox');
+  function toast(title, message, type){
+    var t = document.createElement('div');
+    t.className = 'toast' + (type === 'error' ? ' err' : '');
+    var icon = type === 'error'
+      ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    t.innerHTML = '<div class="toast-ic">' + icon + '</div><div><div class="toast-t">' + title + '</div><div class="toast-m">' + message + '</div></div>';
+    toastBox.appendChild(t);
+    requestAnimationFrame(function(){ t.classList.add('show'); });
+    setTimeout(function(){
+      t.classList.remove('show');
+      setTimeout(function(){ t.remove(); }, 500);
+    }, 5200);
+  }
+
+  /* Form submission helper */
+  function submitForm(form, btn, successTitle, successMsg){
+    var origText = btn.textContent;
+    // Simple HTML5 validation
+    if(!form.checkValidity()){
+      form.reportValidity();
+      return;
+    }
+    // Honeypot
+    var hp = form.querySelector('input[name="company"]');
+    if(hp && hp.value){ return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span>Sending...';
+
+    var data = {};
+    Array.prototype.forEach.call(form.elements, function(el){
+      if(el.name && el.type !== 'submit' && el.name !== 'company'){
+        data[el.name] = el.value;
+      }
+    });
+    // Meta fields
+    data._subject = form.id === 'signupForm'
+      ? 'New Early Access Signup — PostaraTrend'
+      : 'New Contact — PostaraTrend (' + (data.inquiry_type || 'Inquiry') + ')';
+    data._template = 'table';
+    data._captcha = 'false';
+    // Contact form submissions CC the CEO mailbox for founder visibility.
+    // Waitlist signups do NOT CC — that's just noise for the CEO.
+    if(form.id === 'contactForm'){
+      data._cc = 'admin@postaratrend.ca';
+    }
+
+    fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify(data)
+    })
+    .then(function(r){ return r.json().catch(function(){ return {success:r.ok}; }); })
+    .then(function(res){
+      var ok = res && (res.success === 'true' || res.success === true || (typeof res.success === 'undefined'));
+      if(ok){
+        form.reset();
+        toast(successTitle, successMsg);
+      } else {
+        throw new Error(res && res.message || 'Submission failed');
+      }
+    })
+    .catch(function(){
+      toast('Something went wrong', 'Please try again, or email inquiries@postaratrend.ca directly.', 'error');
+    })
+    .finally(function(){
+      btn.disabled = false;
+      btn.textContent = origText;
+    });
+  }
+
+  /* Wire up forms */
+  var signupForm = document.getElementById('signupForm');
+  var signupBtn = document.getElementById('signupBtn');
+  signupForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    submitForm(signupForm, signupBtn, "You're on the list!", "We'll notify you as soon as PostaraTrend is ready.");
+  });
+
+  var contactForm = document.getElementById('contactForm');
+  var contactBtn = document.getElementById('contactBtn');
+  contactForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    submitForm(contactForm, contactBtn, 'Message sent', "Thanks — we'll get back to you shortly.");
+  });
+
+  /* Reveal-on-scroll */
+  var ob = new IntersectionObserver(function(entries){
+    entries.forEach(function(x){
+      if(x.isIntersecting){
+        x.target.style.opacity = '1';
+        x.target.style.transform = 'translateY(0)';
+        ob.unobserve(x.target);
+      }
+    });
+  }, {threshold:0.1, rootMargin:'0px 0px -60px 0px'});
+  document.querySelectorAll('.pill,.sc,.tc,.step,.av,.ci,.faq,.bc').forEach(function(el,i){
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .55s ease ' + (i * .04) + 's, transform .55s ease ' + (i * .04) + 's';
+    ob.observe(el);
+  });
+
+  /* Animated stat counters */
+  var statOb = new IntersectionObserver(function(entries){
+    entries.forEach(function(x){
+      if(x.isIntersecting){
+        var el = x.target;
+        var target = parseInt(el.getAttribute('data-count'), 10);
+        var suffix = el.getAttribute('data-suffix') || '';
+        if(!isNaN(target)){
+          var start = 0, duration = 1200, startTime = null;
+          function tick(t){
+            if(!startTime) startTime = t;
+            var p = Math.min((t - startTime) / duration, 1);
+            // easeOutExpo
+            var eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+            el.textContent = Math.round(start + (target - start) * eased) + suffix;
+            if(p < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+        }
+        statOb.unobserve(el);
+      }
+    });
+  }, {threshold:0.5});
+  document.querySelectorAll('.sc-n[data-count]').forEach(function(el){ statOb.observe(el); });
+
+})();
 </script>
 </body>
 </html>
