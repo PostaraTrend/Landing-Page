@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>PostaraTrend — Technical Walkthrough Resources</title>
+<style>
+  :root {
+    --navy: #1a3a6b;
+    --navy-deep: #0e2841;
+    --emerald: #1d9e75;
+    --emerald-soft: #e8f5ee;
+    --teal: #308888;
+    --amber: #f0a020;
+    --amber-soft: #fff4d4;
+    --bg: #f7f8fa;
+    --surface: #ffffff;
+    --border: #e1e5ec;
+    --border-strong: #c8d0dc;
+    --text: #1f2937;
+    --text-muted: #5e6b7e;
+    --text-faint: #8b95a8;
+    --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 4px 14px rgba(15, 23, 42, 0.08), 0 18px 48px rgba(15, 23, 42, 0.10);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 40px 24px 80px 24px;
+  }
+
+  /* ============== HEADER ============== */
+  header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+  }
+  .brand-logo {
+    width: 44px; height: 44px;
+    flex-shrink: 0;
+    display: block;
+  }
+  .brand-text { display: flex; flex-direction: column; }
+  .brand-name {
+    font-size: 18px; font-weight: 700; color: var(--navy);
+    letter-spacing: -0.01em;
+  }
+  .brand-tag {
+    font-size: 12px; color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ============== HERO ============== */
+  .hero {
+    margin-bottom: 36px;
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    color: var(--emerald); text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .hero-title {
+    font-size: 30px; font-weight: 700; color: var(--navy);
+    letter-spacing: -0.02em; line-height: 1.2;
+    margin: 0 0 14px 0;
+  }
+  .hero-intro {
+    font-size: 16px; color: var(--text); line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ============== ADVISORY NOTE ============== */
+  .advisory {
+    background: var(--amber-soft);
+    border: 1px solid var(--amber);
+    border-left-width: 4px;
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin: 28px 0 36px 0;
+    font-size: 13px;
+    color: var(--text);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .advisory-icon {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--amber);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .advisory strong { color: var(--navy); }
+
+  /* ============== SECTION HEADINGS ============== */
+  h2.section {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--text-muted); text-transform: uppercase;
+    margin: 36px 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ============== CARDS ============== */
+  .cards { display: grid; gap: 18px; margin-bottom: 12px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.18s, border-color 0.18s, transform 0.18s;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .card.recommended {
+    border-color: var(--emerald);
+    border-width: 2px;
+    background: linear-gradient(180deg, var(--emerald-soft) 0%, var(--surface) 50px);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .card-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--emerald);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    text-transform: uppercase;
+  }
+  .card-pill.muted {
+    background: var(--bg);
+    color: var(--text-muted);
+    border: 1px solid var(--border-strong);
+  }
+  .card-runtime {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .card-desc {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .card-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
+    cursor: pointer;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: var(--navy);
+    color: white;
+    border-color: var(--navy);
+  }
+  .btn-primary:hover { background: var(--emerald); border-color: var(--emerald); }
+  .btn-secondary {
+    background: var(--surface);
+    color: var(--navy);
+    border-color: var(--border-strong);
+  }
+  .btn-secondary:hover { background: var(--bg); border-color: var(--navy); }
+  .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* ============== DOCUMENTS LIST ============== */
+  .docs-list {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 0;
+    box-shadow: var(--shadow);
+  }
+  .doc-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 22px;
+    text-decoration: none;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s;
+  }
+  .doc-item:last-child { border-bottom: none; }
+  .doc-item:hover { background: var(--bg); }
+  .doc-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--emerald-soft);
+    color: var(--emerald);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .doc-info { flex: 1; min-width: 0; }
+  .doc-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    margin: 0;
+  }
+  .doc-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .doc-arrow {
+    color: var(--text-faint);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  /* ============== FOOTER ============== */
+  footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  footer a { color: var(--text-muted); text-decoration: none; border-bottom: 1px dotted var(--text-faint); }
+  footer a:hover { color: var(--navy); border-bottom-color: var(--navy); }
+  .footer-divider { color: var(--text-faint); margin: 0 6px; }
+
+  /* ============== MOBILE ============== */
+  @media (max-width: 600px) {
+    .page { padding: 24px 18px 60px 18px; }
+    header { gap: 10px; padding-bottom: 18px; margin-bottom: 24px; }
+    .brand-logo { width: 38px; height: 38px; }
+    .brand-name { font-size: 16px; }
+    .hero-title { font-size: 24px; }
+    .hero-intro { font-size: 15px; }
+    .card { padding: 18px 18px; }
+    .card-title { font-size: 17px; }
+    .card-actions { flex-direction: column; }
+    .btn { width: 100%; justify-content: center; }
+    .doc-item { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ============= HEADER ============= -->
+  <header>
+    <svg class="brand-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect width="120" height="120" rx="24" fill="#1A3A6B"/>
+      <rect x="20" y="70" width="16" height="30" rx="3" fill="#5DCAA5"/>
+      <rect x="42" y="50" width="16" height="50" rx="3" fill="#1D9E75"/>
+      <rect x="64" y="30" width="16" height="70" rx="3" fill="#0F6E56"/>
+      <rect x="86" y="14" width="16" height="86" rx="3" fill="#FFF"/>
+      <polygon points="94,10 84,18 104,18" fill="#0F6E56"/>
+    </svg>
+    <div class="brand-text">
+      <div class="brand-name">PostaraTrend Technologies Inc.</div>
+      <div class="brand-tag">Trend intelligence for the digital age</div>
+    </div>
+  </header>
+
+  <!-- ============= HERO ============= -->
+  <div class="hero">
+    <div class="hero-eyebrow">IRAP Application — Technical Resources</div>
+    <h1 class="hero-title">Architectural walkthrough of the four R&amp;D decision loci</h1>
+    <p class="hero-intro">
+      Welcome. This page hosts technical orientation material that accompanies the formal
+      <em>Statement of R&amp;D Uncertainty</em> submitted with our IRAP application. It is intended
+      for the assigned Industry Technology Advisor and any technical reviewer who would benefit
+      from a guided walkthrough of the autonomous editorial decision-making layer of the
+      PostaraTrend platform.
+    </p>
+  </div>
+
+  <!-- ============= ADVISORY ============= -->
+  <div class="advisory">
+    <div class="advisory-icon">i</div>
+    <div>
+      <strong>Best experienced on desktop with audio enabled.</strong> The walkthroughs use
+      browser-based speech synthesis (Web Speech API). For best results, please use Chrome, Edge,
+      or Safari. Read-along transcripts are linked below for anyone unable to use audio.
+    </div>
+  </div>
+
+  <!-- ============= WALKTHROUGHS ============= -->
+  <h2 class="section">Walkthroughs</h2>
+
+  <div class="cards">
+
+    <!-- RECOMMENDED — short walkthrough -->
+    <div class="card recommended">
+      <div class="card-header">
+        <span class="card-pill">Recommended for pre-call</span>
+        <span class="card-runtime">≈ 10 minutes</span>
+      </div>
+      <h3 class="card-title">D1–D4 Walkthrough — The Four R&amp;D Uncertainties</h3>
+      <p class="card-desc">
+        A focused, ten-minute walkthrough of the four decision loci that anchor the R&amp;D
+        scope of the proposed project. For each locus, the walkthrough states the technical
+        uncertainty, explains why it cannot be resolved through engineering judgment alone, and
+        identifies the project phase that addresses it. This is the recommended pre-call
+        orientation asset.
+      </p>
+      <div class="card-actions">
+        <a class="btn btn-primary" href="walkthrough/" aria-label="Open the D1 to D4 Walkthrough">
+          Open walkthrough
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a class="btn btn-secondary" href="documents/PostaraTrend_D1-D4_Walkthrough_Transcript.docx">
+          Read transcript (.docx)
+        </a>
+      </div>
+    </div>
+
+    <!-- DEEP-DIVE — full walkthrough -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-pill muted">Optional deep-dive</span>
+        <span class="card-runtime">≈ 25 minutes</span>
+      </div>
+      <h3 class="card-title">Full Technical Voiceover — End-to-end pipeline walkthrough</h3>
+      <p class="card-desc">
+        A longer, exhaustive walkthrough of the entire Master Workflow pipeline — every phase
+        from <em>P-15a Pause Check</em> through <em>P-09 Log</em> — including API specifics,
+        prompt structures, audit-trail design, and the closed-loop dynamics of D2 and D4. Useful
+        for technical advisors or reviewers who prefer the full architectural narrative before
+        a deep technical discussion.
+      </p>
+      <div class="card-actions">
+        <a class="btn btn-primary" href="walkthrough-full/" aria-label="Open the full Technical Voiceover">
+          Open full walkthrough
+          <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 8h13M9 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a class="btn btn-secondary" href="documents/PostaraTrend_Technical_Voiceover_Transcript.docx">
+          Read transcript (.docx)
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============= COMPANION DOCUMENTS ============= -->
+  <h2 class="section">Companion documents</h2>
+
+  <div class="docs-list">
+
+    <a class="doc-item" href="documents/PostaraTrend_Statement_of_RD_Uncertainty.docx">
+      <div class="doc-icon">DOCX</div>
+      <div class="doc-info">
+        <div class="doc-title">Statement of R&amp;D Uncertainty</div>
+        <div class="doc-meta">Formal supplementary statement submitted with the IRAP application</div>
+      </div>
+      <div class="doc-arrow">↓</div>
+    </a>
+
+    <a class="doc-item" href="documents/PostaraTrend_D1-D4_Walkthrough_Transcript.docx">
+      <div class="doc-icon">DOCX</div>
+      <div class="doc-info">
+        <div class="doc-title">D1–D4 Walkthrough — Transcript</div>
+        <div class="doc-meta">Read-along version of the 10-minute walkthrough</div>
+      </div>
+      <div class="doc-arrow">↓</div>
+    </a>
+
+    <a class="doc-item" href="documents/PostaraTrend_Technical_Voiceover_Transcript.docx">
+      <div class="doc-icon">DOCX</div>
+      <div class="doc-info">
+        <div class="doc-title">Full Technical Voiceover — Transcript</div>
+        <div class="doc-meta">Read-along version of the 25-minute deep-dive walkthrough</div>
+      </div>
+      <div class="doc-arrow">↓</div>
+    </a>
+
+  </div>
+
+  <!-- ============= FOOTER ============= -->
+  <footer>
+    <div>
+      <strong style="color: var(--navy);">PostaraTrend Technologies Inc.</strong>
+      <span class="footer-divider">·</span>
+      Corp. No. 2028037402
+      <span class="footer-divider">·</span>
+      BN 726572233
+      <span class="footer-divider">·</span>
+      Calgary, AB, T3P 2E9
+    </div>
+    <div style="margin-top: 6px;">
+      <a href="https://postaratrend.ca">postaratrend.ca</a>
+      <span class="footer-divider">·</span>
+      <a href="mailto:admin@postaratrend.ca">admin@postaratrend.ca</a>
+      <span class="footer-divider">·</span>
+      +1 587 889 8213
+    </div>
+    <div style="margin-top: 12px; color: var(--text-faint); font-size: 11px;">
+      This page is unlisted. Please do not share the URL outside the IRAP review context.
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
