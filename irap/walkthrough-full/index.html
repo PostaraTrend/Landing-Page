@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PostaraTrend — Technical Architecture Voiceover</title>
+<style>
+  :root {
+    --navy: #1a3a6b;
+    --navy-deep: #0e2841;
+    --emerald: #1d9e75;
+    --emerald-soft: #d4f0e3;
+    --amber: #f0a020;
+    --amber-soft: #fff4d4;
+    --coral: #e85d4f;
+    --coral-soft: #fbe0dc;
+    --teal: #308888;
+    --teal-soft: #d4ecec;
+    --bg: #f7f8fa;
+    --surface: #ffffff;
+    --border: #e1e5ec;
+    --border-strong: #c8d0dc;
+    --text: #1f2937;
+    --text-muted: #5e6b7e;
+    --text-faint: #8b95a8;
+    --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.04);
+    --shadow-lg: 0 4px 14px rgba(15, 23, 42, 0.08), 0 18px 48px rgba(15, 23, 42, 0.10);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ===== layout shell ===== */
+  .app { display: grid; grid-template-columns: 320px 1fr; min-height: 100vh; }
+  @media (max-width: 980px) { .app { grid-template-columns: 1fr; } }
+
+  /* ===== left rail ===== */
+  .rail {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px 18px;
+    overflow-y: auto;
+    max-height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 14px; margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand-logo {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 14px;
+  }
+  .brand-name { font-size: 14px; font-weight: 700; color: var(--navy); letter-spacing: -0.01em; }
+  .brand-tag { font-size: 11px; color: var(--text-faint); }
+
+  .rail h2 {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    color: var(--text-muted); text-transform: uppercase;
+    margin: 16px 0 8px 0;
+  }
+
+  .scene-list { list-style: none; padding: 0; margin: 0; }
+  .scene-list li {
+    padding: 9px 11px; margin-bottom: 3px; cursor: pointer;
+    border-radius: var(--radius-sm);
+    font-size: 13px; color: var(--text-muted);
+    display: flex; align-items: center; gap: 8px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .scene-list li:hover { background: rgba(26, 58, 107, 0.05); color: var(--text); }
+  .scene-list li.active { background: var(--navy); color: white; font-weight: 600; }
+  .scene-list li.active .scene-num { background: rgba(255,255,255,0.2); color: white; }
+  .scene-list li.played { color: var(--emerald); }
+  .scene-num {
+    width: 22px; height: 22px; flex: 0 0 22px;
+    border-radius: 50%; background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: var(--text-muted);
+  }
+  .scene-title { flex: 1; line-height: 1.3; }
+
+  /* ===== main stage ===== */
+  .stage {
+    padding: 24px 28px 120px 28px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .stage-header {
+    display: flex; flex-direction: column; gap: 4px;
+    padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+  .stage-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--emerald); text-transform: uppercase; }
+  .stage-title { font-size: 22px; font-weight: 700; color: var(--navy); letter-spacing: -0.01em; margin: 0; }
+  .stage-sub { font-size: 13px; color: var(--text-muted); }
+
+  /* ===== diagram canvas ===== */
+  .canvas-wrap {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; position: relative; box-shadow: var(--shadow);
+  }
+  .scene-label {
+    position: absolute; top: 12px; left: 16px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+    color: var(--text-faint); text-transform: uppercase; z-index: 5;
+    background: rgba(255,255,255,0.9); padding: 2px 8px; border-radius: 4px;
+  }
+  svg.diagram { width: 100%; height: auto; display: block; max-height: 70vh; }
+
+  /* SVG element states for spotlight effect */
+  .node, .edge, .annotation, .group { transition: opacity 0.45s ease, filter 0.45s ease; }
+  .dimmed { opacity: 0.18; filter: grayscale(0.6); }
+  .focused { opacity: 1; }
+  .focused .node-fill { filter: drop-shadow(0 0 12px rgba(232, 93, 79, 0.55)); }
+  .arrow-pointer { transition: opacity 0.3s ease; }
+
+  /* arrow pulse */
+  @keyframes arrowFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .arrow-pointer.active { animation: arrowFloat 1.4s ease-in-out infinite; }
+
+  /* ===== caption ribbon ===== */
+  .caption {
+    background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy) 100%);
+    color: white; border-radius: var(--radius); padding: 18px 22px;
+    box-shadow: var(--shadow-lg); position: relative; min-height: 80px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .caption-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: rgba(255,255,255,0.65); text-transform: uppercase; }
+  .caption-text { font-size: 15px; line-height: 1.55; color: white; }
+  .caption-text .word-active {
+    background: var(--amber);
+    color: var(--navy-deep);
+    padding: 1px 4px; border-radius: 3px; font-weight: 600;
+  }
+  .caption-progress {
+    position: absolute; bottom: 0; left: 0; height: 3px;
+    background: var(--emerald); border-radius: 0 0 var(--radius) var(--radius);
+    transition: width 0.3s linear; max-width: 100%;
+  }
+
+  /* ===== player bar ===== */
+  .player {
+    position: fixed; bottom: 0; left: 320px; right: 0;
+    background: var(--surface); border-top: 1px solid var(--border-strong);
+    padding: 14px 28px; display: flex; align-items: center; gap: 16px;
+    box-shadow: 0 -4px 12px rgba(15,23,42,0.06); z-index: 100;
+  }
+  @media (max-width: 980px) { .player { left: 0; } }
+
+  .player button {
+    border: 1px solid var(--border-strong); background: var(--surface); color: var(--navy);
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 13px; font-weight: 600;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .player button:hover:not(:disabled) { background: var(--navy); color: white; border-color: var(--navy); }
+  .player button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .player button.primary {
+    background: var(--navy); color: white; border-color: var(--navy);
+    padding: 10px 18px;
+  }
+  .player button.primary:hover { background: var(--emerald); border-color: var(--emerald); }
+
+  .player-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .player-scene { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .player-status { font-size: 11px; color: var(--text-muted); }
+
+  .player-controls { display: flex; gap: 8px; align-items: center; }
+  select {
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    padding: 6px 8px; font-size: 12px; color: var(--text); background: var(--surface);
+    max-width: 200px;
+  }
+  .speed-pill {
+    background: var(--bg); border: 1px solid var(--border-strong); border-radius: 999px;
+    padding: 4px 10px; font-size: 11px; font-weight: 700; color: var(--navy);
+    cursor: pointer; user-select: none;
+  }
+  .speed-pill:hover { background: var(--navy); color: white; border-color: var(--navy); }
+
+  /* ===== modal voice picker ===== */
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5);
+    display: none; align-items: center; justify-content: center; z-index: 1000;
+  }
+  .modal-bg.shown { display: flex; }
+  .modal {
+    background: var(--surface); border-radius: var(--radius); max-width: 540px; width: 92%;
+    max-height: 80vh; overflow-y: auto; box-shadow: var(--shadow-lg); padding: 24px;
+  }
+  .modal h3 { margin-top: 0; color: var(--navy); }
+  .voice-list { list-style: none; padding: 0; margin: 12px 0; }
+  .voice-list li {
+    padding: 10px 14px; margin-bottom: 4px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); cursor: pointer; font-size: 13px;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .voice-list li:hover { border-color: var(--navy); background: rgba(26, 58, 107, 0.03); }
+  .voice-list li.selected { border-color: var(--emerald); background: var(--emerald-soft); }
+  .voice-name { font-weight: 600; }
+  .voice-meta { font-size: 11px; color: var(--text-muted); }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+
+  /* ===== inactive scene styling ===== */
+  .scene-svg { display: none; }
+  .scene-svg.shown { display: block; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ============= LEFT RAIL ============= -->
+  <aside class="rail">
+    <div class="brand">
+      <div class="brand-logo">PT</div>
+      <div>
+        <div class="brand-name">PostaraTrend</div>
+        <div class="brand-tag">Technical Voiceover</div>
+      </div>
+    </div>
+
+    <h2>Sections</h2>
+    <ul class="scene-list" id="sceneList"></ul>
+
+    <h2 style="margin-top: 24px;">Voice</h2>
+    <button class="primary" style="width: 100%; padding: 10px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--navy); border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; font-weight: 600;" onclick="openVoicePicker()">
+      Choose Voice
+    </button>
+    <div id="currentVoiceLabel" style="font-size: 11px; color: var(--text-muted); margin-top: 8px; word-break: break-word;"></div>
+  </aside>
+
+  <!-- ============= MAIN STAGE ============= -->
+  <main class="stage">
+    <div class="stage-header">
+      <span class="stage-eyebrow" id="stageEyebrow">Section 0</span>
+      <h1 class="stage-title" id="stageTitle">PostaraTrend AI — Technical Architecture</h1>
+      <p class="stage-sub" id="stageSub">A guided voiceover of the autonomous editorial decision-making system</p>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="scene-label" id="sceneLabel">Scene 1 / 12</div>
+      <!-- All SVG scenes are rendered into this container, but only one shown at a time -->
+      <div id="svgContainer"></div>
+    </div>
+
+    <div class="caption">
+      <span class="caption-eyebrow" id="captionEyebrow">Section</span>
+      <div class="caption-text" id="captionText">Press Play to begin the technical walkthrough.</div>
+      <div class="caption-progress" id="captionProgress" style="width: 0%;"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ============= PLAYER BAR ============= -->
+<div class="player">
+  <div class="player-info">
+    <div class="player-scene" id="playerScene">Ready</div>
+    <div class="player-status" id="playerStatus">Press Play to begin</div>
+  </div>
+  <div class="player-controls">
+    <button id="prevBtn" onclick="prevScene()">◀ Prev</button>
+    <button id="playBtn" class="primary" onclick="togglePlay()">▶ Play</button>
+    <button id="nextBtn" onclick="nextScene()">Next ▶</button>
+    <span class="speed-pill" onclick="cycleSpeed()" id="speedPill">1.0×</span>
+  </div>
+</div>
+
+<!-- ============= VOICE PICKER MODAL ============= -->
+<div class="modal-bg" id="voiceModal">
+  <div class="modal">
+    <h3>Choose narrator voice</h3>
+    <p style="font-size: 13px; color: var(--text-muted);">Higher-quality voices marked with ★. Voices vary by browser and operating system.</p>
+    <ul class="voice-list" id="voiceList"></ul>
+    <div class="modal-actions">
+      <button onclick="closeVoicePicker()" style="padding: 8px 14px; border: 1px solid var(--border-strong); background: var(--surface); border-radius: var(--radius-sm); cursor: pointer;">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   PostaraTrend Technical Voiceover — exhaustive narration with spotlight+arrow
+   ========================================================================== */
+
+/* ---- SCENE DEFINITIONS ----
+   Each scene has:
+     id, title, eyebrow, svgKey (which diagram to show),
+     beats: [{focus: <element id or null>, text: "narration", arrow: {x,y,from?}}]
+*/
+const SCENES = [
+  {
+    id: 'intro',
+    title: 'Welcome and Orientation',
+    eyebrow: 'Section 1 of 12',
+    svgKey: 'overview',
+    beats: [
+      {focus: null, text: "Welcome to the PostaraTrend technical voiceover. Over the next thirty minutes, we will walk through the complete autonomous editorial decision-making system — the architecture, the orchestration logic, the four research-and-development decision loci, and the technical uncertainties that justify the IRAP funding application. This is a deliberately exhaustive technical narrative. It is intended for an Industry Technology Advisor, a technical reviewer, or any party who needs to understand the system at a level of detail sufficient to assess research-and-development eligibility.", arrow: null},
+      {focus: 'overview-title', text: "We will begin with the system at the highest level of abstraction. The PostaraTrend platform is an autonomous social media publishing system. It ingests trending news signals from public sources, generates platform-specific short-form video content, decides whether to publish each piece of content, decides which variant of the content to use, decides how to adapt the content for each target platform, and decides whether the system as a whole should pause due to current sentiment conditions. All of these decisions are made without human review at production volume.", arrow: {x: 700, y: 80, from: 'top'}},
+      {focus: 'overview-integration', text: "The system is built on four commercially available services. n8n provides workflow orchestration. The Anthropic Claude API provides large language model inference. Apify provides web scraping. Creatomate provides programmatic video rendering. The integration of these four services into a working pipeline is engineering work, not research. We do not claim, and we do not seek IRAP support for, the integration layer.", arrow: {x: 280, y: 280, from: 'top'}},
+      {focus: 'overview-rd', text: "What is genuinely uncertain — and what makes this project research-and-development rather than commercial scaling — is whether the layer of decision-making logic that orchestrates these components into a fully autonomous publishing system can be made reliable enough at scale to operate without human review. This is the autonomous editorial decision-making layer. It is the focus of this voiceover and the focus of the IRAP funding application.", arrow: {x: 1120, y: 280, from: 'top'}},
+    ],
+  },
+  {
+    id: 'figure2',
+    title: 'Figure 2 — Architectural Map',
+    eyebrow: 'Section 2 of 12',
+    svgKey: 'figure2',
+    beats: [
+      {focus: null, text: "This is the architectural map. It shows the Master Workflow as a sequence of phases, the four decision loci labelled D-one through D-four, and the feedback systems that connect them. We will walk through every element of this diagram in detail, but first let us establish the overall topology.", arrow: null},
+      {focus: 'f2-master', text: "The Master Workflow runs on a daily schedule. It executes a sequence of phases that ingest signals, generate content, decide whether to publish, adapt for platform, render, publish, and log. The phases are labelled P-fifteen-A, P-zero-two, P-zero-three through P-zero-four, P-zero-five through P-zero-six, the publishing gate, P-twelve, P-zero-seven through P-zero-eight, and P-zero-nine. We will examine each phase individually.", arrow: {x: 600, y: 320, from: 'top'}},
+      {focus: 'f2-d1', text: "Decision locus one — D-one — is the post-or-suppress gate. It sits between content generation and platform adaptation. Every piece of content that the system generates passes through D-one, and D-one classifies it as publish, suppress, or escalate. D-one is a per-execution decision, meaning it operates statelessly — each item is evaluated on its own merits, with no memory of prior decisions.", arrow: {x: 555, y: 380, from: 'top'}},
+      {focus: 'f2-d3', text: "Decision locus three — D-three — is the format adaptation stage. Once content has been approved by D-one, D-three transforms it into platform-specific variants. Facebook receives long-form text plus video. TikTok receives short vertical video. Instagram receives square format. LinkedIn receives professional framing. Like D-one, D-three is stateless — the same input always produces the same family of platform variants.", arrow: {x: 770, y: 380, from: 'top'}},
+      {focus: 'f2-d2', text: "Decision locus two — D-two — is the variant selection loop. After publishing, the system instruments engagement on each variant. The Engagement Log accumulates per-platform metrics on every published piece. The Variant Publisher, a standalone workflow running hourly, reads from the Engagement Log and biases the next content generation cycle toward higher-engagement patterns. This is a closed-loop control system: the system's future behaviour depends on its own past output.", arrow: {x: 480, y: 580, from: 'left'}},
+      {focus: 'f2-d4', text: "Decision locus four — D-four — is the sentiment-gated pause loop. Every four hours, the Sentiment Monitor ingests engagement signals and external sentiment indicators. It writes timestamped sentiment scores and threshold evaluations into the Sentiment Log. At the start of every Master Workflow execution, phase fifteen-A — the Pause Check — reads the Sentiment Log and aborts the workflow if a pause is currently active. D-four is also a closed-loop control system, but rather than biasing content selection, it controls whether the system runs at all.", arrow: {x: 250, y: 200, from: 'left'}},
+      {focus: null, text: "Two of the four decision loci — D-one and D-three — are stateless per-execution decisions. The other two — D-two and D-four — are closed-loop control systems whose state evolves over time through feedback. This combination is the source of the technical uncertainty we will examine in detail later in this voiceover. For now, hold this map in mind as we walk through the pipeline phase by phase.", arrow: null},
+    ],
+  },
+  {
+    id: 'pipeline-entry',
+    title: 'Pipeline Entry — P-15a Pause Check',
+    eyebrow: 'Section 3 of 12',
+    svgKey: 'pipeline',
+    beats: [
+      {focus: null, text: "We now zoom into the Master Workflow itself. This view shows every phase of the pipeline in sequence, with the decision loci anchored to the phases they govern. We will narrate each phase in execution order, beginning with the entry point.", arrow: null},
+      {focus: 'p-15a', text: "Phase fifteen-A is the Pause Check. It is the very first node executed when the Master Workflow runs. It reads the most recent entry from the Sentiment Log — a Google Sheet maintained by the Sentiment Monitor workflow — and inspects three fields. The first field is pause-status, which is either active or inactive. The second field is the pause-trigger reason, a free-text annotation written by the Sentiment Monitor. The third field is the timestamp of the most recent threshold evaluation.", arrow: {x: 100, y: 320, from: 'top'}},
+      {focus: 'p-15a', text: "If pause-status is active, P-fifteen-A halts the workflow immediately. No further phases execute. A log entry is written recording the abort, the reason, and the timestamp. This is the failsafe that prevents the system from publishing content during sensitive real-world events — for example, after a public tragedy, during a brand-relevant controversy, or when external sentiment signals indicate that automated content would be inappropriate. We will return to how the Sentiment Log is populated when we examine D-four in detail.", arrow: {x: 100, y: 320, from: 'top'}},
+      {focus: 'p-15a', text: "If pause-status is inactive, P-fifteen-A passes control to P-zero-two. This is the normal execution path, and it is the path we will follow for the remainder of this section.", arrow: {x: 100, y: 320, from: 'top'}},
+    ],
+  },
+  {
+    id: 'pipeline-state-scrape',
+    title: 'P-02 Read State and P-03/P-04 Scrape and Analyze',
+    eyebrow: 'Section 4 of 12',
+    svgKey: 'pipeline',
+    beats: [
+      {focus: 'p-02', text: "Phase zero-two reads the Settings sheet and the Page Config sheet. The Settings sheet contains operator-tunable parameters — things like daily post limits, category mix ratios, brand voice descriptors, and sentiment thresholds. The Page Config sheet contains per-account configuration — Facebook Page IDs, posting schedules, target audiences, and platform-specific overrides. These two sheets together constitute the system's runtime configuration. They are read fresh on every execution, which means an operator can change behaviour without redeploying code.", arrow: {x: 240, y: 320, from: 'top'}},
+      {focus: 'p-03-04', text: "Phases zero-three and zero-four perform trend ingestion and topical analysis. Phase zero-three invokes Apify, calling the Facebook Pages Scraper actor. The actor returns recent posts, engagement metrics, and trending topics from a configured list of source pages. The actor is a commercial Apify product — its behaviour is documented and deterministic, and we treat it as a black-box data source.", arrow: {x: 380, y: 320, from: 'top'}},
+      {focus: 'p-03-04', text: "Phase zero-four invokes the Anthropic Claude API for category alignment. The raw scraped data is passed to Claude with a structured prompt asking it to classify each trend into one of the operator-defined content categories — for example, breaking news, industry insight, light commentary, or evergreen reference. Claude returns a category label, a confidence score, and a brief justification. The justification is logged for audit purposes but does not influence downstream behaviour. Only the category label and confidence score are used in subsequent phases.", arrow: {x: 380, y: 320, from: 'top'}},
+      {focus: 'p-03-04', text: "It is worth noting that this categorization step itself involves non-deterministic LLM output. The same trend can receive different category labels across invocations. We do not currently treat this variability as an R-and-D uncertainty because category misalignment at this early stage is recoverable — downstream phases include their own filtering and the post-or-suppress gate at D-one provides a final check. We mention it only to be transparent about where non-determinism enters the pipeline.", arrow: {x: 380, y: 320, from: 'top'}},
+    ],
+  },
+  {
+    id: 'pipeline-generate',
+    title: 'P-05/P-06 Content Generation',
+    eyebrow: 'Section 5 of 12',
+    svgKey: 'pipeline',
+    beats: [
+      {focus: 'p-05-06', text: "Phases zero-five and zero-six are the content generation phases. Phase zero-five generates post copy. Phase zero-six generates the video script. Both invoke the Anthropic Claude API, but with different prompts and different temperature settings. Post copy uses a moderate temperature to allow stylistic variation. Video script uses a lower temperature to maintain narrative coherence across the five-scene structure of the rendered video.", arrow: {x: 540, y: 320, from: 'top'}},
+      {focus: 'p-05-06', text: "The post copy prompt incorporates four inputs. First, the categorized trend data from P-zero-four. Second, the brand voice descriptors from the Settings sheet. Third, the current sentiment context from the Sentiment Log — which we will discuss in more detail when we cover D-four. Fourth, and most importantly for the variant selection loop, a bias signal from the Variant Publisher workflow. This bias signal is what causes content generation to favour patterns that have performed well on recent published content. It is the mechanism by which D-two — the closed-loop variant selection — exerts its influence on future content.", arrow: {x: 540, y: 320, from: 'top'}},
+      {focus: 'p-05-06', text: "The output of P-zero-five is a structured object containing the post copy text, three to five candidate variant copies, a hook line, three numbered point texts, an outro text, and a call-to-action text. The output of P-zero-six is a five-scene video script with timing, with the same five text fields slotted into the appropriate scenes — hook in the intro, three point texts in the three item scenes, and call-to-action in the outro. The text fields are deliberately aligned across the two outputs so that the post copy and the rendered video tell a coherent story.", arrow: {x: 540, y: 320, from: 'top'}},
+      {focus: 'p-05-06', text: "Both Claude invocations log their full prompt, full response, and Anthropic API metadata to the Post Log. This is important for the R-and-D measurement work in Phase one of the IRAP project — without complete prompt-response logging, we cannot characterize failure modes or attribute outcomes to specific prompt variations. We will return to this when we discuss instrumentation.", arrow: {x: 540, y: 320, from: 'top'}},
+    ],
+  },
+  {
+    id: 'd1-detail',
+    title: 'D1 — Post-or-Suppress Gate',
+    eyebrow: 'Section 6 of 12',
+    svgKey: 'pipeline',
+    beats: [
+      {focus: 'd1-gate', text: "We now reach the first decision locus, D-one — the post-or-suppress gate. This is the most consequential decision in the entire pipeline because it is the gate between generated content and published content. Once content passes D-one, it will be published unless something fails downstream. There is no human reviewer between D-one and the audience.", arrow: {x: 700, y: 320, from: 'top'}},
+      {focus: 'd1-gate', text: "D-one is implemented as an Anthropic Claude API call with a specialized prompt. The prompt receives the generated post copy and video script, the brand voice descriptors, the current sensitivity rules, and the current sentiment context. It is asked to produce a structured judgment with three fields. The first field is the decision — publish, suppress, or escalate. The second field is the rationale — a free-text explanation. The third field is a confidence score.", arrow: {x: 700, y: 320, from: 'top'}},
+      {focus: 'd1-gate', text: "If the decision is publish, the content proceeds to D-three for format adaptation. If the decision is suppress, the content is logged but not published, and the workflow ends successfully — suppression is a successful outcome from the system's perspective, not a failure. If the decision is escalate — which is rare — the content is held in a separate queue for human review. Escalation is reserved for genuinely ambiguous cases where the model is uncertain.", arrow: {x: 700, y: 320, from: 'top'}},
+      {focus: 'd1-gate', text: "The R-and-D uncertainty associated with D-one is the empirical failure rate at production volume. Failure has two forms. A false negative is inappropriate or off-brand content that warranted suppression but was published. A false positive is appropriate content that was inappropriately suppressed. False negatives create brand and reputation risk. False positives reduce the system's commercial value by suppressing content the operator wanted published.", arrow: {x: 700, y: 320, from: 'top'}},
+      {focus: 'd1-gate', text: "What makes this genuinely uncertain is that no published industry benchmark exists for acceptable LLM-driven publication failure rates in fully autonomous systems. This is not because the metric is unimportant; it is because the use case is sufficiently new that representative measurements have not yet been published. Engineering judgment cannot answer the question because failure modes at production volume are not necessarily extrapolations of failure modes observed at low volume — distributional shifts in content categories, edge-case accumulation, and prompt-context interactions can produce failure dynamics that only emerge above a certain throughput threshold. Phase one of the IRAP project will produce a documented baseline measurement, and Phase two will measure improvement against that baseline through deployed guardrail systems.", arrow: {x: 700, y: 320, from: 'top'}},
+    ],
+  },
+  {
+    id: 'd3-detail',
+    title: 'D3 — Format Adaptation Stage',
+    eyebrow: 'Section 7 of 12',
+    svgKey: 'pipeline',
+    beats: [
+      {focus: 'd3-adapt', text: "We now reach decision locus three — D-three, the format adaptation stage. D-three takes the publish-approved content and transforms it into platform-specific variants in parallel. Like D-one, D-three is stateless — it is a per-execution transformation with no feedback loop. The same input always produces the same family of platform variants.", arrow: {x: 850, y: 320, from: 'top'}},
+      {focus: 'd3-adapt', text: "D-three currently produces five platform variants. Facebook receives long-form text plus video — typically two to four paragraphs of post copy followed by the rendered video. TikTok receives short vertical video with caption overlay and a one-line text caption. Instagram receives the square version of the video and a slightly truncated text post. LinkedIn receives a professionally framed version with industry context and longer-form text. YouTube Shorts receives a vertical version of the video and a brief description.", arrow: {x: 850, y: 320, from: 'top'}},
+      {focus: 'd3-adapt', text: "The adaptation is performed by another Claude API invocation that receives the original content plus a platform descriptor — telling it which platform variant to produce — and platform-specific style guidelines. The output is a structured object with platform-specific text and metadata that will be consumed by the rendering and publishing phases.", arrow: {x: 850, y: 320, from: 'top'}},
+      {focus: 'd3-adapt', text: "The R-and-D uncertainty associated with D-three is whether automated adaptation actually improves engagement compared to mechanical re-publishing of identical content. This is genuinely uncertain because platform-specific format expectations are well known, but whether automated content adaptation by a language model produces variants that genuinely match those expectations — versus surface-level transformations that miss underlying audience-engagement dynamics — has not been empirically characterized in the public literature for this use case. There is also the risk that adaptation introduces inconsistency that reduces effectiveness for cross-platform audiences who follow the same brand on multiple platforms. Some adapted variants may underperform their unadapted counterparts. Phase three of the IRAP project will produce a documented per-platform comparison of adapted versus unadapted engagement.", arrow: {x: 850, y: 320, from: 'top'}},
+    ],
+  },
+  {
+    id: 'pipeline-render-publish',
+    title: 'P-07/P-08 Render and Publish',
+    eyebrow: 'Section 8 of 12',
+    svgKey: 'pipeline',
+    beats: [
+      {focus: 'p-07-08', text: "Phases zero-seven and zero-eight perform rendering and publishing. Phase zero-seven invokes the Creatomate API. The video script from P-zero-six is converted into a Creatomate render job. The job references a master template — currently template ID three-A-E-zero-six-one-one-F — which defines a five-scene vertical video at ten-eighty by nineteen-twenty resolution and thirty frames per second. The template has six text layers and three image layers, all of which are populated from the script output.", arrow: {x: 990, y: 320, from: 'top'}},
+      {focus: 'p-07-08', text: "Creatomate accepts the render request and returns a job ID. Because video rendering is asynchronous and can take between thirty seconds and several minutes depending on queue depth, the workflow polls Creatomate for status. The polling node retries up to twenty times with exponential back-off. When the render completes, Creatomate returns a signed URL to the rendered video file.", arrow: {x: 990, y: 320, from: 'top'}},
+      {focus: 'p-07-08', text: "Phase zero-eight then publishes the content to each target platform. For Facebook, the Facebook Graph API is invoked with the page access token, the post copy text, and the video URL. The API returns a post ID. The same pattern is repeated for Instagram, TikTok, LinkedIn, and YouTube Shorts using each platform's respective publishing API. Each successful publication returns a platform post ID, which is logged in the Post Log.", arrow: {x: 990, y: 320, from: 'top'}},
+      {focus: 'p-07-08', text: "If any platform publish fails — a transient API error, a credential issue, or a content rejection — the failure is logged with the error code and the workflow continues to the next platform. Partial publication is acceptable; complete failure is logged for operator review. The system never retries a failed publish automatically because retry semantics on social platforms can produce duplicate posts.", arrow: {x: 990, y: 320, from: 'top'}},
+    ],
+  },
+  {
+    id: 'pipeline-log',
+    title: 'P-09 Log Success and the Engagement Log',
+    eyebrow: 'Section 9 of 12',
+    svgKey: 'pipeline',
+    beats: [
+      {focus: 'p-09', text: "Phase zero-nine writes the success row to the Post Log. The Post Log is a Google Sheet that serves as the system of record for every published piece of content. Each row contains the timestamp, the trend source, the categorized topic, the full post copy text, the variant identifier, the rendered video URL, the platform post IDs, the D-one decision, the D-three platform list, and a unique correlation ID that ties the row to all upstream phases.", arrow: {x: 1110, y: 320, from: 'top'}},
+      {focus: 'p-09', text: "Critically, the Post Log also contains the engagement-tracking columns. These columns are populated not by the Master Workflow but by a separate engagement-tracking process that polls each platform's API every few hours, retrieves likes, comments, shares, views, and click-through metrics for each published post, and updates the corresponding row.", arrow: {x: 1110, y: 320, from: 'top'}},
+      {focus: 'p-09', text: "The Post Log, with its engagement columns continually updated, becomes the input to the Variant Publisher workflow that drives the D-two feedback loop. We will examine the Variant Publisher next.", arrow: {x: 1110, y: 320, from: 'top'}},
+    ],
+  },
+  {
+    id: 'd2-detail',
+    title: 'D2 — Variant Selection Closed Loop',
+    eyebrow: 'Section 10 of 12',
+    svgKey: 'figure2',
+    beats: [
+      {focus: 'f2-d2', text: "We now examine decision locus two — D-two, the variant selection closed loop — in full detail. Unlike D-one and D-three, which are stateless per-execution decisions, D-two is a closed-loop control system. The system's behaviour at any given moment depends on its own past output, mediated through engagement data.", arrow: {x: 480, y: 580, from: 'top'}},
+      {focus: 'f2-engagement-log', text: "The loop has three components. The first component is the Engagement Log — which we just discussed — containing per-platform engagement metrics on every published variant. The second component is the Variant Publisher, a standalone n8n workflow that runs hourly. The third component is the bias signal that the Variant Publisher injects into Phase zero-five and zero-six of the Master Workflow's next execution.", arrow: {x: 870, y: 580, from: 'top'}},
+      {focus: 'f2-d2', text: "The Variant Publisher reads the Engagement Log every hour and computes a Claude-based selection policy. It groups recent published variants by content category and platform, ranks them by engagement metrics, and asks Claude to identify patterns that distinguish higher-engagement variants from lower-engagement variants. Claude returns a structured signal — a list of stylistic and structural patterns — that are written to a Bias sheet.", arrow: {x: 480, y: 580, from: 'top'}},
+      {focus: 'f2-d2', text: "On the next Master Workflow execution, P-zero-five and P-zero-six read the Bias sheet and incorporate the patterns into their generation prompts. Future content is therefore biased toward patterns that recently performed well. This is the entire D-two loop: published content produces engagement data, the engagement data drives a bias signal, the bias signal influences future generation, future generation produces more published content, and the cycle continues.", arrow: {x: 480, y: 580, from: 'top'}},
+      {focus: 'f2-d2', text: "The R-and-D uncertainty associated with D-two is whether this loop actually converges to identifiable performance-improving patterns over time, or whether noise dominates signal at the volumes a small or medium-sized business generates. Variant selection effectiveness depends on the signal-to-noise ratio of engagement metrics at a given content cadence and audience size. At low signal-to-noise ratios — which can occur at modest publishing volumes, in narrow content categories, or on platforms with high engagement variance — a variant selection policy that appears to be improving performance may in fact be tracking random fluctuations. This effect is well-known in adjacent fields such as advertising and recommender systems, but the parameter regime relevant to PostaraTrend's target customer profile has not been independently characterized in the public literature. Phase three of the IRAP project will produce a documented characterization of D-two's convergence behaviour across categories and platforms relevant to that profile.", arrow: {x: 480, y: 580, from: 'top'}},
+    ],
+  },
+  {
+    id: 'd4-detail',
+    title: 'D4 — Sentiment-Gated Pause Loop',
+    eyebrow: 'Section 11 of 12',
+    svgKey: 'figure2',
+    beats: [
+      {focus: 'f2-sentiment-monitor', text: "We now examine decision locus four — D-four, the sentiment-gated pause loop — in full detail. D-four is the system's safety brake. It governs not what the system publishes, but whether it runs at all.", arrow: {x: 250, y: 100, from: 'left'}},
+      {focus: 'f2-sentiment-monitor', text: "D-four has three components. The first is the Sentiment Monitor, a standalone n8n workflow that runs every four hours. The second is the Sentiment Log, a Google Sheet that the Sentiment Monitor writes to. The third is Phase fifteen-A, the Pause Check at the entry of the Master Workflow, which reads the Sentiment Log to determine whether to abort.", arrow: {x: 250, y: 100, from: 'left'}},
+      {focus: 'f2-sentiment-monitor', text: "The Sentiment Monitor performs three operations on each invocation. First, it ingests recent engagement metrics from the Engagement Log and computes summary statistics — typical engagement, recent deltas, comment-tone distribution. Second, it ingests external sentiment signals from configured public sources — news headlines, trending topics, and social signals — and asks Claude to classify the current macro-sentiment context. Third, it evaluates these signals against operator-configured threshold rules. If any threshold is breached, the Sentiment Monitor sets the pause-status to active in the Sentiment Log and writes a free-text rationale.", arrow: {x: 250, y: 100, from: 'left'}},
+      {focus: 'f2-pause-check', text: "Phase fifteen-A reads the Sentiment Log at the start of each Master Workflow execution. If pause-status is active, the workflow aborts. The pause persists until the Sentiment Monitor's next evaluation either reaffirms the pause or clears it. There is also a manual override — an operator can edit the Sentiment Log directly to clear or extend a pause.", arrow: {x: 100, y: 320, from: 'top'}},
+      {focus: 'f2-sentiment-monitor', text: "The R-and-D uncertainty associated with D-four is the empirically validated false-positive and false-negative rate of this monitor. A false positive is a pause triggered when publishing would have been appropriate. A false negative is the absence of a pause when publishing was inappropriate. Current sentiment-monitor thresholds are based on operator judgment and reasonable defaults, not on measured outcomes. There is no published baseline for sentiment-monitor accuracy in this use case, and threshold sensitivity is likely to vary across content categories and account profiles. Setting thresholds too aggressively produces excessive pause events and degrades commercial viability. Setting them too loosely permits inappropriate content to be published during sensitive periods. The correct threshold for any given account profile cannot be derived from first principles — it must be tuned empirically against measured outcomes. Phase three of the IRAP project will produce a documented sentiment-monitor accuracy characterization with thresholds tuned against measured false-positive and false-negative outcomes for representative account profiles.", arrow: {x: 250, y: 100, from: 'left'}},
+    ],
+  },
+  {
+    id: 'closing',
+    title: 'R&D Mapping Summary',
+    eyebrow: 'Section 12 of 12',
+    svgKey: 'summary',
+    beats: [
+      {focus: null, text: "We have now walked through the complete PostaraTrend autonomous editorial decision-making system at full technical depth. Let us close by summarizing the four research-and-development uncertainties and how each maps to a specific architectural decision locus, a project phase, and a measurable outcome.", arrow: null},
+      {focus: 'sum-d1', text: "Uncertainty one — failure-rate measurement at scale — is anchored at decision locus D-one. It is addressed in Phase one and Phase two of the IRAP project, corresponding to standard operating procedures S-O-P-zero-zero-two and S-O-P-zero-zero-three. Resolution produces a documented baseline failure rate and a documented improvement measurement, with the underlying audit-trail data available for inspection.", arrow: {x: 220, y: 200, from: 'left'}},
+      {focus: 'sum-d2', text: "Uncertainty two — A-B variant convergence dynamics — is anchored at decision locus D-two. It is addressed in Phase three of the IRAP project, corresponding to S-O-P-zero-zero-four. Resolution produces a documented characterization of the variant selection loop's convergence behaviour across content categories and platforms relevant to the target customer profile.", arrow: {x: 220, y: 320, from: 'left'}},
+      {focus: 'sum-d3', text: "Uncertainty three — cross-platform format adaptation effectiveness — is anchored at decision locus D-three. It is also addressed in Phase three, S-O-P-zero-zero-four. Resolution produces a per-platform engagement comparison of adapted versus unadapted variants across a representative content category mix, sufficient to support a per-platform decision about whether to deploy adaptation in commercial operation.", arrow: {x: 220, y: 440, from: 'left'}},
+      {focus: 'sum-d4', text: "Uncertainty four — sentiment-monitor accuracy — is anchored at decision locus D-four. It is addressed in Phase three, S-O-P-zero-zero-four. Resolution produces a documented sentiment-monitor accuracy characterization with thresholds tuned against measured false-positive and false-negative outcomes for representative account profiles.", arrow: {x: 220, y: 560, from: 'left'}},
+      {focus: null, text: "Each of the four uncertainties shares a common feature: the answer cannot be obtained by more careful design, more thorough documentation review, or longer engineering effort applied to existing code. Each requires a system that is built, deployed, instrumented, and operated at sufficient volume to gather statistically meaningful measurements. This is the canonical structure of technical uncertainty that warrants research-and-development investment rather than engineering investment, and it is the basis for the IRAP funding application. Thank you for following the technical voiceover. The accompanying Statement of R-and-D Uncertainty document contains the formal version of this material for ITA review.", arrow: null},
+    ],
+  },
+];
+
+/* ==========================================================================
+   SVG DIAGRAMS — separate scenes
+   ========================================================================== */
+const SVG_OVERVIEW = `
+<svg class="diagram scene-svg" id="svg-overview" viewBox="0 0 1400 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-grad-overview" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7f8fa"/>
+      <stop offset="100%" stop-color="#eef2f7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="600" fill="url(#bg-grad-overview)"/>
+
+  <!-- Title -->
+  <g class="annotation" id="overview-title">
+    <text x="700" y="50" text-anchor="middle" font-size="22" font-weight="700" fill="#1a3a6b">PostaraTrend AI — System Overview</text>
+    <text x="700" y="74" text-anchor="middle" font-size="13" fill="#5e6b7e">Autonomous social media publishing across five platforms</text>
+  </g>
+
+  <!-- Integration layer (left) -->
+  <g class="group" id="overview-integration">
+    <rect x="80" y="160" width="400" height="380" rx="14" fill="#ffffff" stroke="#308888" stroke-width="2"/>
+    <text x="280" y="195" text-anchor="middle" font-size="13" font-weight="700" fill="#308888" letter-spacing="0.06em">INTEGRATION LAYER</text>
+    <text x="280" y="215" text-anchor="middle" font-size="11" fill="#5e6b7e" font-style="italic">Engineering, not R&amp;D</text>
+
+    <g class="node">
+      <rect x="110" y="240" width="160" height="64" rx="8" fill="#d4ecec" stroke="#308888"/>
+      <text x="190" y="266" text-anchor="middle" font-size="13" font-weight="700" fill="#1a3a6b">n8n</text>
+      <text x="190" y="285" text-anchor="middle" font-size="10" fill="#5e6b7e">Workflow orchestration</text>
+    </g>
+    <g class="node">
+      <rect x="290" y="240" width="160" height="64" rx="8" fill="#d4ecec" stroke="#308888"/>
+      <text x="370" y="266" text-anchor="middle" font-size="13" font-weight="700" fill="#1a3a6b">Anthropic Claude</text>
+      <text x="370" y="285" text-anchor="middle" font-size="10" fill="#5e6b7e">LLM inference</text>
+    </g>
+    <g class="node">
+      <rect x="110" y="320" width="160" height="64" rx="8" fill="#d4ecec" stroke="#308888"/>
+      <text x="190" y="346" text-anchor="middle" font-size="13" font-weight="700" fill="#1a3a6b">Apify</text>
+      <text x="190" y="365" text-anchor="middle" font-size="10" fill="#5e6b7e">Web scraping</text>
+    </g>
+    <g class="node">
+      <rect x="290" y="320" width="160" height="64" rx="8" fill="#d4ecec" stroke="#308888"/>
+      <text x="370" y="346" text-anchor="middle" font-size="13" font-weight="700" fill="#1a3a6b">Creatomate</text>
+      <text x="370" y="365" text-anchor="middle" font-size="10" fill="#5e6b7e">Video rendering</text>
+    </g>
+    <g class="node">
+      <rect x="110" y="400" width="340" height="64" rx="8" fill="#d4ecec" stroke="#308888"/>
+      <text x="280" y="426" text-anchor="middle" font-size="12" font-weight="700" fill="#1a3a6b">Google Sheets · Meta Graph · TikTok · LinkedIn · YouTube</text>
+      <text x="280" y="445" text-anchor="middle" font-size="10" fill="#5e6b7e">Data store and publishing endpoints</text>
+    </g>
+  </g>
+
+  <!-- R&D layer (right) -->
+  <g class="group" id="overview-rd">
+    <rect x="920" y="160" width="400" height="380" rx="14" fill="#ffffff" stroke="#e85d4f" stroke-width="3"/>
+    <text x="1120" y="195" text-anchor="middle" font-size="13" font-weight="700" fill="#e85d4f" letter-spacing="0.06em">AUTONOMOUS EDITORIAL LAYER</text>
+    <text x="1120" y="215" text-anchor="middle" font-size="11" fill="#5e6b7e" font-style="italic">R&amp;D scope — IRAP application</text>
+
+    <g class="node">
+      <rect x="950" y="240" width="160" height="64" rx="8" fill="#fbe0dc" stroke="#e85d4f"/>
+      <text x="1030" y="266" text-anchor="middle" font-size="13" font-weight="700" fill="#1a3a6b">D1 · Post-or-Suppress</text>
+      <text x="1030" y="285" text-anchor="middle" font-size="10" fill="#5e6b7e">Per-execution gate</text>
+    </g>
+    <g class="node">
+      <rect x="1130" y="240" width="160" height="64" rx="8" fill="#fbe0dc" stroke="#e85d4f"/>
+      <text x="1210" y="266" text-anchor="middle" font-size="13" font-weight="700" fill="#1a3a6b">D3 · Format Adapt</text>
+      <text x="1210" y="285" text-anchor="middle" font-size="10" fill="#5e6b7e">Per-execution transform</text>
+    </g>
+    <g class="node">
+      <rect x="950" y="320" width="160" height="64" rx="8" fill="#fbe0dc" stroke="#e85d4f" stroke-dasharray="4 3"/>
+      <text x="1030" y="346" text-anchor="middle" font-size="13" font-weight="700" fill="#1a3a6b">D2 · Variant Loop</text>
+      <text x="1030" y="365" text-anchor="middle" font-size="10" fill="#5e6b7e">Closed-loop control</text>
+    </g>
+    <g class="node">
+      <rect x="1130" y="320" width="160" height="64" rx="8" fill="#fbe0dc" stroke="#e85d4f" stroke-dasharray="4 3"/>
+      <text x="1210" y="346" text-anchor="middle" font-size="13" font-weight="700" fill="#1a3a6b">D4 · Pause Loop</text>
+      <text x="1210" y="365" text-anchor="middle" font-size="10" fill="#5e6b7e">Closed-loop safety</text>
+    </g>
+    <g class="annotation">
+      <text x="1120" y="425" text-anchor="middle" font-size="11" fill="#1a3a6b" font-weight="700">Four decision loci</text>
+      <text x="1120" y="445" text-anchor="middle" font-size="10" fill="#5e6b7e">D1, D3 stateless · D2, D4 feedback-driven</text>
+    </g>
+  </g>
+
+  <!-- Connection between -->
+  <g class="edge">
+    <path d="M 480 350 L 920 350" stroke="#1a3a6b" stroke-width="2" fill="none" marker-end="url(#arrowhead-overview)"/>
+    <text x="700" y="340" text-anchor="middle" font-size="11" font-style="italic" fill="#5e6b7e">orchestrates</text>
+  </g>
+
+  <defs>
+    <marker id="arrowhead-overview" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#1a3a6b"/>
+    </marker>
+  </defs>
+</svg>
+`;
+
+const SVG_FIGURE2 = `
+<svg class="diagram scene-svg" id="svg-figure2" viewBox="0 0 1400 720" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="720" fill="#f7f8fa"/>
+  <text x="700" y="40" text-anchor="middle" font-size="20" font-weight="700" fill="#1a3a6b">Figure 2 — Autonomous Editorial Decision-Making Architecture</text>
+  <text x="700" y="62" text-anchor="middle" font-size="12" font-style="italic" fill="#5e6b7e">Workflow stages, D1–D4 decision loci, and feedback loops</text>
+
+  <!-- Sentiment Monitor (top) -->
+  <g class="node" id="f2-sentiment-monitor">
+    <rect x="130" y="100" width="320" height="80" rx="10" fill="#fff4d4" stroke="#f0a020" stroke-width="2"/>
+    <text x="290" y="128" text-anchor="middle" font-size="13" font-weight="700" fill="#1a3a6b">Sentiment Monitor (every 4h)</text>
+    <text x="290" y="148" text-anchor="middle" font-size="11" fill="#5e6b7e">Ingests engagement + external signals</text>
+    <text x="290" y="165" text-anchor="middle" font-size="11" fill="#5e6b7e">Writes timestamped sentiment scores</text>
+  </g>
+
+  <!-- Sentiment Log -->
+  <g class="node" id="f2-sentiment-log">
+    <rect x="490" y="100" width="320" height="80" rx="10" fill="#fff4d4" stroke="#f0a020" stroke-width="2"/>
+    <text x="650" y="128" text-anchor="middle" font-size="13" font-weight="700" fill="#1a3a6b">Sentiment Log</text>
+    <text x="650" y="148" text-anchor="middle" font-size="11" fill="#5e6b7e">Pause status · scores · trigger events</text>
+    <text x="650" y="165" text-anchor="middle" font-size="11" fill="#5e6b7e">Audit trail (Google Sheet)</text>
+  </g>
+
+  <!-- Master Workflow header -->
+  <g class="group" id="f2-master">
+    <rect x="100" y="280" width="1180" height="160" rx="14" fill="#d4ecec" stroke="#308888" stroke-width="2"/>
+    <rect x="100" y="280" width="200" height="36" rx="14" fill="#308888"/>
+    <text x="200" y="304" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Master Workflow</text>
+
+    <!-- Phases -->
+    <g class="node" id="f2-pause-check">
+      <rect x="120" y="340" width="135" height="80" rx="6" fill="#ffffff" stroke="#e85d4f" stroke-width="2"/>
+      <circle cx="240" cy="350" r="13" fill="#e85d4f"/>
+      <text x="240" y="354" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">D4</text>
+      <text x="187" y="370" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-15a</text>
+      <text x="187" y="386" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">Pause Check</text>
+      <text x="187" y="404" text-anchor="middle" font-size="9" fill="#5e6b7e">Aborts if active</text>
+    </g>
+    <g class="node">
+      <rect x="265" y="340" width="115" height="80" rx="6" fill="#ffffff" stroke="#308888"/>
+      <text x="322" y="362" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-02</text>
+      <text x="322" y="378" text-anchor="middle" font-size="10" fill="#5e6b7e">Read state</text>
+      <text x="322" y="395" text-anchor="middle" font-size="9" fill="#5e6b7e">Settings, Page Config</text>
+    </g>
+    <g class="node">
+      <rect x="390" y="340" width="125" height="80" rx="6" fill="#ffffff" stroke="#308888"/>
+      <text x="452" y="362" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-03 / P-04</text>
+      <text x="452" y="378" text-anchor="middle" font-size="10" fill="#5e6b7e">Scrape + analyze</text>
+      <text x="452" y="395" text-anchor="middle" font-size="9" fill="#5e6b7e">Apify · Claude align</text>
+    </g>
+    <g class="node">
+      <rect x="525" y="340" width="125" height="80" rx="6" fill="#ffffff" stroke="#308888"/>
+      <text x="587" y="362" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-05 / P-06</text>
+      <text x="587" y="378" text-anchor="middle" font-size="10" fill="#5e6b7e">Generate</text>
+      <text x="587" y="395" text-anchor="middle" font-size="9" fill="#5e6b7e">Copy + script</text>
+    </g>
+    <g class="node" id="f2-d1">
+      <rect x="660" y="340" width="135" height="80" rx="6" fill="#ffffff" stroke="#e85d4f" stroke-width="2"/>
+      <circle cx="780" cy="350" r="13" fill="#e85d4f"/>
+      <text x="780" y="354" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">D1</text>
+      <text x="727" y="370" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">GATE</text>
+      <text x="727" y="386" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">Post-or-suppress</text>
+      <text x="727" y="404" text-anchor="middle" font-size="9" fill="#5e6b7e">Brand · sensitivity</text>
+    </g>
+    <g class="node" id="f2-d3">
+      <rect x="805" y="340" width="135" height="80" rx="6" fill="#ffffff" stroke="#e85d4f" stroke-width="2"/>
+      <circle cx="925" cy="350" r="13" fill="#e85d4f"/>
+      <text x="925" y="354" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">D3</text>
+      <text x="872" y="370" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-12</text>
+      <text x="872" y="386" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">Format adapt</text>
+      <text x="872" y="404" text-anchor="middle" font-size="9" fill="#5e6b7e">5 platform variants</text>
+    </g>
+    <g class="node">
+      <rect x="950" y="340" width="125" height="80" rx="6" fill="#ffffff" stroke="#308888"/>
+      <text x="1012" y="362" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-07 / P-08</text>
+      <text x="1012" y="378" text-anchor="middle" font-size="10" fill="#5e6b7e">Render + publish</text>
+      <text x="1012" y="395" text-anchor="middle" font-size="9" fill="#5e6b7e">Creatomate · 5 platforms</text>
+    </g>
+    <g class="node">
+      <rect x="1085" y="340" width="115" height="80" rx="6" fill="#ffffff" stroke="#308888"/>
+      <text x="1142" y="362" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-09</text>
+      <text x="1142" y="378" text-anchor="middle" font-size="10" fill="#5e6b7e">Log</text>
+      <text x="1142" y="395" text-anchor="middle" font-size="9" fill="#5e6b7e">Post Log · IDs</text>
+    </g>
+  </g>
+
+  <!-- Variant Publisher / Engagement Log (D2 closed loop) -->
+  <g class="group" id="f2-d2">
+    <text x="290" y="500" text-anchor="middle" font-size="12" font-weight="700" fill="#e85d4f" letter-spacing="0.05em">D2 · VARIANT SELECTION (CLOSED LOOP)</text>
+    <rect x="130" y="520" width="320" height="100" rx="10" fill="#d4ecec" stroke="#308888" stroke-width="2"/>
+    <circle cx="430" cy="535" r="13" fill="#e85d4f"/>
+    <text x="430" y="539" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">D2</text>
+    <text x="290" y="552" text-anchor="middle" font-size="11" font-weight="700" fill="#308888" letter-spacing="0.06em">SOP-002B · STANDALONE WORKFLOW</text>
+    <text x="290" y="575" text-anchor="middle" font-size="14" font-weight="700" fill="#1a3a6b">Variant Publisher</text>
+    <text x="290" y="595" text-anchor="middle" font-size="10" fill="#5e6b7e">Hourly: Claude-based selection policy</text>
+    <text x="290" y="610" text-anchor="middle" font-size="10" fill="#5e6b7e">biases toward higher-engagement patterns</text>
+  </g>
+
+  <g class="node" id="f2-engagement-log">
+    <rect x="700" y="520" width="320" height="100" rx="10" fill="#fff4d4" stroke="#f0a020" stroke-width="2"/>
+    <text x="860" y="552" text-anchor="middle" font-size="11" font-weight="700" fill="#f0a020" letter-spacing="0.06em">GOOGLE SHEETS · STATE</text>
+    <text x="860" y="575" text-anchor="middle" font-size="14" font-weight="700" fill="#1a3a6b">Engagement Log</text>
+    <text x="860" y="595" text-anchor="middle" font-size="10" fill="#5e6b7e">Per-platform engagement metrics</text>
+    <text x="860" y="610" text-anchor="middle" font-size="10" fill="#5e6b7e">on every published variant</text>
+  </g>
+
+  <!-- Edges -->
+  <g class="edge">
+    <!-- Pause check up to Sentiment Log (dashed, consulted at workflow entry) -->
+    <path d="M 187 340 Q 187 220 490 180" stroke="#e85d4f" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+    <text x="200" y="240" font-size="10" font-style="italic" fill="#e85d4f">consulted at workflow entry</text>
+  </g>
+  <g class="edge">
+    <!-- Sentiment Monitor -> Sentiment Log -->
+    <path d="M 450 140 L 490 140" stroke="#f0a020" stroke-width="2" fill="none" marker-end="url(#arrowhead-f2)"/>
+  </g>
+  <g class="edge">
+    <!-- D1 suppress (down to no publish) -->
+    <path d="M 727 420 L 727 470 L 800 470" stroke="#e85d4f" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+    <text x="745" y="455" font-size="9" font-style="italic" fill="#e85d4f">suppress</text>
+  </g>
+  <g class="edge">
+    <!-- P-09 (engagement) down -->
+    <path d="M 1142 420 L 1142 480 L 1020 540 L 1020 540" stroke="#1a3a6b" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-f2)"/>
+    <text x="1155" y="470" font-size="9" font-style="italic" fill="#1a3a6b">engagement</text>
+  </g>
+  <g class="edge">
+    <!-- Engagement Log -> Variant Publisher -->
+    <path d="M 700 570 L 450 570" stroke="#1a3a6b" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-f2)"/>
+    <text x="555" y="565" text-anchor="middle" font-size="10" font-style="italic" fill="#1a3a6b">reads</text>
+  </g>
+  <g class="edge">
+    <!-- Variant Publisher -> P-05/06 (bias) -->
+    <path d="M 290 520 Q 290 460 587 420" stroke="#e85d4f" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+    <text x="320" y="475" font-size="10" font-style="italic" fill="#e85d4f">biases next P-05/06 generation</text>
+  </g>
+
+  <defs>
+    <marker id="arrowhead-f2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#1a3a6b"/>
+    </marker>
+  </defs>
+</svg>
+`;
+
+const SVG_PIPELINE = `
+<svg class="diagram scene-svg" id="svg-pipeline" viewBox="0 0 1400 600" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="600" fill="#f7f8fa"/>
+  <text x="700" y="40" text-anchor="middle" font-size="20" font-weight="700" fill="#1a3a6b">Master Workflow Pipeline — Phase-by-Phase</text>
+  <text x="700" y="62" text-anchor="middle" font-size="12" font-style="italic" fill="#5e6b7e">Sequential phases with D1, D3 anchored at decision points; D2, D4 reference points highlighted</text>
+
+  <!-- Pipeline rail -->
+  <rect x="40" y="280" width="1320" height="100" rx="14" fill="#ffffff" stroke="#308888" stroke-width="2"/>
+
+  <!-- P-15a -->
+  <g class="node" id="p-15a">
+    <rect x="60" y="300" width="150" height="60" rx="8" fill="#fff4d4" stroke="#e85d4f" stroke-width="2"/>
+    <circle cx="195" cy="310" r="11" fill="#e85d4f"/>
+    <text x="195" y="314" text-anchor="middle" font-size="9" font-weight="700" fill="#ffffff">D4</text>
+    <text x="135" y="324" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-15a · Pause Check</text>
+    <text x="135" y="342" text-anchor="middle" font-size="9" fill="#5e6b7e">Reads Sentiment Log</text>
+    <text x="135" y="354" text-anchor="middle" font-size="9" fill="#5e6b7e">Aborts if active</text>
+  </g>
+
+  <!-- P-02 -->
+  <g class="node" id="p-02">
+    <rect x="220" y="300" width="120" height="60" rx="8" fill="#ffffff" stroke="#308888"/>
+    <text x="280" y="324" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-02 · State</text>
+    <text x="280" y="342" text-anchor="middle" font-size="9" fill="#5e6b7e">Settings · Page Config</text>
+  </g>
+
+  <!-- P-03/P-04 -->
+  <g class="node" id="p-03-04">
+    <rect x="350" y="300" width="160" height="60" rx="8" fill="#ffffff" stroke="#308888"/>
+    <text x="430" y="324" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-03 / P-04 · Scrape</text>
+    <text x="430" y="342" text-anchor="middle" font-size="9" fill="#5e6b7e">Apify + Claude align</text>
+  </g>
+
+  <!-- P-05/P-06 -->
+  <g class="node" id="p-05-06">
+    <rect x="520" y="300" width="160" height="60" rx="8" fill="#ffffff" stroke="#308888"/>
+    <text x="600" y="324" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-05 / P-06 · Generate</text>
+    <text x="600" y="342" text-anchor="middle" font-size="9" fill="#5e6b7e">Copy + video script</text>
+  </g>
+
+  <!-- D1 Gate -->
+  <g class="node" id="d1-gate">
+    <rect x="690" y="300" width="140" height="60" rx="8" fill="#fbe0dc" stroke="#e85d4f" stroke-width="3"/>
+    <circle cx="815" cy="310" r="11" fill="#e85d4f"/>
+    <text x="815" y="314" text-anchor="middle" font-size="9" font-weight="700" fill="#ffffff">D1</text>
+    <text x="753" y="324" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">GATE · Post-or-Suppress</text>
+    <text x="753" y="342" text-anchor="middle" font-size="9" fill="#5e6b7e">publish · suppress · escalate</text>
+  </g>
+
+  <!-- D3 Adapt -->
+  <g class="node" id="d3-adapt">
+    <rect x="840" y="300" width="140" height="60" rx="8" fill="#fbe0dc" stroke="#e85d4f" stroke-width="3"/>
+    <circle cx="965" cy="310" r="11" fill="#e85d4f"/>
+    <text x="965" y="314" text-anchor="middle" font-size="9" font-weight="700" fill="#ffffff">D3</text>
+    <text x="903" y="324" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-12 · Format adapt</text>
+    <text x="903" y="342" text-anchor="middle" font-size="9" fill="#5e6b7e">5 platform variants</text>
+  </g>
+
+  <!-- P-07/P-08 -->
+  <g class="node" id="p-07-08">
+    <rect x="990" y="300" width="160" height="60" rx="8" fill="#ffffff" stroke="#308888"/>
+    <text x="1070" y="324" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-07 / P-08 · Publish</text>
+    <text x="1070" y="342" text-anchor="middle" font-size="9" fill="#5e6b7e">Creatomate · 5 platforms</text>
+  </g>
+
+  <!-- P-09 -->
+  <g class="node" id="p-09">
+    <rect x="1160" y="300" width="170" height="60" rx="8" fill="#ffffff" stroke="#308888"/>
+    <text x="1245" y="324" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">P-09 · Log</text>
+    <text x="1245" y="342" text-anchor="middle" font-size="9" fill="#5e6b7e">Post Log · engagement</text>
+  </g>
+
+  <!-- Annotations top: Sentiment Monitor (D4 source) -->
+  <g class="annotation">
+    <rect x="60" y="120" width="280" height="50" rx="8" fill="#fff4d4" stroke="#f0a020"/>
+    <text x="200" y="142" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">Sentiment Monitor (every 4h)</text>
+    <text x="200" y="158" text-anchor="middle" font-size="9" fill="#5e6b7e">Writes pause status to Sentiment Log</text>
+    <path d="M 200 170 L 200 280 L 195 290" stroke="#f0a020" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#arrowhead-pipe)"/>
+  </g>
+
+  <!-- Annotations bottom: Engagement Log + Variant Publisher (D2) -->
+  <g class="annotation">
+    <rect x="500" y="450" width="400" height="80" rx="8" fill="#fff4d4" stroke="#f0a020"/>
+    <text x="700" y="475" text-anchor="middle" font-size="11" font-weight="700" fill="#1a3a6b">Engagement Log + Variant Publisher (hourly)</text>
+    <text x="700" y="494" text-anchor="middle" font-size="9" fill="#5e6b7e">Engagement signals from P-09 → bias signal into P-05/P-06</text>
+    <text x="700" y="510" text-anchor="middle" font-size="9" font-style="italic" fill="#e85d4f">Closed loop — D2 variant selection</text>
+    <!-- arrows: from P-09 down -->
+    <path d="M 1245 360 L 1245 410 L 900 480" stroke="#1a3a6b" stroke-width="1.5" fill="none" marker-end="url(#arrowhead-pipe)"/>
+    <!-- back into P-05/P-06 -->
+    <path d="M 600 450 L 600 360" stroke="#e85d4f" stroke-width="1.5" fill="none" stroke-dasharray="4 3" marker-end="url(#arrowhead-pipe-coral)"/>
+    <text x="610" y="430" font-size="9" font-style="italic" fill="#e85d4f">bias</text>
+  </g>
+
+  <defs>
+    <marker id="arrowhead-pipe" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#1a3a6b"/>
+    </marker>
+    <marker id="arrowhead-pipe-coral" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#e85d4f"/>
+    </marker>
+  </defs>
+</svg>
+`;
+
+const SVG_SUMMARY = `
+<svg class="diagram scene-svg" id="svg-summary" viewBox="0 0 1100 720" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1100" height="720" fill="#f7f8fa"/>
+  <text x="550" y="46" text-anchor="middle" font-size="20" font-weight="700" fill="#1a3a6b">R&amp;D Uncertainty Mapping Summary</text>
+  <text x="550" y="68" text-anchor="middle" font-size="12" font-style="italic" fill="#5e6b7e">Each uncertainty maps to a decision locus, project phase, and resolution artefact</text>
+
+  <!-- D1 row -->
+  <g class="group" id="sum-d1">
+    <rect x="50" y="120" width="1000" height="120" rx="10" fill="#ffffff" stroke="#e85d4f" stroke-width="2"/>
+    <circle cx="100" cy="180" r="28" fill="#e85d4f"/>
+    <text x="100" y="186" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">D1</text>
+    <text x="160" y="148" font-size="14" font-weight="700" fill="#1a3a6b">Uncertainty 1 — Failure-rate measurement at scale</text>
+    <text x="160" y="172" font-size="11" fill="#5e6b7e">Empirical failure rate of the post-or-suppress gate at 100+ posts/day</text>
+    <text x="160" y="190" font-size="11" fill="#5e6b7e"><tspan font-weight="700">Phase:</tspan> Phase 1 (Baseline) + Phase 2 (Hardening)</text>
+    <text x="160" y="208" font-size="11" fill="#5e6b7e"><tspan font-weight="700">SOP:</tspan> SOP-002 → SOP-003</text>
+    <text x="160" y="226" font-size="11" fill="#308888" font-style="italic">Resolution: documented baseline + improvement measurement, with audit-trail data</text>
+  </g>
+
+  <!-- D2 row -->
+  <g class="group" id="sum-d2">
+    <rect x="50" y="260" width="1000" height="120" rx="10" fill="#ffffff" stroke="#e85d4f" stroke-width="2" stroke-dasharray="4 3"/>
+    <circle cx="100" cy="320" r="28" fill="#e85d4f"/>
+    <text x="100" y="326" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">D2</text>
+    <text x="160" y="288" font-size="14" font-weight="700" fill="#1a3a6b">Uncertainty 2 — A/B variant convergence dynamics</text>
+    <text x="160" y="312" font-size="11" fill="#5e6b7e">Does the variant selection loop converge or track noise at small-business volume?</text>
+    <text x="160" y="330" font-size="11" fill="#5e6b7e"><tspan font-weight="700">Phase:</tspan> Phase 3 (Scale Trial)</text>
+    <text x="160" y="348" font-size="11" fill="#5e6b7e"><tspan font-weight="700">SOP:</tspan> SOP-004</text>
+    <text x="160" y="366" font-size="11" fill="#308888" font-style="italic">Resolution: convergence characterisation across content categories and platforms</text>
+  </g>
+
+  <!-- D3 row -->
+  <g class="group" id="sum-d3">
+    <rect x="50" y="400" width="1000" height="120" rx="10" fill="#ffffff" stroke="#e85d4f" stroke-width="2"/>
+    <circle cx="100" cy="460" r="28" fill="#e85d4f"/>
+    <text x="100" y="466" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">D3</text>
+    <text x="160" y="428" font-size="14" font-weight="700" fill="#1a3a6b">Uncertainty 3 — Cross-platform format adaptation effectiveness</text>
+    <text x="160" y="452" font-size="11" fill="#5e6b7e">Does adaptation improve engagement vs mechanical re-publishing?</text>
+    <text x="160" y="470" font-size="11" fill="#5e6b7e"><tspan font-weight="700">Phase:</tspan> Phase 3 (Scale Trial)</text>
+    <text x="160" y="488" font-size="11" fill="#5e6b7e"><tspan font-weight="700">SOP:</tspan> SOP-004</text>
+    <text x="160" y="506" font-size="11" fill="#308888" font-style="italic">Resolution: per-platform engagement comparison: adapted vs unadapted variants</text>
+  </g>
+
+  <!-- D4 row -->
+  <g class="group" id="sum-d4">
+    <rect x="50" y="540" width="1000" height="120" rx="10" fill="#ffffff" stroke="#e85d4f" stroke-width="2" stroke-dasharray="4 3"/>
+    <circle cx="100" cy="600" r="28" fill="#e85d4f"/>
+    <text x="100" y="606" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">D4</text>
+    <text x="160" y="568" font-size="14" font-weight="700" fill="#1a3a6b">Uncertainty 4 — Sentiment-monitor accuracy</text>
+    <text x="160" y="592" font-size="11" fill="#5e6b7e">False-positive and false-negative rates of the pause loop at current thresholds</text>
+    <text x="160" y="610" font-size="11" fill="#5e6b7e"><tspan font-weight="700">Phase:</tspan> Phase 3 (Scale Trial)</text>
+    <text x="160" y="628" font-size="11" fill="#5e6b7e"><tspan font-weight="700">SOP:</tspan> SOP-004</text>
+    <text x="160" y="646" font-size="11" fill="#308888" font-style="italic">Resolution: tuned thresholds with documented FP / FN characterisation</text>
+  </g>
+</svg>
+`;
+
+const SVG_BY_KEY = {
+  overview: SVG_OVERVIEW,
+  figure2: SVG_FIGURE2,
+  pipeline: SVG_PIPELINE,
+  summary: SVG_SUMMARY,
+};
+
+/* ==========================================================================
+   STATE
+   ========================================================================== */
+const state = {
+  sceneIdx: 0,
+  beatIdx: 0,
+  isPlaying: false,
+  selectedVoice: null,
+  voices: [],
+  rate: 1.0,
+  currentUtterance: null,
+  arrowEl: null,
+  resumeOnVoicesReady: false,
+};
+
+/* ==========================================================================
+   INIT
+   ========================================================================== */
+function init() {
+  // Render all SVGs (only one shown at a time)
+  const container = document.getElementById('svgContainer');
+  container.innerHTML = SVG_OVERVIEW + SVG_FIGURE2 + SVG_PIPELINE + SVG_SUMMARY;
+
+  // Build scene list
+  const list = document.getElementById('sceneList');
+  SCENES.forEach((scene, idx) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="scene-num">${idx + 1}</span><span class="scene-title">${scene.title}</span>`;
+    li.onclick = () => jumpToScene(idx);
+    list.appendChild(li);
+  });
+
+  // Voices
+  loadVoices();
+  if (typeof speechSynthesis !== 'undefined') {
+    speechSynthesis.onvoiceschanged = loadVoices;
+  }
+
+  // Initial render
+  showScene(0);
+  renderBeat();
+}
+
+function loadVoices() {
+  if (typeof speechSynthesis === 'undefined') return;
+  state.voices = speechSynthesis.getVoices();
+  if (!state.selectedVoice && state.voices.length) {
+    // Prefer high-quality voice: en-US, premium, or default
+    state.selectedVoice = pickDefaultVoice(state.voices);
+    updateVoiceLabel();
+  }
+}
+
+function pickDefaultVoice(voices) {
+  // Prefer Microsoft/Google/Apple high-quality en-US voices
+  const en = voices.filter(v => /^en[-_]/i.test(v.lang));
+  if (!en.length) return voices[0];
+
+  const premium = en.find(v => /natural|enhanced|premium|neural|online/i.test(v.name));
+  if (premium) return premium;
+  const default_ = en.find(v => v.default);
+  if (default_) return default_;
+  return en[0];
+}
+
+function updateVoiceLabel() {
+  const lab = document.getElementById('currentVoiceLabel');
+  if (state.selectedVoice) {
+    lab.textContent = state.selectedVoice.name + ' (' + state.selectedVoice.lang + ')';
+  } else {
+    lab.textContent = 'No voice selected';
+  }
+}
+
+/* ==========================================================================
+   SCENE RENDERING
+   ========================================================================== */
+function showScene(idx) {
+  state.sceneIdx = idx;
+  state.beatIdx = 0;
+  const scene = SCENES[idx];
+
+  // Hide all SVGs, show this scene's
+  document.querySelectorAll('.scene-svg').forEach(el => el.classList.remove('shown'));
+  const svgEl = document.getElementById('svg-' + scene.svgKey);
+  if (svgEl) svgEl.classList.add('shown');
+
+  // Update header & label
+  document.getElementById('stageEyebrow').textContent = scene.eyebrow;
+  document.getElementById('stageTitle').textContent = scene.title;
+  document.getElementById('captionEyebrow').textContent = scene.eyebrow;
+  document.getElementById('sceneLabel').textContent = `Scene ${idx + 1} / ${SCENES.length}`;
+  document.getElementById('playerScene').textContent = `${idx + 1}. ${scene.title}`;
+
+  // Update sidebar
+  document.querySelectorAll('#sceneList li').forEach((li, i) => {
+    li.classList.toggle('active', i === idx);
+    li.classList.toggle('played', i < idx);
+  });
+
+  // Reset arrow
+  removeArrow();
+  // Reset spotlight
+  resetSpotlight();
+}
+
+function renderBeat() {
+  const scene = SCENES[state.sceneIdx];
+  const beat = scene.beats[state.beatIdx];
+  if (!beat) return;
+
+  // Caption text
+  document.getElementById('captionText').textContent = beat.text;
+
+  // Progress bar
+  const progress = ((state.beatIdx + 1) / scene.beats.length) * 100;
+  document.getElementById('captionProgress').style.width = progress + '%';
+
+  // Spotlight
+  applySpotlight(beat.focus);
+
+  // Arrow
+  removeArrow();
+  if (beat.arrow) {
+    placeArrow(beat.focus, beat.arrow);
+  }
+
+  // Status
+  document.getElementById('playerStatus').textContent =
+    `Beat ${state.beatIdx + 1} of ${scene.beats.length}`;
+}
+
+function applySpotlight(focusId) {
+  const svgEl = document.querySelector('.scene-svg.shown');
+  if (!svgEl) return;
+
+  const groups = svgEl.querySelectorAll('.node, .edge, .annotation, .group');
+
+  if (!focusId) {
+    // No spotlight — everything visible
+    groups.forEach(g => { g.classList.remove('dimmed', 'focused'); });
+    return;
+  }
+
+  // Find focused element by id, including nested children
+  const focusEl = svgEl.querySelector('#' + focusId);
+  if (!focusEl) {
+    groups.forEach(g => { g.classList.remove('dimmed', 'focused'); });
+    return;
+  }
+
+  groups.forEach(g => {
+    if (g === focusEl || focusEl.contains(g) || g.contains(focusEl)) {
+      g.classList.remove('dimmed');
+      g.classList.add('focused');
+    } else {
+      g.classList.add('dimmed');
+      g.classList.remove('focused');
+    }
+  });
+}
+
+function resetSpotlight() {
+  const svgEl = document.querySelector('.scene-svg.shown');
+  if (!svgEl) return;
+  svgEl.querySelectorAll('.node, .edge, .annotation, .group').forEach(g => {
+    g.classList.remove('dimmed', 'focused');
+  });
+}
+
+function removeArrow() {
+  const existing = document.getElementById('voicearrow');
+  if (existing) existing.remove();
+  state.arrowEl = null;
+}
+
+function placeArrow(focusId, arrowSpec) {
+  const svgEl = document.querySelector('.scene-svg.shown');
+  if (!svgEl) return;
+
+  // Build the arrow as a sibling SVG group inside the same SVG
+  const NS = 'http://www.w3.org/2000/svg';
+  const arrowGroup = document.createElementNS(NS, 'g');
+  arrowGroup.setAttribute('id', 'voicearrow');
+  arrowGroup.setAttribute('class', 'arrow-pointer active');
+
+  // Determine target: either explicit x,y from arrowSpec, or center of focus element
+  let tx = arrowSpec.x;
+  let ty = arrowSpec.y;
+  if (focusId) {
+    const focusEl = svgEl.querySelector('#' + focusId);
+    if (focusEl) {
+      try {
+        const bbox = focusEl.getBBox();
+        tx = bbox.x + bbox.width / 2;
+        ty = bbox.y - 10;  // arrow points DOWN onto element
+      } catch (e) { /* fall back to spec */ }
+    }
+  }
+
+  // Arrow shape — coral, pointing downward, anchored above target
+  const arrowSize = 28;
+  const ax = tx;
+  const ay = ty - arrowSize - 4;
+
+  // Arrow body (downward triangle with stem)
+  const path = document.createElementNS(NS, 'path');
+  path.setAttribute('d', `
+    M ${ax} ${ay + arrowSize}
+    L ${ax - 12} ${ay + arrowSize - 12}
+    L ${ax - 5} ${ay + arrowSize - 12}
+    L ${ax - 5} ${ay}
+    L ${ax + 5} ${ay}
+    L ${ax + 5} ${ay + arrowSize - 12}
+    L ${ax + 12} ${ay + arrowSize - 12}
+    Z
+  `);
+  path.setAttribute('fill', '#e85d4f');
+  path.setAttribute('stroke', '#ffffff');
+  path.setAttribute('stroke-width', '2');
+  path.setAttribute('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.25))');
+
+  arrowGroup.appendChild(path);
+  svgEl.appendChild(arrowGroup);
+  state.arrowEl = arrowGroup;
+}
+
+/* ==========================================================================
+   PLAYBACK
+   ========================================================================== */
+function togglePlay() {
+  if (typeof speechSynthesis === 'undefined') {
+    alert('Speech synthesis is not supported in this browser. Try Chrome, Edge, or Safari.');
+    return;
+  }
+  if (state.isPlaying) {
+    pause();
+  } else {
+    play();
+  }
+}
+
+function play() {
+  state.isPlaying = true;
+  document.getElementById('playBtn').innerHTML = '⏸ Pause';
+  speakBeat();
+}
+
+function pause() {
+  state.isPlaying = false;
+  document.getElementById('playBtn').innerHTML = '▶ Play';
+  speechSynthesis.cancel();
+  state.currentUtterance = null;
+}
+
+function speakBeat() {
+  const scene = SCENES[state.sceneIdx];
+  const beat = scene.beats[state.beatIdx];
+  if (!beat) return;
+  renderBeat();
+
+  if (typeof speechSynthesis === 'undefined') return;
+
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(beat.text);
+  if (state.selectedVoice) u.voice = state.selectedVoice;
+  u.rate = state.rate;
+  u.pitch = 1.0;
+  u.volume = 1.0;
+
+  u.onend = () => {
+    if (!state.isPlaying) return;
+    advance();
+  };
+  u.onerror = (e) => {
+    console.warn('Speech error:', e);
+    if (!state.isPlaying) return;
+    setTimeout(advance, 250);
+  };
+
+  state.currentUtterance = u;
+  speechSynthesis.speak(u);
+}
+
+function advance() {
+  const scene = SCENES[state.sceneIdx];
+  if (state.beatIdx + 1 < scene.beats.length) {
+    state.beatIdx++;
+    speakBeat();
+  } else if (state.sceneIdx + 1 < SCENES.length) {
+    state.sceneIdx++;
+    state.beatIdx = 0;
+    showScene(state.sceneIdx);
+    speakBeat();
+  } else {
+    // End of voiceover
+    state.isPlaying = false;
+    document.getElementById('playBtn').innerHTML = '▶ Play';
+    document.getElementById('playerStatus').textContent = 'Voiceover complete';
+  }
+}
+
+function nextScene() {
+  pause();
+  if (state.sceneIdx + 1 < SCENES.length) {
+    state.sceneIdx++;
+    showScene(state.sceneIdx);
+    renderBeat();
+  }
+}
+
+function prevScene() {
+  pause();
+  if (state.sceneIdx > 0) {
+    state.sceneIdx--;
+    showScene(state.sceneIdx);
+    renderBeat();
+  }
+}
+
+function jumpToScene(idx) {
+  pause();
+  state.sceneIdx = idx;
+  showScene(idx);
+  renderBeat();
+}
+
+/* ==========================================================================
+   SPEED
+   ========================================================================== */
+function cycleSpeed() {
+  const speeds = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.25, 1.5];
+  const cur = state.rate;
+  let next = speeds[(speeds.indexOf(cur) + 1) % speeds.length] || 1.0;
+  state.rate = next;
+  document.getElementById('speedPill').textContent = next.toFixed(2).replace(/\.?0+$/, '') + '×';
+  // If currently speaking, restart current beat at new rate
+  if (state.isPlaying) {
+    speakBeat();
+  }
+}
+
+/* ==========================================================================
+   VOICE PICKER
+   ========================================================================== */
+function openVoicePicker() {
+  const list = document.getElementById('voiceList');
+  list.innerHTML = '';
+  if (!state.voices || !state.voices.length) {
+    list.innerHTML = '<li style="cursor: default;">No voices available in this browser.</li>';
+  } else {
+    // Group: en first, then others
+    const en = state.voices.filter(v => /^en[-_]/i.test(v.lang));
+    const others = state.voices.filter(v => !/^en[-_]/i.test(v.lang));
+    [...en, ...others].forEach(v => {
+      const li = document.createElement('li');
+      const isSelected = state.selectedVoice && state.selectedVoice.name === v.name;
+      const isPremium = /natural|enhanced|premium|neural|online/i.test(v.name);
+      li.className = isSelected ? 'selected' : '';
+      li.innerHTML = `
+        <span>
+          <span class="voice-name">${isPremium ? '★ ' : ''}${v.name}</span>
+          <div class="voice-meta">${v.lang}${v.default ? ' · default' : ''}</div>
+        </span>
+        ${isSelected ? '<span style="color: var(--emerald);">✓</span>' : ''}
+      `;
+      li.onclick = () => {
+        state.selectedVoice = v;
+        updateVoiceLabel();
+        openVoicePicker(); // re-render to show selection
+      };
+      list.appendChild(li);
+    });
+  }
+  document.getElementById('voiceModal').classList.add('shown');
+}
+
+function closeVoicePicker() {
+  document.getElementById('voiceModal').classList.remove('shown');
+}
+
+window.openVoicePicker = openVoicePicker;
+window.closeVoicePicker = closeVoicePicker;
+window.togglePlay = togglePlay;
+window.nextScene = nextScene;
+window.prevScene = prevScene;
+window.cycleSpeed = cycleSpeed;
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>
