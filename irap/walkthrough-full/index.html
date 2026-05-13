@@ -58,10 +58,10 @@
     border-bottom: 1px solid var(--border);
   }
   .brand-logo {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
-    display: flex; align-items: center; justify-content: center;
-    color: white; font-weight: 700; font-size: 14px;
+    width: 36px; height: 36px; border-radius: 8px;
+    object-fit: cover; flex-shrink: 0;
+    background: var(--surface);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
   }
   .brand-name { font-size: 14px; font-weight: 700; color: var(--navy); letter-spacing: -0.01em; }
   .brand-tag { font-size: 11px; color: var(--text-faint); }
@@ -156,10 +156,62 @@
   .player {
     position: fixed; bottom: 0; left: 320px; right: 0;
     background: var(--surface); border-top: 1px solid var(--border-strong);
-    padding: 14px 28px; display: flex; align-items: center; gap: 16px;
+    padding: 10px 28px 14px 28px;
+    display: flex; flex-direction: column; gap: 8px;
     box-shadow: 0 -4px 12px rgba(15,23,42,0.06); z-index: 100;
   }
+  .player-bottom { display: flex; align-items: center; gap: 16px; }
   @media (max-width: 980px) { .player { left: 0; } }
+  @media (max-width: 600px) {
+    .player { padding: 8px 14px 12px 14px; }
+    .player-bottom { gap: 8px; flex-wrap: wrap; }
+  }
+
+  /* ===== scrubber ===== */
+  .scrubber-row {
+    display: flex; align-items: center; gap: 12px; width: 100%;
+  }
+  .scrubber-track {
+    flex: 1; position: relative; height: 22px;
+    cursor: pointer; touch-action: none;
+  }
+  .scrubber-track::before {
+    content: '';
+    position: absolute; left: 0; right: 0; top: 50%;
+    height: 4px; transform: translateY(-50%);
+    background: var(--border); border-radius: 2px;
+  }
+  .scrubber-fill {
+    position: absolute; left: 0; top: 50%;
+    height: 4px; transform: translateY(-50%);
+    background: linear-gradient(90deg, var(--emerald) 0%, var(--teal) 100%);
+    border-radius: 2px; width: 0%;
+    pointer-events: none;
+    transition: width 0.12s linear;
+  }
+  .scrubber-ticks { position: absolute; inset: 0; pointer-events: none; }
+  .scrubber-tick {
+    position: absolute; top: 50%; transform: translate(-50%, -50%);
+    width: 2px; height: 10px; background: var(--border-strong); border-radius: 1px;
+  }
+  .scrubber-handle {
+    position: absolute; top: 50%; left: 0%;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--navy); border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.22);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: left 0.12s linear, transform 0.15s ease;
+  }
+  .scrubber-track:hover .scrubber-handle { transform: translate(-50%, -50%) scale(1.18); }
+  .scrubber-track.dragging .scrubber-handle,
+  .scrubber-track.dragging .scrubber-fill { transition: none; }
+  .scrubber-track.dragging .scrubber-handle { transform: translate(-50%, -50%) scale(1.3); }
+  .scrubber-time {
+    font-size: 11px; color: var(--text-muted); font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    min-width: 50px; text-align: right; user-select: none;
+  }
 
   .player button {
     border: 1px solid var(--border-strong); background: var(--surface); color: var(--navy);
@@ -228,7 +280,7 @@
   <!-- ============= LEFT RAIL ============= -->
   <aside class="rail">
     <div class="brand">
-      <div class="brand-logo">PT</div>
+      <img class="brand-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACqAKoDASIAAhEBAxEB/8QAHQABAQADAAMBAQAAAAAAAAAAAAgCBgcDBAkBBf/EAEoQAAECAwEEFggDCAMAAAAAAAABAgMEBREGBwgSFRYXITEyNjdTVWZzdJKTpbGys9HS4xMUIjNBcXJ1I1FhNFZigZGVocElQlL/xAAaAQEBAQADAQAAAAAAAAAAAAAABQQBAgYD/8QAMhEAAQICBwYGAgIDAAAAAAAAAAECAwQFERIVM1JxFFOBkrHRITEyNFHBBkETkURh8f/aAAwDAQACEQMRAD8A4rkVVNrZzkHdwyKqm1s5yDu4sXMA3W83eaMwDdbzd5pWvV2U8lYpTcJzJ3I6yKqm1s5yDu4ZFVTa2c5B3cWLmAbrebvNGYBut5u80Xq7KLFKbhOZO5HWRVU2tnOQd3DIqqbWznIO7ixcwDdbzd5ozAN1vN3mi9XZRYpTcJzJ3I6yKqm1s5yDu4ZFVTa2c5B3cWLmAbrebvNGYBut5u80Xq7KLFKbhOZO5HWRVU2tnOQd3DIqqbWznIO7ixcwDdbzd5ozAN1vN3mi9XZRYpTcJzJ3I6yKqm1s5yDu4ZFVTa2c5B3cWLmAbrebvNGYBut5u80Xq7KLFKbhOZO5HWRVU2tnOQd3DIqqbWznIO7ixcwDdbzd5ozAN1vN3mi9XZRYpTcJzJ3I6yKqm1s5yDu4ZFVTa2c5B3cWLmAbrebvNGYBut5u80Xq7KLFKbhOZO5HWRVU2tnOQd3DIqqbWznIO7ixcwDdbzd5ozAN1vN3mi9XZRYpTcJzJ3I6yKqm1s5yDu4ZFVTa2c5B3cWLmAbrebvNGYBut5u80Xq7KLFKbhOZO5HWRVU2tnOQd3DIqqbWznIO7ixcwDdbzd5ozAN1vN3mi9XZRYpTcJzJ3O4AAknrQAAAAAAAAAAAAeOJHgw4sODEjQ2RItqQ2OciK+xLVsT42JnmUV7IUN0SI9rGMRXOc5bERE0VVSN76l9ierN9GWr9CnUhylEi4tMTG9l6Ivtvcn5RND6bEOUSsxT08yUaiu8a1/6WUD+DcDdRT7sblJKv016eimGe3DxkVYURM5zHfqi/1zl+J/eODWxyPajm+SgAA7AAAAAAAAAAAAAAAAKtiWqCV8My+FVoNZgXB0qbiysn6s2ZqCwnK10dXquJDVUz8REbaqfFVS3QPtLwVjPsIfOLESG20pR0a625aDFdCjXS0aHEatjmvnoSKi/qmMY5cbkf3pof9wheI+bGJD2NnFQYkPY2cVCpdTcxi25fg+k+XG5H96aH/cIXiGXG5H96aH/cIXiPmxiQ9jZxUGJD2NnFQXU3McbcvwfSWJdfce+G5kS6ehOY5FRyOn4KoqfG32j32UmjvY17KdIua5LUVIDFRU/ofMmKxnon/hs0q/8AVPyPptc8llz9PRUsslYXUQxzkokuiVLXWaIEb+autPI9OJXbk6PHiSESs0SnxWOtiQHTMKE5qqiaLbUsWywzlbqbmZqOyXlboqRHjPWxsOHOw3Ocv6IjrVIbwm2MW/tdQqsaq+nhaLU2CGc4RjEW1GMRU/hQ0w6Ma9iOteaHxdOK1ytq8j6hgnHA5vj1WuQ524quTUWciSMukzIzEV2M/wBCjka6G5y564qq1UVc+xVT4IUcuclpNjwXQXqxTZDiJEbaQA/GuRzUcmgqWofp8j6AAAAAAAAAAAAAh3DA18J3gEr1XFxEO4YGvhO8Aleq4o0ZjLp2Mk7h8TkAAL5KAAAPLKNa6Na9PYY10R3yair/AKPpdQHK+gyDnaKysNV4iHzST8OmTUT4xE9E35WYzuhP6n0sud1P0/gsLqISKV8m8fooSPmpCmE1r63Ub/C7CGc4Oj4TWvrdRv8AC7CGc4KUDCbonQxxfW7U7lgTa7k59mjdrCLOdpV+RGOBNruTn2aN2sIs52lX5ESksfgUpPDMZf3EP6U6DMwl/cQ/pToMyeagAAAAAAAAAAAAQ7hga+E7wCV6ri4iHcMDXwneASvVcUaMxl07GSdw+JyAAF8lAA3C9jIykeoRZ+ZgNi+pPhxGo/Pameq6HxVVREPlGipCYr1/R8ZiMkCGsR36NVqNsOVhy9lishK9yfxOS3osPpZc7qfp/BYXUQgy+wyWnoEeteqsgzT1axysVc9MVUz/AM1ztEvO53U/T+CwuohGnYyRobHInz9G2h5psyxXtQhTCa19bqN/hdhDOcHR8JrX1uo3+F2EM5wWYGE3ROh0i+t2p3LAm13Jz7NG7WEWc7Sr8iMcCbXcnPs0btYRZztKvyIlJY/ApSeGYy/uIf0p0GZhL+4h/SnQZk81AAAAAAAAAAAAAh3DA18J3gEr1XFxEO4YGvhO8Aleq4o0ZjLp2Mk7h8TkAAaiucjWoqqq2IiJol8lA3q4FEgwZ2VTTtdDdGX+Kx3s/wAum08tPvX3VtuViXTLJp6SFExYUgqL6w5bURH2aFiKttltq2Hp3umvY6ositc2I17EcjksVFTGtt/W0nzkRj4DrK11VdSbSb2ulH2V+OqHuXxNTMTfG9Cl53O6n6fwWF1EIMviamYm+N6FLzud1P0/gsLqISYmA3Vfo1/i/t3akKYTWvrdRv8AC7CGc4Oj4TWvrdRv8LsIZzg9DAwm6J0NcX1u1O5YE2u5OfZo3awiznaVfkRjgTa7k59mjdrCLOdpV+REpLH4FKTwzGX9xD+lOgzMJf3EP6U6DMnmoAAAAAAAAAAAAEO4YGvhO8Aleq4uIh3DA18J3gEr1XFGjMZdOxkncPicgPfueg+lrMmquxIbJiE57/yTHT/K6CGyXr73Feu+qkODINbK09Iqw5ifipbDhKjcazFtRXO0M5PzS1UPPdrcTW7h7qZKmVCBjSXr7Gy84yz0c05HNtdoqqLYulXQz9HRLLozK1ZX4kl3pVTvkaIroqtS1rEdnNtzkzzh1D1U3TcPf13nbne9X6l6TiND1UXTcPf13nnoOFE4dTyiLXLxOHVDw3xNTMTfG9Cl53O6n6fwWF1EIMviamYm+N6FLzud1P0/gsLqIcxMBuq/R6X8X9u7UhTCa19bqN/hdhDOcHR8JrX1uo3+F2EM5wehgYTdE6GuL63ancsCbXcnPs0btYRZztKvyIxwJtdyc+zRu1hFnO0q/IiUlj8ClJ4ZjL+4h/SnQZmEv7iH9KdB+sR6K/GcjkV1rURLLEsTO/XPtJ5qMgAAAAAAAAAAACHcMDXwneASvVcXERFhjQI0K/XHixIbmsj06WdDVUznIiOaqp/NFQo0ZjcDJO4ZuGCzqCn/ALm/s4Z4sJf9nuS+7f6aeXBZ1Az/AN0f2cM8WEx+z3Jfdl6GnP8Amrx6HnlxFNkd71fqXpOI0PVRdNw9/Xedvd71fqXpOIUPVRdNw9/XeZoOFE4dTzye3iaJ1Q8N8TUzE3xvQpedzup+n8FhdRCDL4mpmJvjehS8rnHI656nK1bUWUhKipnovsIcxMBuq/R6b8X9u7UhXCa19bqN/hdhDOcHRsJhUW/pdQqKi/jwuwhnOT0MDCbonQ1xfW7U7lgTa7k59mjdrCLOdpV+RGuBJCiPvr1CK1qqyHR4uOv5WxYVnQpZTtKvyIdJY/ApSeGYy/uIf0p0GZhAzoENF/8AKdBmYDUAAAAAAAAAAAADm9/S9RTb5lGgoswkhWJLG9TnMTGSxdGG9NFWKqJoZ6Lnp8UXpAO7HuhuRzV8Tq5qOSpSOKfeGv00J8eBRKtJS0J7rXOlas+E2JZoKqYqf5PDWLw1+qsuhOq09Jz6wbfR+sVdz8S3RstbnFmg2XhFrrqSvQy7FCrrI6S8nf2REalYgoiJYn/NO8J/OgYO19uBEfFgLS4b36dzamqK745/s55awOEpCIn6T+jrd8CqqoiqaweL7s0xGTLqZGai2oj6mqoi8U92WvIX9JaXZLy1ZSBBhtRrIcOvxWtaiaCIiJYiFkA5vCJVVUn9HZsjCYlTfAiWPg331o8Z8eOykxYsRyue+JUlc5yroqqq21VMpXBmvmRY7IcVKHLsVbFiOnlcjf1sRlqlsA5vON/o52OGc7vG3rKbeyoMaBDmPXqrOq107OKzFR1mlYxPgxLV/VVVVX8k6IAYnvc9yucviaWtRqVIAAdDsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfOLLnVNgk+I7xDLnVNgk+I7xGtg9PskDKeTu+WyIbJlzqmwSfEd4hlzqmwSfEd4jWwNkgZRd8tkQ2TLnVNgk+I7xDLnVNgk+I7xGtgbJAyi75bIhsmXOqbBJ8R3iGXOqbBJ8R3iNbA2SBlF3y2RDZMudU2CT4jvEMudU2CT4jvEa2BskDKLvlsiGyZc6psEnxHeIZc6psEnxHeI1sDZIGUXfLZENky51TYJPiO8Qy51TYJPiO8RrYGyQMou+WyIbJlzqmwSfEd4hlzqmwSfEd4jWwNkgZRd8tkQ2TLnVNgk+I7xDLnVNgk+I7xGtgbJAyi75bIhsmXOqbBJ8R3iGXOqbBJ8R3iNbA2SBlF3y2RDZMudU2CT4jvEMudU2CT4jvEa2BskDKLvlsiH/2Q==" alt="PostaraTrend logo">
       <div>
         <div class="brand-name">PostaraTrend</div>
         <div class="brand-tag">Technical Voiceover</div>
@@ -269,15 +321,25 @@
 
 <!-- ============= PLAYER BAR ============= -->
 <div class="player">
-  <div class="player-info">
-    <div class="player-scene" id="playerScene">Ready</div>
-    <div class="player-status" id="playerStatus">Press Play to begin</div>
+  <div class="scrubber-row">
+    <div class="scrubber-track" id="scrubberTrack" role="slider" aria-label="Walkthrough position" aria-valuemin="1" aria-valuenow="1">
+      <div class="scrubber-fill" id="scrubberFill"></div>
+      <div class="scrubber-ticks" id="scrubberTicks"></div>
+      <div class="scrubber-handle" id="scrubberHandle"></div>
+    </div>
+    <div class="scrubber-time" id="scrubberTime">1 / 1</div>
   </div>
-  <div class="player-controls">
-    <button id="prevBtn" onclick="prevScene()">◀ Prev</button>
-    <button id="playBtn" class="primary" onclick="togglePlay()">▶ Play</button>
-    <button id="nextBtn" onclick="nextScene()">Next ▶</button>
-    <span class="speed-pill" onclick="cycleSpeed()" id="speedPill">1.0×</span>
+  <div class="player-bottom">
+    <div class="player-info">
+      <div class="player-scene" id="playerScene">Ready</div>
+      <div class="player-status" id="playerStatus">Press Play to begin</div>
+    </div>
+    <div class="player-controls">
+      <button id="prevBtn" onclick="prevScene()">◀ Prev</button>
+      <button id="playBtn" class="primary" onclick="togglePlay()">▶ Play</button>
+      <button id="nextBtn" onclick="nextScene()">Next ▶</button>
+      <span class="speed-pill" onclick="cycleSpeed()" id="speedPill">1.0×</span>
+    </div>
   </div>
 </div>
 
@@ -869,6 +931,16 @@ const SVG_BY_KEY = {
 /* ==========================================================================
    STATE
    ========================================================================== */
+
+/* Flat beat index across all scenes — used by the scrubber. */
+const ALL_BEATS = [];
+SCENES.forEach((scene, sIdx) => {
+  scene.beats.forEach((_b, bIdx) => {
+    ALL_BEATS.push({ sceneIdx: sIdx, beatIdx: bIdx });
+  });
+});
+const TOTAL_BEATS = ALL_BEATS.length;
+
 const state = {
   sceneIdx: 0,
   beatIdx: 0,
@@ -879,6 +951,10 @@ const state = {
   currentUtterance: null,
   arrowEl: null,
   resumeOnVoicesReady: false,
+  /* scrubber state */
+  wordFraction: 0,           // 0..1 progress within current beat (driven by onboundary)
+  scrubberDragging: false,   // suppresses programmatic updates while user drags
+  wasPlayingBeforeDrag: false,
 };
 
 /* ==========================================================================
@@ -907,6 +983,11 @@ function init() {
   // Initial render
   showScene(0);
   renderBeat();
+
+  // Scrubber setup
+  buildScrubberTicks();
+  attachScrubberHandlers();
+  updateScrubber();
 }
 
 function loadVoices() {
@@ -980,7 +1061,7 @@ function renderBeat() {
   // Caption text
   document.getElementById('captionText').textContent = beat.text;
 
-  // Progress bar
+  // Caption progress bar (per-scene visual indicator)
   const progress = ((state.beatIdx + 1) / scene.beats.length) * 100;
   document.getElementById('captionProgress').style.width = progress + '%';
 
@@ -996,6 +1077,10 @@ function renderBeat() {
   // Status
   document.getElementById('playerStatus').textContent =
     `Beat ${state.beatIdx + 1} of ${scene.beats.length}`;
+
+  // Global scrubber — reset word fraction at start of every beat
+  state.wordFraction = 0;
+  updateScrubber();
 }
 
 function applySpotlight(focusId) {
@@ -1136,6 +1221,16 @@ function speakBeat() {
   u.pitch = 1.0;
   u.volume = 1.0;
 
+  // Word-level fill: drives the global scrubber smoothly through the beat
+  const textLen = Math.max(1, beat.text.length);
+  u.onboundary = (e) => {
+    if (!state.isPlaying || state.scrubberDragging) return;
+    if (e.name && e.name !== 'word' && e.name !== 'sentence') return;
+    const ci = (typeof e.charIndex === 'number') ? e.charIndex : 0;
+    state.wordFraction = Math.min(1, Math.max(0, ci / textLen));
+    updateScrubber();
+  };
+
   u.onend = () => {
     if (!state.isPlaying) return;
     advance();
@@ -1175,6 +1270,7 @@ function nextScene() {
     showScene(state.sceneIdx);
     renderBeat();
   }
+  updateScrubber();
 }
 
 function prevScene() {
@@ -1184,6 +1280,7 @@ function prevScene() {
     showScene(state.sceneIdx);
     renderBeat();
   }
+  updateScrubber();
 }
 
 function jumpToScene(idx) {
@@ -1191,6 +1288,7 @@ function jumpToScene(idx) {
   state.sceneIdx = idx;
   showScene(idx);
   renderBeat();
+  updateScrubber();
 }
 
 /* ==========================================================================
@@ -1206,6 +1304,145 @@ function cycleSpeed() {
   if (state.isPlaying) {
     speakBeat();
   }
+}
+
+/* ==========================================================================
+   SCRUBBER
+   ========================================================================== */
+
+function currentGlobalBeat() {
+  let g = 0;
+  for (let s = 0; s < state.sceneIdx; s++) g += SCENES[s].beats.length;
+  return g + state.beatIdx;
+}
+
+function buildScrubberTicks() {
+  const ticks = document.getElementById('scrubberTicks');
+  if (!ticks) return;
+  ticks.innerHTML = '';
+  let cum = 0;
+  for (let s = 0; s < SCENES.length - 1; s++) {
+    cum += SCENES[s].beats.length;
+    const pct = (cum / TOTAL_BEATS) * 100;
+    const tick = document.createElement('div');
+    tick.className = 'scrubber-tick';
+    tick.style.left = pct + '%';
+    ticks.appendChild(tick);
+  }
+}
+
+function updateScrubber() {
+  if (state.scrubberDragging) return;
+  const g = currentGlobalBeat();
+  const overall = (g + state.wordFraction) / TOTAL_BEATS;
+  const pct = Math.min(100, Math.max(0, overall * 100));
+  const fill = document.getElementById('scrubberFill');
+  const handle = document.getElementById('scrubberHandle');
+  const time = document.getElementById('scrubberTime');
+  const track = document.getElementById('scrubberTrack');
+  if (fill) fill.style.width = pct + '%';
+  if (handle) handle.style.left = pct + '%';
+  if (time) time.textContent = (g + 1) + ' / ' + TOTAL_BEATS;
+  if (track) {
+    track.setAttribute('aria-valuenow', String(g + 1));
+    track.setAttribute('aria-valuemax', String(TOTAL_BEATS));
+  }
+}
+
+function seekToBeatIndex(globalIdx) {
+  const target = Math.min(TOTAL_BEATS - 1, Math.max(0, globalIdx));
+  const ref = ALL_BEATS[target];
+  if (!ref) return;
+  showScene(ref.sceneIdx);
+  state.beatIdx = ref.beatIdx;
+  state.wordFraction = 0;
+  renderBeat();
+}
+
+function attachScrubberHandlers() {
+  const track = document.getElementById('scrubberTrack');
+  if (!track) return;
+  let dragging = false;
+
+  const fracFromClientX = (clientX) => {
+    const rect = track.getBoundingClientRect();
+    if (rect.width <= 0) return 0;
+    return Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+  };
+
+  const targetFromFrac = (frac) =>
+    Math.min(TOTAL_BEATS - 1, Math.max(0, Math.floor(frac * TOTAL_BEATS)));
+
+  const previewAt = (clientX) => {
+    const frac = fracFromClientX(clientX);
+    const pct = frac * 100;
+    document.getElementById('scrubberFill').style.width = pct + '%';
+    document.getElementById('scrubberHandle').style.left = pct + '%';
+    const tgt = targetFromFrac(frac);
+    document.getElementById('scrubberTime').textContent = (tgt + 1) + ' / ' + TOTAL_BEATS;
+  };
+
+  const startDrag = (clientX) => {
+    dragging = true;
+    state.scrubberDragging = true;
+    state.wasPlayingBeforeDrag = state.isPlaying;
+    if (state.isPlaying) pause();
+    track.classList.add('dragging');
+    previewAt(clientX);
+  };
+
+  const moveDrag = (clientX) => {
+    if (!dragging) return;
+    previewAt(clientX);
+  };
+
+  const endDrag = (clientX) => {
+    if (!dragging) return;
+    dragging = false;
+    state.scrubberDragging = false;
+    track.classList.remove('dragging');
+    const frac = fracFromClientX(clientX);
+    const tgt = targetFromFrac(frac);
+    seekToBeatIndex(tgt);
+    if (state.wasPlayingBeforeDrag) {
+      play();
+    } else {
+      updateScrubber();
+    }
+    state.wasPlayingBeforeDrag = false;
+  };
+
+  // Mouse
+  track.addEventListener('mousedown', (e) => {
+    startDrag(e.clientX);
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', (e) => moveDrag(e.clientX));
+  document.addEventListener('mouseup', (e) => {
+    if (dragging) endDrag(e.clientX);
+  });
+
+  // Touch
+  track.addEventListener('touchstart', (e) => {
+    if (!e.touches[0]) return;
+    startDrag(e.touches[0].clientX);
+  }, { passive: true });
+  track.addEventListener('touchmove', (e) => {
+    if (!e.touches[0]) return;
+    moveDrag(e.touches[0].clientX);
+    if (dragging && e.cancelable) e.preventDefault();
+  }, { passive: false });
+  track.addEventListener('touchend', (e) => {
+    const t = (e.changedTouches && e.changedTouches[0]) || null;
+    if (!t || !dragging) { dragging = false; state.scrubberDragging = false; track.classList.remove('dragging'); return; }
+    endDrag(t.clientX);
+  });
+  track.addEventListener('touchcancel', () => {
+    dragging = false;
+    state.scrubberDragging = false;
+    track.classList.remove('dragging');
+    updateScrubber();
+  });
 }
 
 /* ==========================================================================
