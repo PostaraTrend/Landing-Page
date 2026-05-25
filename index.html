@@ -698,11 +698,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 (function(){
   'use strict';
 
-  /* Form endpoint — routes inbound submissions to inquiries@postaratrend.ca.
-     IMPORTANT: on first submission, a one-time activation link is emailed
-     to that address. Open it once, and every future submission lands in
-     the inbox silently. */
-  var FORM_ENDPOINT = 'https://formsubmit.co/ajax/inquiries@postaratrend.ca';
+  /* Form endpoint — Web3Forms relays submissions to the destination email
+     configured in the Web3Forms dashboard (admin@postaratrend.ca account,
+     form name "PostaraTrend Website"). The access key below is public and
+     safe to commit; it only authorises submissions to be forwarded to the
+     pre-registered destination email. */
+  var FORM_ENDPOINT = 'https://api.web3forms.com/submit';
+  var WEB3FORMS_ACCESS_KEY = '9d4ebda1-93b3-447c-87bc-3780f182efc8';
 
   /* Scroll progress */
   var bar = document.getElementById('progBar');
@@ -752,16 +754,16 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
         data[el.name] = el.value;
       }
     });
-    // Meta fields
-    data._subject = form.id === 'signupForm'
+    // Web3Forms meta fields
+    data.access_key = WEB3FORMS_ACCESS_KEY;
+    data.subject = form.id === 'signupForm'
       ? 'New Early Access Signup — PostaraTrend'
       : 'New Contact — PostaraTrend (' + (data.inquiry_type || 'Inquiry') + ')';
-    data._template = 'table';
-    data._captcha = 'false';
+    data.from_name = 'PostaraTrend Website';
     // Contact form submissions CC the CEO mailbox for founder visibility.
-    // Waitlist signups do NOT CC — that's just noise for the CEO.
+    // Waitlist signups do NOT CC — that is just noise for the CEO.
     if(form.id === 'contactForm'){
-      data._cc = 'admin@postaratrend.ca';
+      data.cc = 'admin@postaratrend.ca';
     }
 
     fetch(FORM_ENDPOINT, {
@@ -769,10 +771,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
       headers: {'Content-Type':'application/json','Accept':'application/json'},
       body: JSON.stringify(data)
     })
-    .then(function(r){ return r.json().catch(function(){ return {success:r.ok}; }); })
+    .then(function(r){ return r.json(); })
     .then(function(res){
-      var ok = res && (res.success === 'true' || res.success === true || (typeof res.success === 'undefined'));
-      if(ok){
+      if(res && res.success === true){
         form.reset();
         toast(successTitle, successMsg);
       } else {
