@@ -223,6 +223,16 @@ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000
 .guide-buy-row{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
 .guide-price{font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:800;color:var(--ltg);letter-spacing:-.01em}
 @media(max-width:760px){.guide-feature{grid-template-columns:1fr;gap:24px;padding:24px;text-align:center}.guide-feature-img{max-width:240px;margin:0 auto}.guide-feats{grid-template-columns:1fr;text-align:left;max-width:300px;margin-left:auto;margin-right:auto}.guide-buy-row{justify-content:center}}
+/* PROOF STRIP */
+.proof-strip{background:#0F2847;padding:30px 24px;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln)}
+.proof-in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;text-align:center}
+.proof-dot{width:9px;height:9px;border-radius:50%;background:var(--ltg);box-shadow:0 0 10px var(--ltg);flex-shrink:0}
+.proof-eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ltg);background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.25);border-radius:100px;padding:5px 12px;flex-shrink:0}
+.proof-in p{font-size:15.5px;color:var(--dim);line-height:1.6;margin:0}
+.proof-in p strong{color:var(--w);font-weight:600}
+.proof-in a{color:var(--ltg);text-decoration:none;font-weight:600;white-space:nowrap}
+.proof-in a:hover{color:var(--w)}
+@media(max-width:600px){.proof-in{gap:12px}.proof-in p{font-size:14px}}
 /* ABOUT */
 .about-story{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;margin-bottom:80px}
 .about-story h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,3.8vw,38px);font-weight:800;line-height:1.12;margin-bottom:22px;letter-spacing:-.025em}
@@ -428,9 +438,9 @@ html{scroll-behavior:auto}
 <div class="hero-logo"><svg width="64" height="64" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="120" height="120" rx="24" fill="#1A3A6B" stroke="rgba(29,158,117,0.3)" stroke-width="1.5"/><rect x="20" y="70" width="16" height="30" rx="3" fill="#5DCAA5"/><rect x="42" y="50" width="16" height="50" rx="3" fill="#1D9E75"/><rect x="64" y="30" width="16" height="70" rx="3" fill="#0F6E56"/><rect x="86" y="14" width="16" height="86" rx="3" fill="#FFF"/><polygon points="94,10 84,18 104,18" fill="#0F6E56"/></svg></div>
 <h1>PostaraTrend</h1>
 <div class="ht">Technologies</div>
-<p class="htl">Trend intelligence for the digital age</p>
+<p class="htl">Turn trends into brand-ready content, automatically.</p>
 <a href="https://postaratrend.ca" class="hu">postaratrend.ca</a>
-<p class="hsub">An Alberta technology company building AI-powered content automation and trend intelligence for small and medium businesses. Our first products are live today, and our autonomous publishing platform is in active development.</p>
+<p class="hsub">We are an Alberta technology company building AI that detects emerging trends and turns them into brand-safe content &mdash; so small and medium businesses stay visible without a content team. Our first products are live today; our autonomous publishing platform is in active development.</p>
 <div class="ha">
 <a href="#products" class="btn bp">See What Is Live <span class="ba">&rarr;</span></a>
 <a href="#about" class="btn bs">Learn More</a>
@@ -521,6 +531,13 @@ html{scroll-behavior:auto}
 <span class="scope-label-dot"></span>
 <span>Live Signal Detection</span>
 </div>
+</div>
+</section>
+<!-- PROOF STRIP -->
+<section class="proof-strip">
+<div class="proof-in">
+<span class="proof-eyebrow">Proof, not promises</span>
+<p>Our content system already runs the social presence for <strong>YYC Rental Studio</strong> &mdash; a live, operating business. We build what we use. <a href="#products">See the portfolio &rarr;</a></p>
 </div>
 </section>
 <!-- WHAT WE DO -->
