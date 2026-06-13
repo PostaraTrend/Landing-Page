@@ -226,6 +226,14 @@ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000
 /* LAUNCH BANNER */
 .launch-banner{background:rgba(29,158,117,.1);border:1px solid rgba(29,158,117,.3);border-radius:12px;padding:14px 22px;text-align:center;font-size:15px;color:var(--dim);max-width:760px;margin:0 auto 30px;line-height:1.5}
 .launch-banner strong{color:var(--ltg);font-weight:700;letter-spacing:.5px}
+/* LEAD MAGNET OPT-IN */
+.leadmag{background:linear-gradient(135deg,rgba(29,158,117,.13),rgba(29,158,117,.04));border:1px solid rgba(29,158,117,.28);border-radius:18px;padding:38px 42px;max-width:1040px;margin:0 auto;display:grid;grid-template-columns:190px 1fr;gap:42px;align-items:center}
+.leadmag-img{border-radius:10px;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.35)}
+.leadmag-img img{width:100%;display:block}
+.leadmag-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ltg);margin-bottom:10px}
+.leadmag h3{font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:700;letter-spacing:-.02em;color:var(--w);margin-bottom:10px;line-height:1.18}
+.leadmag p{font-size:15px;color:var(--dim);line-height:1.6;margin-bottom:22px;max-width:520px}
+@media(max-width:760px){.leadmag{grid-template-columns:1fr;text-align:center;padding:30px 26px;gap:24px}.leadmag-img{max-width:160px;margin:0 auto}.leadmag p{margin-left:auto;margin-right:auto}.leadmag .btn{width:auto}}
 /* PROOF STRIP */
 .proof-strip{background:#0F2847;padding:30px 24px;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln)}
 .proof-in{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;text-align:center}
@@ -673,6 +681,20 @@ html{scroll-behavior:auto}
 <a class="prod-cta" href="#signup">Request early access <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
 </div>
 <p class="prod-note" style="margin-top:28px">Both product lines are operated by PostaraTrend Technologies Inc. as part of our small-business digital portfolio. New tools are added as they are built and tested.</p>
+</div>
+</section>
+<!-- LEAD MAGNET OPT-IN -->
+<section class="sec bg4" style="padding-top:20px;padding-bottom:96px">
+<div class="wrap">
+<div class="leadmag">
+<div class="leadmag-img"><img src="leadmagnet-cover.jpg" alt="30 Content Ideas — free download" loading="lazy"></div>
+<div>
+<div class="leadmag-eyebrow">Free download</div>
+<h3>Not ready to buy? Start with 30 free content ideas.</h3>
+<p>A simple idea bank that gives you a full month of posts for your small business. Enter your email and it is yours, instantly.</p>
+<a class="btn bp" href="https://payhip.com/b/LYJbV" target="_blank" rel="noopener" style="display:inline-flex">Get the free idea bank <span class="ba">&rarr;</span></a>
+</div>
+</div>
 </div>
 </section>
 <!-- ABOUT -->
