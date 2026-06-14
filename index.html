@@ -425,6 +425,9 @@ html{scroll-behavior:auto}
 .yyc-shelf .shop-buy svg{width:11px;height:11px}
 @media(max-width:900px){.yyc-shelf{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}}
 @media(max-width:600px){.yyc-shelf{grid-template-columns:repeat(2,1fr);gap:12px;max-width:none}}
+/* GUIDES shelf — even, responsive, auto-fitting book row */
+.guide-shelf{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));max-width:860px;margin:0 auto}
+@media(max-width:600px){.guide-shelf{grid-template-columns:1fr;max-width:340px}}
 </style>
 </head>
 <body>
@@ -613,8 +616,16 @@ html{scroll-behavior:auto}
 </div>
 </div>
 </div>
-<p style="text-align:center;font-size:13px;color:var(--mut);margin:0 0 24px">Prefer just one? Buy the guide or the template kit on their own.</p>
-<div class="shop-grid" style="grid-template-columns:repeat(2,1fr);max-width:760px;margin:0 auto">
+<p style="text-align:center;font-size:13px;color:var(--mut);margin:0 0 24px">Prefer a single title? Each guide is available on its own.</p>
+<div class="shop-grid guide-shelf">
+<a class="shop-card" href="https://payhip.com/b/VxPQ9" target="_blank" rel="noopener">
+<div class="shop-img"><img src="product-systems-that-decide.jpg" alt="Systems That Decide — a practitioner's guide to building content pipelines that choose, judge, and know when to stay silent" loading="lazy"></div>
+<div class="shop-body">
+<div class="shop-name">Systems That Decide</div>
+<div class="shop-desc">How to build content pipelines that choose, judge, and know when to stay silent. A practitioner's guide, illustrated.</div>
+<div class="shop-foot"><span class="shop-price">CA$24.99</span><span class="shop-buy">Get it <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+</div>
+</a>
 <a class="shop-card" href="https://payhip.com/b/lKYda" target="_blank" rel="noopener">
 <div class="shop-img"><img src="product-image.jpg" alt="The Lean Content Operation — a guide to creating great content without a big team" loading="lazy"></div>
 <div class="shop-body">
