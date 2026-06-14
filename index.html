@@ -413,6 +413,18 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
 html{scroll-behavior:auto}
 }
+/* YYC compact product shelf — smaller, evenly aligned cards (scoped; does not affect the Guides grid) */
+.yyc-shelf{grid-template-columns:repeat(auto-fill,minmax(184px,1fr));gap:16px}
+.yyc-shelf .shop-card{border-radius:12px}
+.yyc-shelf .shop-img{aspect-ratio:1/1}
+.yyc-shelf .shop-body{padding:12px 14px 13px}
+.yyc-shelf .shop-name{font-size:13.5px;line-height:1.3;margin-bottom:5px;min-height:35px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.yyc-shelf .shop-desc{font-size:11.5px;line-height:1.5;margin-bottom:12px;min-height:35px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.yyc-shelf .shop-price{font-size:15px}
+.yyc-shelf .shop-buy{font-size:11px;padding:5px 9px}
+.yyc-shelf .shop-buy svg{width:11px;height:11px}
+@media(max-width:900px){.yyc-shelf{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}}
+@media(max-width:600px){.yyc-shelf{grid-template-columns:repeat(2,1fr);gap:12px;max-width:none}}
 </style>
 </head>
 <body>
@@ -632,12 +644,68 @@ html{scroll-behavior:auto}
 <span class="tdiv"></span>
 <span class="ts"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>Alberta-specific, RTA compliant</span>
 </div>
-<div class="shop-grid">
+<div class="shop-grid yyc-shelf">
+<a class="shop-card" href="https://www.etsy.com/ca/listing/4521630320" target="_blank" rel="noopener">
+<div class="shop-img"><img src="product-moveout-bundle.webp" alt="Alberta Move-Out Bundle — condition report, deposit kit, and tenant scripts in one pack" loading="lazy"></div>
+<div class="shop-body">
+<div class="shop-name">Alberta Move-Out Bundle</div>
+<div class="shop-desc">Inspection, deposit, and tenant scripts in one pack. Priced below buying separately.</div>
+<div class="shop-foot"><span class="shop-price">CA$44.99</span><span class="shop-buy">View <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+</div>
+</a>
+<a class="shop-card" href="https://www.etsy.com/ca/listing/4521621820" target="_blank" rel="noopener">
+<div class="shop-img"><img src="product-diaspora-guide.webp" alt="Diaspora Investor's Guide to Calgary Real Estate" loading="lazy"></div>
+<div class="shop-body">
+<div class="shop-name">Diaspora Investor's Guide</div>
+<div class="shop-desc">Your first Calgary investment property: eligibility, newcomer financing, and how to run it from anywhere.</div>
+<div class="shop-foot"><span class="shop-price">CA$28.99</span><span class="shop-buy">View <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+</div>
+</a>
+<a class="shop-card" href="https://www.etsy.com/ca/listing/4521631791" target="_blank" rel="noopener">
+<div class="shop-img"><img src="product-income-tracker.webp" alt="Alberta Rental Income and Expense Tracker — Excel and Google Sheets, CRA T776 categories" loading="lazy"></div>
+<div class="shop-body">
+<div class="shop-name">Income &amp; Expense Tracker</div>
+<div class="shop-desc">Rent and expenses all year, totals mapped to the CRA T776 form. Excel and Sheets.</div>
+<div class="shop-foot"><span class="shop-price">CA$28.99</span><span class="shop-buy">View <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+</div>
+</a>
+<a class="shop-card" href="https://www.etsy.com/ca/listing/4521570843" target="_blank" rel="noopener">
+<div class="shop-img"><img src="product-condition-report.webp" alt="Move-In Move-Out Condition Report Pack — Alberta RTA compliant inspection reports" loading="lazy"></div>
+<div class="shop-body">
+<div class="shop-name">Condition Report Pack</div>
+<div class="shop-desc">Move-in and move-out inspection reports that hold up at the RTDRS.</div>
+<div class="shop-foot"><span class="shop-price">CA$18.99</span><span class="shop-buy">View <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+</div>
+</a>
+<a class="shop-card" href="https://www.etsy.com/ca/listing/4521625144" target="_blank" rel="noopener">
+<div class="shop-img"><img src="product-deposit-kit.webp" alt="Alberta Deposit and Move-Out Compliance Kit — statement of account and ten-day deadline tracker" loading="lazy"></div>
+<div class="shop-body">
+<div class="shop-name">Deposit &amp; Move-Out Compliance Kit</div>
+<div class="shop-desc">Return every deposit on time and dispute-proof. Built around the ten-day deadline.</div>
+<div class="shop-foot"><span class="shop-price">CA$23.99</span><span class="shop-buy">View <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+</div>
+</a>
+<a class="shop-card" href="https://www.etsy.com/ca/listing/4521612829" target="_blank" rel="noopener">
+<div class="shop-img"><img src="product-tenant-scripts.webp" alt="Tenant Communication Scripts, Alberta Edition — fourteen ready-to-send landlord messages" loading="lazy"></div>
+<div class="shop-body">
+<div class="shop-name">Tenant Communication Scripts</div>
+<div class="shop-desc">Fourteen firm, professional, ready-to-send scripts for every landlord conversation.</div>
+<div class="shop-foot"><span class="shop-price">CA$14.99</span><span class="shop-buy">View <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+</div>
+</a>
+<a class="shop-card" href="https://www.etsy.com/ca/listing/4521635551" target="_blank" rel="noopener">
+<div class="shop-img"><img src="product-welcome-pack.webp" alt="Tenant Welcome Pack — welcome letter, house rules, home info sheet, and contacts" loading="lazy"></div>
+<div class="shop-body">
+<div class="shop-name">Tenant Welcome Pack</div>
+<div class="shop-desc">A warm move-in: welcome letter, house rules, home info sheet, and key contacts.</div>
+<div class="shop-foot"><span class="shop-price">CA$13.99</span><span class="shop-buy">View <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
+</div>
+</a>
 <a class="shop-card" href="https://www.etsy.com/ca/listing/4513949621/alberta-landlord-toolkit-rental-forms" target="_blank" rel="noopener">
 <div class="shop-img"><img src="product-toolkit.webp" alt="Alberta Landlord Toolkit — listing, showing, and renting documents for Calgary landlords" loading="lazy"></div>
 <div class="shop-body">
 <div class="shop-name">Alberta Landlord Toolkit</div>
-<div class="shop-desc">List, show, and rent your Calgary unit — done right. Ten documents, worked examples, two formats.</div>
+<div class="shop-desc">List, show, and rent your Calgary unit. Ten documents, worked examples, two formats.</div>
 <div class="shop-foot"><span class="shop-price">CA$24.90</span><span class="shop-buy">View <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
 </div>
 </a>
@@ -645,7 +713,7 @@ html{scroll-behavior:auto}
 <div class="shop-img"><img src="product-deal-analyzer.webp" alt="Calgary Rental Property Deal Analyzer — an Excel spreadsheet for cash flow, cap rate, and ROI" loading="lazy"></div>
 <div class="shop-body">
 <div class="shop-name">Calgary Rental Property Deal Analyzer</div>
-<div class="shop-desc">An Excel spreadsheet that tells you whether the numbers work, before you buy. Cash flow, cap rate, ROI.</div>
+<div class="shop-desc">An Excel spreadsheet that tells you whether the numbers work, before you buy.</div>
 <div class="shop-foot"><span class="shop-price">CA$19.90</span><span class="shop-buy">View <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
 </div>
 </a>
@@ -653,7 +721,7 @@ html{scroll-behavior:auto}
 <div class="shop-img"><img src="product-screening-kit.webp" alt="Tenant Screening Kit — rental application and screening documents for Alberta private landlords" loading="lazy"></div>
 <div class="shop-body">
 <div class="shop-name">Tenant Screening Kit</div>
-<div class="shop-desc">Rental application and screening documents for Alberta private landlords. Four editable documents.</div>
+<div class="shop-desc">Rental application and screening documents for Alberta landlords. Four editable documents.</div>
 <div class="shop-foot"><span class="shop-price">CA$11.99</span><span class="shop-buy">View <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
 </div>
 </a>
@@ -661,7 +729,7 @@ html{scroll-behavior:auto}
 <div class="shop-img"><img src="product-checklist.webp" alt="The Pre-Rental Checklist — eight steps to screen any applicant properly, Alberta-specific" loading="lazy"></div>
 <div class="shop-body">
 <div class="shop-name">Pre-Rental Checklist</div>
-<div class="shop-desc">Eight steps to screen any applicant properly, on one page. Alberta-specific. Instant PDF.</div>
+<div class="shop-desc">Eight steps to screen any applicant properly, on one page. Alberta-specific.</div>
 <div class="shop-foot"><span class="shop-price">CA$1.00</span><span class="shop-buy">View <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span></div>
 </div>
 </a>
