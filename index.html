@@ -636,6 +636,7 @@ html{scroll-behavior:auto}
 .ps-kick{font:600 11px/1 'Geist',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--ltg);margin:0 0 10px}
 .ps-h{font:800 clamp(22px,2.6vw,29px)/1.2 'Bricolage Grotesque',sans-serif;color:var(--w);margin:0 0 6px;letter-spacing:-.02em}
 .ps-sub{font:400 14.5px/1.6 'Geist',sans-serif;color:var(--mut);margin:0 0 26px;max-width:62ch}
+.ps-period{display:inline-block;font:500 13px/1 'Geist',sans-serif;color:var(--plg);background:rgba(29,158,117,.10);border:1px solid var(--ln);border-radius:999px;padding:8px 15px;margin:0 0 26px}
 .ps-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:30px}
 .ps-card{flex:1 1 200px;background:var(--nbg);border:1px solid var(--lnd);border-radius:13px;padding:20px 22px}
 .ps-n{font:800 34px/1 'Bricolage Grotesque',sans-serif;color:var(--w);letter-spacing:-.02em;margin:0 0 6px}
@@ -663,6 +664,7 @@ html{scroll-behavior:auto}
   <p class="ps-kick">Live from the platform</p>
   <h2 class="ps-h">What the system has published, and what it refused.</h2>
   <p class="ps-sub">These numbers are written by the publishing platform itself, counted from its own logs. The refusal count is the one that matters: it is the work the editorial gate declined to put on a page.</p>
+  <p class="ps-period" id="ps-period"></p>
 
   <div class="ps-row">
     <div class="ps-card"><p class="ps-n" id="ps-pub">0</p><p class="ps-l">posts published</p></div>
@@ -718,6 +720,15 @@ html{scroll-behavior:auto}
       q('ps-lanebox').style.display='none';
     }
 
+    var fmt=function(iso){
+      var t=Date.parse(iso); if(isNaN(t)) return '';
+      var d2=new Date(t);
+      var mo=['January','February','March','April','May','June','July','August','September','October','November','December'][d2.getMonth()];
+      return d2.getDate()+' '+mo+' '+d2.getFullYear();
+    };
+    var ps=fmt(d.period_start);
+    q('ps-period').textContent = ps ? ('Counting everything published since '+ps) : '';
+    if(!ps){ q('ps-period').style.display='none'; }
     var bits=[];
     if(d.last_published) bits.push('Last published '+ago(d.last_published));
     if(d.updated_at) bits.push('counts refreshed '+ago(d.updated_at));
