@@ -59,6 +59,19 @@
     {
       "type": "video",
       "format": "Short vertical video",
+      "lane": "PostaraTrend",
+      "date": "",
+      "orientation": "vertical",
+      "kicker": "SMB Tip",
+      "headline": "One negative review should not cost you a customer",
+      "image": "assets/showroom/negative-review-poster.jpg",
+      "video": "assets/showroom/negative-review-reel.mp4",
+      "caption": "",
+      "url": ""
+    },
+    {
+      "type": "video",
+      "format": "Short vertical video",
       "lane": "Trend Radar Nigeria",
       "date": "",
       "orientation": "vertical",
@@ -66,6 +79,19 @@
       "headline": "People's Voice Edition",
       "image": "assets/showroom/peoples-voice-poster.jpg",
       "video": "assets/showroom/peoples-voice-reel.mp4",
+      "caption": "",
+      "url": ""
+    },
+    {
+      "type": "video",
+      "format": "Narrated story reel",
+      "lane": "Trend Radar Nigeria",
+      "date": "",
+      "orientation": "vertical",
+      "kicker": "Heritage",
+      "headline": "Every culture holds a story worth telling",
+      "image": "assets/showroom/heritage-story-poster.jpg",
+      "video": "assets/showroom/heritage-story-reel.mp4",
       "caption": "",
       "url": ""
     }
