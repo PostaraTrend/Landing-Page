@@ -1,1 +1,20 @@
-
+{
+  "updated_at": "2026-07-22T04:31:22.516Z",
+  "totals": {
+    "published": 1437,
+    "refused": 54
+  },
+  "windows": {
+    "published_7d": 558,
+    "published_30d": 1437
+  },
+  "last_published": "2026-07-22T02:38:26.203Z",
+  "lanes": [
+    {
+      "label": "Trend Radar Nigeria",
+      "published": 1437,
+      "refused": 54,
+      "last_published": "2026-07-22T02:38:26.203Z"
+    }
+  ]
+}
