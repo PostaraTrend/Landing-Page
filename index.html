@@ -956,6 +956,170 @@ html{scroll-behavior:auto}
 
   </div>
 </section>
+<!-- ============================================================
+     POSTARATREND SHOWROOM
+     Reads /data/showroom.json. Add samples by editing that file,
+     no HTML changes needed. Images live in assets/showroom/.
+     Three kinds of entry are supported:
+       card   one image, or a drawn panel if no image is given
+       story  a frames array, stepped through in order, so a
+              narrative carries across several pictures
+       video  set video to an mp4 in the repo and it plays inline,
+              with image used as the poster frame. If no mp4 is
+              given it falls back to the poster plus a link out.
+     Hidden entirely if the file is missing or empty.
+     ============================================================ -->
+<style>
+#ptshow{display:none;padding:96px 0;background:var(--nd)}
+#ptshow .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+.sr-kick{font:600 12px/1 'Geist',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--ltg);margin:0 0 14px}
+.sr-h{font:800 clamp(28px,3.8vw,42px)/1.14 'Bricolage Grotesque',sans-serif;color:var(--w);margin:0 0 16px;letter-spacing:-.02em;max-width:18ch}
+.sr-h em{font-style:normal;color:var(--ltg)}
+.sr-sub{font:400 16px/1.65 'Geist',sans-serif;color:var(--dim);max-width:660px;margin:0 0 52px}
+.sr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.sr-item{background:var(--nbg);border:1px solid var(--lnd);border-radius:15px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .3s,transform .3s}
+.sr-item:hover{border-color:rgba(29,158,117,.4);transform:translateY(-3px)}
+.sr-item.wide{grid-column:span 2}
+.sr-imgwrap{position:relative;width:100%;aspect-ratio:4/5;background:#0D2444;overflow:hidden}
+.sr-imgwrap.tall{aspect-ratio:9/16}
+.sr-imgwrap img{width:100%;height:100%;object-fit:cover;display:block}
+.sr-imgwrap video{width:100%;height:100%;object-fit:cover;display:block;background:#0D2444}
+.sr-mock{position:absolute;inset:0;padding:26px 24px;display:flex;flex-direction:column;background:linear-gradient(165deg,#173461,#0F2847)}
+.sr-mock-wm{font:800 15px/1 'Bricolage Grotesque',sans-serif;color:var(--w);margin-bottom:auto}
+.sr-mock-wm em{font-style:normal;color:var(--green)}
+.sr-mock-kick{display:inline-block;font:600 9px/1 'Geist',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--plg);border:1px solid var(--ln);border-radius:99px;padding:5px 10px;margin-bottom:14px;align-self:flex-start}
+.sr-mock-hl{font:800 clamp(16px,1.9vw,20px)/1.22 'Bricolage Grotesque',sans-serif;color:var(--w);letter-spacing:-.02em}
+.sr-mock-foot{margin-top:auto;padding-top:16px;border-top:1px solid var(--lnd);font:400 9px/1 'Geist',sans-serif;color:var(--mut);letter-spacing:.08em}
+/* story frames */
+.sr-frames{position:absolute;inset:0}
+.sr-frame{position:absolute;inset:0;opacity:0;transition:opacity .45s ease;pointer-events:none}
+.sr-frame.on{opacity:1;pointer-events:auto}
+.sr-fcap{position:absolute;left:0;right:0;bottom:0;padding:44px 20px 18px;background:linear-gradient(180deg,transparent,rgba(9,26,50,.94));font:500 14px/1.5 'Geist',sans-serif;color:var(--w)}
+.sr-nav{position:absolute;left:14px;right:14px;bottom:14px;display:flex;align-items:center;gap:10px;z-index:3}
+.sr-dots{display:flex;gap:6px;margin-right:auto}
+.sr-dot{width:22px;height:3px;border-radius:99px;background:rgba(255,255,255,.28);transition:background .3s}
+.sr-dot.on{background:var(--ltg)}
+.sr-btn{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(9,26,50,.72);color:var(--w);font:600 15px/1 sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s;backdrop-filter:blur(8px)}
+.sr-btn:hover{background:var(--green);border-color:var(--green)}
+.sr-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.sr-play span{width:56px;height:56px;border-radius:50%;background:rgba(9,26,50,.62);border:1.5px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.sr-play svg{width:20px;height:20px;fill:var(--w);margin-left:3px}
+.sr-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+.sr-tags{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.sr-fmt{font:600 10px/1 'Geist',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--ltg);background:rgba(29,158,117,.10);border:1px solid var(--ln);border-radius:99px;padding:5px 10px}
+.sr-lane{font:500 10px/1 'Geist',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);border:1px solid var(--lnd);border-radius:99px;padding:5px 10px}
+.sr-date{font:400 11.5px/1 'Geist',sans-serif;color:var(--mut);margin-left:auto}
+.sr-cap{font:400 13.5px/1.65 'Geist',sans-serif;color:var(--dim);margin:0 0 14px;white-space:pre-line}
+.sr-link{margin-top:auto;font:600 12.5px/1 'Geist',sans-serif;color:var(--ltg);text-decoration:none}
+.sr-link:hover{color:var(--w)}
+.sr-ref{margin-top:56px;background:var(--nbg);border:1px solid var(--lnd);border-radius:15px;padding:30px 32px 26px}
+.sr-ref-h{font:700 19px/1.3 'Bricolage Grotesque',sans-serif;color:var(--w);margin:0 0 6px}
+.sr-ref-s{font:400 14px/1.6 'Geist',sans-serif;color:var(--mut);margin:0 0 24px;max-width:64ch}
+.sr-ref-i{padding:16px 0;border-top:1px solid var(--lnd)}
+.sr-ref-t{font:600 14.5px/1.4 'Geist',sans-serif;color:var(--w);margin:0 0 6px}
+.sr-ref-r{font:400 13.5px/1.6 'Geist',sans-serif;color:var(--dim);margin:0;padding-left:16px;border-left:2px solid var(--green)}
+@media(max-width:980px){.sr-grid{grid-template-columns:repeat(2,1fr)}.sr-item.wide{grid-column:span 2}}
+@media(max-width:640px){.sr-grid{grid-template-columns:1fr}.sr-item.wide{grid-column:span 1}#ptshow{padding:72px 0}.sr-h{max-width:none}}
+</style>
+
+<section id="ptshow"><div class="wrap">
+  <p class="sr-kick">Showroom</p>
+  <h2 class="sr-h">Work the system published, <em>and work it refused</em>.</h2>
+  <p class="sr-sub">Every piece below was decided, written and published by the platform: branded cards, picture led stories that carry across several frames, and short vertical video you can play. The refusals underneath are real too, taken from the same logs, with the reason the editorial gate gave at the time.</p>
+  <div class="sr-grid" id="sr-grid"></div>
+  <div class="sr-ref" id="sr-refbox" style="display:none">
+    <h3 class="sr-ref-h">And a few it declined to publish</h3>
+    <p class="sr-ref-s">Refusals are recorded with their reason, which is what makes brand safety something you can read rather than something you are promised.</p>
+    <div id="sr-reflist"></div>
+  </div>
+</div></section>
+
+<script>
+(function(){
+  var esc=function(s){var d=document.createElement('div');d.textContent=String(s==null?'':s);return d.innerHTML;};
+  var fmtDate=function(v){
+    var t=Date.parse(v); if(isNaN(t)) return '';
+    var d=new Date(t), mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+    return d.getDate()+' '+mo+' '+d.getFullYear();
+  };
+  var panel=function(i){
+    return '<div class="sr-mock"><div class="sr-mock-wm">Postara<em>Trend</em></div>'
+      +(i.kicker?'<span class="sr-mock-kick">'+esc(i.kicker)+'</span>':'')
+      +'<p class="sr-mock-hl">'+esc(i.headline||'')+'</p>'
+      +'<div class="sr-mock-foot">postaratrend.ca &middot; Calgary, Alberta</div></div>';
+  };
+  fetch('data/showroom.json?t='+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(d){
+    if(!d) return;
+    var items=(d.items||[]).filter(function(i){return i && (i.headline||i.caption||(i.frames&&i.frames.length));});
+    if(items.length===0) return;
+
+    document.getElementById('sr-grid').innerHTML=items.map(function(i,idx){
+      var frames=(i.frames||[]).filter(function(f){return f && (f.image||f.text);});
+      var isStory=frames.length>1, tall=(i.orientation==='vertical');
+      var visual;
+      if(isStory){
+        visual='<div class="sr-frames" data-story="'+idx+'">'
+          +frames.map(function(f,n){
+            return '<div class="sr-frame'+(n===0?' on':'')+'" data-n="'+n+'">'
+              +(f.image?'<img src="'+esc(f.image)+'" alt="'+esc(f.text||'Story frame')+'" loading="lazy">':panel({headline:f.text||'',kicker:i.kicker}))
+              +(f.image&&f.text?'<div class="sr-fcap">'+esc(f.text)+'</div>':'')
+              +'</div>';
+          }).join('')
+          +'</div>'
+          +'<div class="sr-nav"><div class="sr-dots">'
+          +frames.map(function(f,n){return '<span class="sr-dot'+(n===0?' on':'')+'"></span>';}).join('')
+          +'</div><button class="sr-btn" data-dir="-1" aria-label="Previous frame">&lsaquo;</button>'
+          +'<button class="sr-btn" data-dir="1" aria-label="Next frame">&rsaquo;</button></div>';
+      } else {
+        if(i.video){
+          visual = '<video controls playsinline preload="none" '
+            +(i.image?'poster="'+esc(i.image)+'" ':'')
+            +'><source src="'+esc(i.video)+'" type="video/mp4">Your browser cannot play this video.</video>';
+        } else {
+          visual = i.image ? '<img src="'+esc(i.image)+'" alt="'+esc(i.headline||'Published post')+'" loading="lazy">' : panel(i);
+          if(i.type==='video'){
+            visual += '<div class="sr-play"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div>';
+          }
+        }
+      }
+      return '<article class="sr-item'+(isStory?' wide':'')+'">'
+        +'<div class="sr-imgwrap'+(tall?' tall':'')+'">'+visual+'</div>'
+        +'<div class="sr-body">'
+          +'<div class="sr-tags">'
+            +(i.format?'<span class="sr-fmt">'+esc(i.format)+'</span>':'')
+            +(i.lane?'<span class="sr-lane">'+esc(i.lane)+'</span>':'')
+            +(i.date?'<span class="sr-date">'+esc(fmtDate(i.date))+'</span>':'')
+          +'</div>'
+          +(i.caption?'<p class="sr-cap">'+esc(i.caption)+'</p>':'')
+          +(i.url?'<a class="sr-link" href="'+esc(i.url)+'" target="_blank" rel="noopener">See the live post</a>':'')
+        +'</div></article>';
+    }).join('');
+
+    Array.prototype.forEach.call(document.querySelectorAll('.sr-item'), function(item){
+      var wrap=item.querySelector('.sr-frames'); if(!wrap) return;
+      var fr=wrap.querySelectorAll('.sr-frame'), dots=item.querySelectorAll('.sr-dot'), cur=0;
+      var go=function(n){
+        cur=(n+fr.length)%fr.length;
+        Array.prototype.forEach.call(fr,function(f,k){ f.classList.toggle('on',k===cur); });
+        Array.prototype.forEach.call(dots,function(x,k){ x.classList.toggle('on',k===cur); });
+      };
+      Array.prototype.forEach.call(item.querySelectorAll('.sr-btn'),function(b){
+        b.addEventListener('click',function(){ go(cur+parseInt(b.dataset.dir,10)); });
+      });
+    });
+
+    var refs=(d.refusals||[]).filter(function(r){return r && r.reason;});
+    if(refs.length>0){
+      document.getElementById('sr-reflist').innerHTML=refs.map(function(r){
+        return '<div class="sr-ref-i"><p class="sr-ref-t">'+esc(r.topic||'An item the system reviewed')+'</p>'
+          +'<p class="sr-ref-r">'+esc(r.reason)+'</p></div>';
+      }).join('');
+      document.getElementById('sr-refbox').style.display='block';
+    }
+    document.getElementById('ptshow').style.display='block';
+  }).catch(function(){});
+})();
+</script>
 <!-- ABOUT -->
 <section class="sec bg4" id="about">
 <div class="grid-bg" style="opacity:.3"></div>
