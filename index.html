@@ -623,7 +623,110 @@ html{scroll-behavior:auto}
 <p>Our content system already runs the social presence for <strong>YYC Rental Studio</strong> &mdash; a live, operating business. We build what we use. <a href="products.html#yyc">See YYC Rental Studio &rarr;</a></p>
 </div>
 </section>
-postaratrend_live_stats_section.html
+<!-- ============================================================
+     POSTARATREND LIVE STATS
+     Reads /data/stats.json, written by the Website Stats Publisher.
+     Paste into index.html just above the What We Do section.
+     Hidden until the file loads, so a failed fetch shows nothing
+     rather than showing zeros.
+     ============================================================ -->
+<style>
+#ptstats{display:none;padding:56px 0 44px;background:var(--nd)}
+#ptstats .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+.ps-kick{font:600 11px/1 'Geist',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--ltg);margin:0 0 10px}
+.ps-h{font:800 clamp(22px,2.6vw,29px)/1.2 'Bricolage Grotesque',sans-serif;color:var(--w);margin:0 0 6px;letter-spacing:-.02em}
+.ps-sub{font:400 14.5px/1.6 'Geist',sans-serif;color:var(--mut);margin:0 0 26px;max-width:62ch}
+.ps-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:30px}
+.ps-card{flex:1 1 200px;background:var(--nbg);border:1px solid var(--lnd);border-radius:13px;padding:20px 22px}
+.ps-n{font:800 34px/1 'Bricolage Grotesque',sans-serif;color:var(--w);letter-spacing:-.02em;margin:0 0 6px}
+.ps-n.g{color:var(--ltg)}
+.ps-l{font:400 13px/1.45 'Geist',sans-serif;color:var(--mut);margin:0}
+.ps-lanes{background:var(--nbg);border:1px solid var(--lnd);border-radius:13px;padding:22px 24px 10px}
+.ps-lh{font:600 12px/1 'Geist',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--ltg);margin:0 0 18px}
+.ps-lane{margin-bottom:18px}
+.ps-lt{display:flex;align-items:baseline;gap:10px;margin-bottom:7px}
+.ps-lname{font:600 14.5px/1.3 'Geist',sans-serif;color:var(--w);margin:0}
+.ps-lmeta{font:400 12.5px/1.3 'Geist',sans-serif;color:var(--mut);margin:0 0 0 auto;white-space:nowrap}
+.ps-track{height:9px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;display:flex}
+.ps-bar{height:100%;background:var(--green);border-radius:99px 0 0 99px;transition:width .8s ease}
+.ps-bar2{height:100%;background:rgba(163,228,204,.42)}
+.ps-key{display:flex;gap:18px;margin:20px 0 14px;padding-top:16px;border-top:1px solid var(--lnd)}
+.ps-ki{display:flex;align-items:center;gap:7px;font:400 12.5px/1 'Geist',sans-serif;color:var(--mut)}
+.ps-sw{width:11px;height:11px;border-radius:3px;flex:none}
+.ps-foot{display:flex;align-items:center;gap:9px;margin-top:16px}
+.ps-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.ps-foot span{font:400 12.5px/1 'Geist',sans-serif;color:var(--mut)}
+@media(max-width:640px){.ps-card{flex:1 1 100%}#ptstats{padding:44px 0 34px}}
+</style>
+
+<section id="ptstats"><div class="wrap">
+  <p class="ps-kick">Live from the platform</p>
+  <h2 class="ps-h">What the system has published, and what it refused.</h2>
+  <p class="ps-sub">These numbers are written by the publishing platform itself, counted from its own logs. The refusal count is the one that matters: it is the work the editorial gate declined to put on a page.</p>
+
+  <div class="ps-row">
+    <div class="ps-card"><p class="ps-n" id="ps-pub">0</p><p class="ps-l">posts published</p></div>
+    <div class="ps-card"><p class="ps-n g" id="ps-ref">0</p><p class="ps-l">drafts refused by the editorial gate</p></div>
+    <div class="ps-card"><p class="ps-n" id="ps-30">0</p><p class="ps-l">published in the last thirty days</p></div>
+  </div>
+
+  <div class="ps-lanes" id="ps-lanebox">
+    <p class="ps-lh">By lane</p>
+    <div id="ps-lanelist"></div>
+    <div class="ps-key">
+      <span class="ps-ki"><span class="ps-sw" style="background:var(--green)"></span>published</span>
+      <span class="ps-ki"><span class="ps-sw" style="background:rgba(163,228,204,.42)"></span>refused</span>
+    </div>
+  </div>
+
+  <div class="ps-foot"><span class="ps-dot"></span><span id="ps-when">live</span></div>
+</div></section>
+
+<script>
+(function(){
+  var esc=function(s){var d=document.createElement('div');d.textContent=String(s==null?'':s);return d.innerHTML;};
+  var ago=function(iso){
+    if(!iso) return '';
+    var m=Math.floor((Date.now()-Date.parse(iso))/60000);
+    if(isNaN(m)) return '';
+    if(m<60) return m<=1?'just now':m+' minutes ago';
+    var h=Math.floor(m/60); if(h<24) return h===1?'an hour ago':h+' hours ago';
+    var d=Math.floor(h/24); return d===1?'yesterday':d+' days ago';
+  };
+  fetch('data/stats.json?t='+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(d){
+    if(!d||!d.totals||!d.totals.published){return;}
+    var q=function(i){return document.getElementById(i);};
+    q('ps-pub').textContent=d.totals.published.toLocaleString();
+    q('ps-ref').textContent=(d.totals.refused||0).toLocaleString();
+    q('ps-30').textContent=((d.windows&&d.windows.published_30d)||0).toLocaleString();
+
+    var lanes=(d.lanes||[]).filter(function(l){return (l.published||0)+(l.refused||0)>0;});
+    if(lanes.length>1){
+      var max=Math.max.apply(null,lanes.map(function(l){return (l.published||0)+(l.refused||0);}))||1;
+      q('ps-lanelist').innerHTML=lanes.map(function(l){
+        var p=l.published||0, r=l.refused||0, tot=p+r;
+        var w=(tot/max)*100, pw=tot?(p/tot)*100:0, rw=tot?(r/tot)*100:0;
+        return '<div class="ps-lane">'
+          +'<div class="ps-lt"><p class="ps-lname">'+esc(l.label)+'</p>'
+          +'<p class="ps-lmeta">'+p.toLocaleString()+' published, '+r.toLocaleString()+' refused</p></div>'
+          +'<div class="ps-track" style="width:'+w.toFixed(1)+'%">'
+          +'<span class="ps-bar" style="width:'+pw.toFixed(1)+'%"></span>'
+          +'<span class="ps-bar2" style="width:'+rw.toFixed(1)+'%"></span>'
+          +'</div></div>';
+      }).join('');
+    } else {
+      q('ps-lanebox').style.display='none';
+    }
+
+    var bits=[];
+    if(d.last_published) bits.push('Last published '+ago(d.last_published));
+    if(d.updated_at) bits.push('counts refreshed '+ago(d.updated_at));
+    q('ps-when').textContent=bits.join(', ')||'live';
+    q('ptstats').style.display='block';
+  }).catch(function(){});
+})();
+</script>
+<!-- WHAT WE DO -->
 <section class="sec bg2" id="what">
 <div class="arc arc-sm" style="width:400px;height:400px;bottom:-200px;right:-100px"></div>
 <div class="wrap">
