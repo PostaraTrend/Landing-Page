@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-07-22T06:00:07.771Z",
+  "updated_at": "2026-07-22T08:30:09.670Z",
   "totals": {
-    "published": 603,
+    "published": 604,
     "refused": 28
   },
   "windows": {
     "published_7d": 226,
-    "published_30d": 596
+    "published_30d": 597
   },
   "period_start": "2026-06-18T19:06:30.422Z",
   "period_end": "2026-07-22T05:04:32.367Z",
@@ -21,7 +21,7 @@
     },
     {
       "label": "PostaraTrend",
-      "published": 122,
+      "published": 123,
       "refused": 5,
       "first_published": "2026-06-18T19:06:30.422Z",
       "last_published": "2026-07-22T00:00:18.514Z"
