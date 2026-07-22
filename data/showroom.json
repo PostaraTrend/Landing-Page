@@ -1,1 +1,87 @@
-
+{
+  "note": "Edit this file to change the showroom. No HTML changes needed. Images and mp4 files live in assets/showroom/. An entry with two or more frames renders as a story you can step through. An entry with a video field plays inline, using image as its poster frame. Leave image blank and a branded panel is drawn from the headline instead.",
+  "items": [
+    {
+      "type": "card",
+      "format": "Trend briefing",
+      "lane": "PostaraTrend",
+      "date": "2026-07-21",
+      "kicker": "Trend Signal",
+      "headline": "Youth Entrepreneurship Applications Are Surging Across Canada",
+      "image": "assets/showroom/trend-youth-entrepreneurship.jpg",
+      "caption": "A new wave of young entrepreneurs is reshaping the Canadian business landscape. Futurpreneur is reporting a surge in applications as more youth pursue business ownership, signaling a generational shift worth paying attention to. For small and medium businesses, this trend points to a growing pool of fresh competitors, collaborators, and customers. BetaKit covers the full picture of what this momentum looks like across Canada.\n\n#SmallBusiness #CanadianEntrepreneurs #TrendWatch",
+      "url": ""
+    },
+    {
+      "type": "card",
+      "format": "Practical tip",
+      "lane": "PostaraTrend",
+      "date": "",
+      "kicker": "SMB Tip",
+      "headline": "Share one customer result each month.",
+      "image": "assets/showroom/smb-tip-customer-result.jpg",
+      "caption": "",
+      "url": ""
+    },
+    {
+      "type": "card",
+      "format": "Proof of work",
+      "lane": "PostaraTrend",
+      "date": "2026-07-20",
+      "kicker": "Fleet Proof",
+      "headline": "248 posts published last week across 17 lanes. Zero manual touches.",
+      "image": "assets/showroom/fleet-proof-248-posts.jpg",
+      "caption": "",
+      "url": ""
+    },
+    {
+      "type": "card",
+      "format": "Picture led post",
+      "lane": "Trend Radar Nigeria",
+      "date": "",
+      "kicker": "Naija Naturals",
+      "headline": "The African Savanna",
+      "image": "assets/showroom/naija-naturals-savanna.jpg",
+      "caption": "There is a power in this gaze that stops the world completely still.",
+      "url": ""
+    },
+    {
+      "type": "card",
+      "format": "Picture led post",
+      "lane": "Trend Radar Nigeria",
+      "date": "",
+      "kicker": "Naija Lens",
+      "headline": "This is what home is. And it never needs a reason.",
+      "image": "assets/showroom/naija-lens-home.jpg",
+      "caption": "There is no special occasion here.",
+      "url": ""
+    },
+    {
+      "type": "video",
+      "format": "Short vertical video",
+      "lane": "Trend Radar Nigeria",
+      "date": "",
+      "orientation": "vertical",
+      "kicker": "People's Voice",
+      "headline": "People's Voice Edition",
+      "image": "assets/showroom/peoples-voice-poster.jpg",
+      "video": "assets/showroom/peoples-voice-reel.mp4",
+      "caption": "",
+      "url": ""
+    }
+  ],
+  "refusals": [
+    {
+      "topic": "An active policy controversy",
+      "reason": "Crypto regulation is an active political and partisan policy controversy that a small business marketing brand should not comment on."
+    },
+    {
+      "topic": "A story outside the audience",
+      "reason": "The athlete career transition platform topic does not clearly fit the PostaraTrend audience of Canadian small and medium businesses focused on marketing, social media, and trend intelligence."
+    },
+    {
+      "topic": "A corporate story with no reader value",
+      "reason": "A corporate acquisition story about grocery retail does not clearly fit the PostaraTrend audience."
+    }
+  ]
+}
