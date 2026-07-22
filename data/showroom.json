@@ -94,6 +94,19 @@
       "video": "assets/showroom/heritage-story-reel.mp4",
       "caption": "",
       "url": ""
+    },
+    {
+      "type": "video",
+      "format": "Episodic serial",
+      "lane": "Trend Radar Nigeria",
+      "date": "",
+      "orientation": "vertical",
+      "kicker": "The House That Sent Her",
+      "headline": "She came home to take back her father's house",
+      "image": "assets/showroom/serial-house-poster.jpg",
+      "video": "assets/showroom/serial-house-that-sent-her.mp4",
+      "caption": "",
+      "url": ""
     }
   ],
   "refusals": [
