@@ -1,5 +1,5 @@
 {
-    "note": "Edit this file to change the showroom. No HTML changes needed. Images and mp4 files live in assets/showroom/. An entry with two or more frames renders as a story you can step through. An entry with a video field plays inline, using image as its poster frame. Leave image blank and a branded panel is drawn from the headline instead.",
+    "note": "Edit this file to change the showroom. No HTML changes needed. Images and mp4 files live in assets/showroom/. An entry with two or more frames renders as a story you can step through. An entry with a video field plays inline, using image as its poster frame. Leave image blank and a branded panel is drawn from the headline instead. An item may carry a group, and the first item of each group prints that name as a heading across the row.",
     "items": [
         {
             "type": "card",
@@ -80,7 +80,8 @@
             "image": "assets/showroom/indigenous-nibi-water-walkers-poster.jpg",
             "video": "assets/showroom/indigenous-nibi-water-walkers.mp4",
             "caption": "",
-            "url": ""
+            "url": "",
+            "group": "Canadian Indigenous Heritage"
         },
         {
             "type": "video",
@@ -93,7 +94,8 @@
             "image": "assets/showroom/indigenous-pitseolak-ashoona-poster.jpg",
             "video": "assets/showroom/indigenous-pitseolak-ashoona.mp4",
             "caption": "",
-            "url": ""
+            "url": "",
+            "group": "Canadian Indigenous Heritage"
         },
         {
             "type": "video",
@@ -106,7 +108,8 @@
             "image": "assets/showroom/indigenous-thanadelthur-dene-poster.jpg",
             "video": "assets/showroom/indigenous-thanadelthur-dene.mp4",
             "caption": "",
-            "url": ""
+            "url": "",
+            "group": "Canadian Indigenous Heritage"
         },
         {
             "type": "video",
@@ -119,7 +122,8 @@
             "image": "assets/showroom/heritage-benin-queen-poster.jpg",
             "video": "assets/showroom/heritage-benin-queen.mp4",
             "caption": "",
-            "url": ""
+            "url": "",
+            "group": "Nigerian Heritage"
         },
         {
             "type": "video",
@@ -132,7 +136,8 @@
             "image": "assets/showroom/heritage-kanuri-queen-poster.jpg",
             "video": "assets/showroom/heritage-kanuri-queen.mp4",
             "caption": "",
-            "url": ""
+            "url": "",
+            "group": "Nigerian Heritage"
         },
         {
             "type": "video",
@@ -145,7 +150,8 @@
             "image": "assets/showroom/heritage-efik-prince-poster.jpg",
             "video": "assets/showroom/heritage-efik-prince.mp4",
             "caption": "",
-            "url": ""
+            "url": "",
+            "group": "Nigerian Heritage"
         }
     ],
     "refusals": [
