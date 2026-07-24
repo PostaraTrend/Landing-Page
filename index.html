@@ -737,6 +737,109 @@ html{scroll-behavior:auto}
   }).catch(function(){});
 })();
 </script>
+     <!-- ============================================================
+     POSTARATREND SCOUT DASHBOARD
+     Reads /data/scout.json. Lane names and the company each lane
+     serves come from that file, so a new scout appears on the page
+     by adding one object to the file, with no HTML change.
+     Stays hidden unless the file loads and at least one lane
+     is present, so a failed fetch shows nothing.
+     ============================================================ -->
+<style>
+#ptscout{display:none;padding:52px 0 56px;background:var(--nbg)}
+#ptscout .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+.sc-kick{font:600 11px/1 'Geist',sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--ltg);margin:0 0 10px}
+.sc-h{font:800 clamp(22px,2.6vw,29px)/1.2 'Bricolage Grotesque',sans-serif;color:var(--w);margin:0 0 6px;letter-spacing:-.02em}
+.sc-sub{font:400 14.5px/1.6 'Geist',sans-serif;color:var(--mut);margin:0 0 26px;max-width:64ch}
+.sc-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:30px}
+.sc-card{flex:1 1 200px;background:var(--nd);border:1px solid var(--lnd);border-radius:13px;padding:20px 22px}
+.sc-n{font:800 34px/1 'Bricolage Grotesque',sans-serif;color:var(--w);letter-spacing:-.02em;margin:0 0 6px}
+.sc-n.g{color:var(--ltg)}
+.sc-l{font:400 13px/1.45 'Geist',sans-serif;color:var(--mut);margin:0}
+.sc-lanes{display:flex;flex-wrap:wrap;gap:14px}
+.sc-lane{flex:1 1 320px;background:var(--nd);border:1px solid var(--lnd);border-radius:13px;padding:22px 24px}
+.sc-ltop{display:flex;align-items:center;gap:9px;margin:0 0 4px}
+.sc-tag{font:600 10.5px/1 'Geist',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--plg);background:rgba(29,158,117,.10);border:1px solid var(--ln);border-radius:999px;padding:6px 11px}
+.sc-lname{font:800 19px/1.2 'Bricolage Grotesque',sans-serif;color:var(--w);letter-spacing:-.02em;margin:0}
+.sc-serves{font:500 13px/1.5 'Geist',sans-serif;color:var(--ltg);margin:0 0 10px}
+.sc-blurb{font:400 13.5px/1.6 'Geist',sans-serif;color:var(--mut);margin:0 0 18px}
+.sc-mrow{display:flex;flex-wrap:wrap;gap:16px 26px;padding-top:16px;border-top:1px solid var(--lnd)}
+.sc-m{flex:0 0 auto;min-width:96px}
+.sc-mn{font:800 22px/1 'Bricolage Grotesque',sans-serif;color:var(--w);letter-spacing:-.02em;margin:0 0 5px}
+.sc-mn.g{color:var(--ltg)}
+.sc-ml{font:400 12.5px/1.4 'Geist',sans-serif;color:var(--mut);margin:0}
+.sc-scope{font:400 12.5px/1.5 'Geist',sans-serif;color:var(--mut);margin:14px 0 0;padding-top:14px;border-top:1px solid var(--lnd)}
+.sc-note{font:400 12.5px/1.6 'Geist',sans-serif;color:var(--mut);margin:22px 0 0;max-width:70ch}
+.sc-foot{display:flex;align-items:center;gap:9px;margin-top:16px}
+.sc-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.sc-foot span{font:400 12.5px/1 'Geist',sans-serif;color:var(--mut)}
+@media(max-width:640px){.sc-card{flex:1 1 100%}.sc-lane{flex:1 1 100%}#ptscout{padding:40px 0 44px}}
+</style>
+
+<section id="ptscout"><div class="wrap">
+  <p class="sc-kick">Live from the platform</p>
+  <h2 class="sc-h" id="sc-h">Who the scout works for, and what it has found.</h2>
+  <p class="sc-sub" id="sc-sub">The same platform that publishes also prospects. These counts are written by the scouting engines themselves, one card for each engine and the company it serves.</p>
+
+  <div class="sc-row" id="sc-headline"></div>
+  <div class="sc-lanes" id="sc-lanelist"></div>
+
+  <p class="sc-note" id="sc-note"></p>
+  <div class="sc-foot"><span class="sc-dot"></span><span id="sc-when">live</span></div>
+</div></section>
+
+<script>
+(function(){
+  var esc=function(s){var d=document.createElement('div');d.textContent=String(s==null?'':s);return d.innerHTML;};
+  var num=function(v){var n=Number(v);return isNaN(n)?esc(v):n.toLocaleString();};
+  var ago=function(iso){
+    if(!iso) return '';
+    var m=Math.floor((Date.now()-Date.parse(iso))/60000);
+    if(isNaN(m)) return '';
+    if(m<60) return m<=1?'just now':m+' minutes ago';
+    var h=Math.floor(m/60); if(h<24) return h===1?'an hour ago':h+' hours ago';
+    var d=Math.floor(h/24); return d===1?'yesterday':d+' days ago';
+  };
+  fetch('data/scout.json?t='+Date.now()).then(function(r){return r.ok?r.json():null;}).then(function(d){
+    if(!d||!d.lanes||!d.lanes.length){return;}
+    var q=function(i){return document.getElementById(i);};
+
+    var head=(d.headline||[]).slice(0,3);
+    if(head.length){
+      q('sc-headline').innerHTML=head.map(function(h){
+        return '<div class="sc-card"><p class="sc-n'+(h.accent?' g':'')+'">'+num(h.value)+'</p>'
+          +'<p class="sc-l">'+esc(h.label)+'</p></div>';
+      }).join('');
+    } else {
+      q('sc-headline').style.display='none';
+    }
+
+    q('sc-lanelist').innerHTML=d.lanes.map(function(l){
+      var mets=(l.metrics||[]).filter(function(m){
+        return m && m.value!==null && m.value!==undefined && m.value!=='';
+      }).slice(0,4).map(function(m){
+        return '<div class="sc-m"><p class="sc-mn'+(m.accent?' g':'')+'">'+num(m.value)+'</p>'
+          +'<p class="sc-ml">'+esc(m.label)+'</p></div>';
+      }).join('');
+      var run=l.last_run?ago(l.last_run):'';
+      return '<div class="sc-lane">'
+        +'<div class="sc-ltop">'+(l.tag?'<span class="sc-tag">'+esc(l.tag)+'</span>':'')
+        +'<p class="sc-lname">'+esc(l.label)+'</p></div>'
+        +(l.serves?'<p class="sc-serves">Running for '+esc(l.serves)+'</p>':'')
+        +(l.blurb?'<p class="sc-blurb">'+esc(l.blurb)+'</p>':'')
+        +(mets?'<div class="sc-mrow">'+mets+'</div>':'')
+        +(l.scope||run?'<p class="sc-scope">'+esc(l.scope||'')+(l.scope&&run?'. ':'')+(run?'Last run '+run:'')+'</p>':'')
+        +'</div>';
+    }).join('');
+
+    if(d.footnote){ q('sc-note').textContent=d.footnote; } else { q('sc-note').style.display='none'; }
+    if(d.heading){ q('sc-h').textContent=d.heading; }
+    if(d.subheading){ q('sc-sub').textContent=d.subheading; }
+    q('sc-when').textContent=d.updated_at?('Counts refreshed '+ago(d.updated_at)):'live';
+    q('ptscout').style.display='block';
+  }).catch(function(){});
+})();
+</script>
 <!-- WHAT WE DO -->
 <section class="sec bg2" id="what">
 <div class="arc arc-sm" style="width:400px;height:400px;bottom:-200px;right:-100px"></div>
