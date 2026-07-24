@@ -1,0 +1,91 @@
+{
+  "note": "Written by the Scout Stats Publisher. Lane names, the company each lane serves, the blurb and the scope are stable and edited by hand. The publisher only fills value and last_run. A metric with a null value is not rendered, so this file is safe to commit before the publisher has ever run. Never put a scanned business name, a prospect score or a draft into this file. Serves must only carry a company that has agreed to be named on the public site.",
+  "updated_at": "",
+  "heading": "Who the scout works for, and what it has found.",
+  "subheading": "The same platform that publishes also prospects. These counts are written by the scouting engines themselves, one card for each engine and the company it serves.",
+  "headline": [],
+  "lanes": [
+    {
+      "tag": "Scout",
+      "label": "Lead Scout",
+      "serves": "PostaraTrend Technologies Inc.",
+      "blurb": "Sweeps a geography for businesses whose public presence has gaps the platform can close, scores each one privately, and shortlists the strongest.",
+      "scope": "Calgary, Edmonton and the Greater Toronto Area",
+      "metrics": [
+        {
+          "value": null,
+          "label": "businesses scanned"
+        },
+        {
+          "value": null,
+          "label": "shortlisted"
+        },
+        {
+          "value": null,
+          "label": "zones covered"
+        },
+        {
+          "value": null,
+          "label": "sent without a person",
+          "accent": true
+        }
+      ],
+      "last_run": ""
+    },
+    {
+      "tag": "Scout",
+      "label": "Named Target Outreach",
+      "serves": "PostaraTrend Technologies Inc.",
+      "blurb": "Takes one named company at a time, researches only what is public about it, and prepares an outreach package for a person to review.",
+      "scope": "Named targets across Alberta and Ontario",
+      "metrics": [
+        {
+          "value": null,
+          "label": "targets researched"
+        },
+        {
+          "value": null,
+          "label": "packages prepared"
+        },
+        {
+          "value": null,
+          "label": "held by the compliance gate"
+        },
+        {
+          "value": null,
+          "label": "sent without a person",
+          "accent": true
+        }
+      ],
+      "last_run": ""
+    },
+    {
+      "tag": "Client scout",
+      "label": "Store Tester Scout",
+      "serves": "Pantrifuge",
+      "blurb": "Sweeps a defined geography for independent food retailers that fit the client's beta programme, screens them on public signals only, and prepares an approach for a person to review.",
+      "scope": "Six zones across Ontario",
+      "metrics": [
+        {
+          "value": null,
+          "label": "stores screened"
+        },
+        {
+          "value": null,
+          "label": "shortlisted"
+        },
+        {
+          "value": null,
+          "label": "zones covered"
+        },
+        {
+          "value": null,
+          "label": "sent without a person",
+          "accent": true
+        }
+      ],
+      "last_run": ""
+    }
+  ],
+  "footnote": "Businesses in a scan are never named here, and their scores and draft messages are never published. Nothing reaches a prospect until a person sends it."
+}
