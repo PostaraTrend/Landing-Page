@@ -3,21 +3,7 @@
   "updated_at": "2026-07-26T15:31:16.613Z",
   "heading": "Who the scout works for, and what it has found.",
   "subheading": "The same platform that publishes also prospects. These counts are written by the scouting engines themselves, one card for each engine and the company it serves.",
-  "headline": [
-    {
-      "value": 14520,
-      "label": "businesses scanned"
-    },
-    {
-      "value": 121,
-      "label": "prospects shortlisted"
-    },
-    {
-      "value": 0,
-      "label": "sent without a person",
-      "accent": true
-    }
-  ],
+  "headline": [],
   "lanes": [
     {
       "tag": "Scout",
@@ -26,23 +12,10 @@
       "blurb": "Sweeps a geography for businesses whose public presence has gaps the platform can close, scores each one privately, and shortlists the strongest.",
       "scope": "Calgary, Edmonton and the Greater Toronto Area",
       "metrics": [
-        {
-          "value": 14520,
-          "label": "businesses scanned"
-        },
-        {
-          "value": 121,
-          "label": "shortlisted"
-        },
-        {
-          "value": 3,
-          "label": "zones covered"
-        },
-        {
-          "value": 0,
-          "label": "sent without a person",
-          "accent": true
-        }
+        { "value": null, "label": "businesses scanned" },
+        { "value": null, "label": "shortlisted" },
+        { "value": 3, "label": "zones covered" },
+        { "value": 0, "label": "sent without a person", "accent": true }
       ],
       "last_run": "2026-07-26"
     },
@@ -53,23 +26,10 @@
       "blurb": "Takes one named company at a time, researches only what is public about it, and prepares an outreach package for a person to review.",
       "scope": "Named targets across Alberta and Ontario",
       "metrics": [
-        {
-          "value": null,
-          "label": "targets researched"
-        },
-        {
-          "value": null,
-          "label": "packages prepared"
-        },
-        {
-          "value": null,
-          "label": "held by the compliance gate"
-        },
-        {
-          "value": null,
-          "label": "sent without a person",
-          "accent": true
-        }
+        { "value": null, "label": "targets researched" },
+        { "value": null, "label": "packages prepared" },
+        { "value": null, "label": "held by the compliance gate" },
+        { "value": null, "label": "sent without a person", "accent": true }
       ],
       "last_run": ""
     },
@@ -80,23 +40,24 @@
       "blurb": "Sweeps a defined geography for independent food retailers that fit the client's beta programme, screens them on public signals only, and prepares an approach for a person to review.",
       "scope": "Six zones across Ontario",
       "metrics": [
-        {
-          "value": null,
-          "label": "stores screened"
-        },
-        {
-          "value": null,
-          "label": "shortlisted"
-        },
-        {
-          "value": null,
-          "label": "zones covered"
-        },
-        {
-          "value": null,
-          "label": "sent without a person",
-          "accent": true
-        }
+        { "value": null, "label": "stores screened" },
+        { "value": null, "label": "shortlisted" },
+        { "value": null, "label": "zones covered" },
+        { "value": null, "label": "sent without a person", "accent": true }
+      ],
+      "last_run": ""
+    },
+    {
+      "tag": "Client scout",
+      "label": "Employer Lead Scout",
+      "serves": "The 3rd Academy",
+      "blurb": "The Lead Scout engine adapted to employer discovery. Sweeps Alberta each week for employers that fit the client's readiness programme, verifies every candidate against two public sources, and delivers a compliance gated batch each Friday. A person reviews every record.",
+      "scope": "Seven zones across Alberta",
+      "metrics": [
+        { "value": null, "label": "employers researched" },
+        { "value": null, "label": "records delivered" },
+        { "value": null, "label": "zones covered" },
+        { "value": null, "label": "sent without a person", "accent": true }
       ],
       "last_run": ""
     }
