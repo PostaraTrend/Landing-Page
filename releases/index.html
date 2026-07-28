@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Releases · PostaraTrend</title>
+<meta name="description" content="Every product on this page runs in production today. Autopilot Social, Lead Scout, the Verdict Engine, Trend Pulse Canada, and the digital tools shop, with live demos where they exist.">
+<link rel="icon" href="/android-chrome-512x512.png">
+<link rel="canonical" href="https://postaratrend.ca/releases/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PostaraTrend">
+<meta property="og:title" content="Releases · PostaraTrend">
+<meta property="og:description" content="Every product on this page runs in production today. Autopilot Social, Lead Scout, the Verdict Engine, Trend Pulse Canada, and the digital tools shop, with live demos where they exist.">
+<meta property="og:url" content="https://postaratrend.ca/releases/">
+<meta property="og:image" content="https://postaratrend.ca/android-chrome-512x512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Releases · PostaraTrend">
+<meta name="twitter:description" content="Every product on this page runs in production today, with live demos where they exist.">
+<meta name="twitter:image" content="https://postaratrend.ca/android-chrome-512x512.png">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1A3A6B; --nd:#112B54; --nbg:#13305A; --darkest:#0D2447;
+    --green:#1D9E75; --gdeep:#0F6E56; --ltg:#5DCAA5; --plg:#A3E4CC;
+    --line:rgba(29,158,117,0.25);
+    --t1:#FFFFFF; --t2:#D6E2F5; --t3:#B9C9E4; --t4:#8FA5C9;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Geist',sans-serif;color:var(--t1);
+    background:linear-gradient(165deg,var(--navy) 0%,var(--nbg) 45%,var(--darkest) 100%);
+    background-attachment:fixed;min-height:100vh;overflow-x:hidden;}
+  .dots{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:radial-gradient(rgba(93,202,165,0.10) 1.5px, transparent 1.5px);
+    background-size:36px 36px;}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 28px;}
+
+  /* Focus */
+  a:focus-visible, button:focus-visible{outline:2px solid var(--ltg);outline-offset:3px;border-radius:8px;}
+
+  /* Header */
+  header{padding:26px 0;}
+  .nav{display:flex;align-items:center;gap:16px;}
+  .logo{width:46px;height:46px;flex:0 0 46px;}
+  .wordmark{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:24px;letter-spacing:-0.01em;color:var(--t1);text-decoration:none;}
+  .wordmark .t{color:var(--ltg);}
+  .navlinks{margin-left:auto;display:flex;gap:26px;align-items:center;}
+  .navlinks a{color:var(--t2);text-decoration:none;font-size:16px;font-weight:600;}
+  .navlinks a.active{color:var(--ltg);}
+  .btn{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:16px;
+    border-radius:12px;padding:12px 22px;}
+  .bp{background:var(--green);color:#FFFFFF;}
+  .bs{background:rgba(214,226,245,0.08);color:var(--t1);border:1px solid rgba(214,226,245,0.22);}
+  .ba{font-weight:800;}
+
+  /* Hero */
+  .hero{padding:64px 0 30px;text-align:left;position:relative;overflow:hidden;}
+  .hero-radar{position:absolute;top:20%;left:8%;width:520px;height:520px;border-radius:50%;
+    pointer-events:none;z-index:0;
+    background:radial-gradient(circle,rgba(29,158,117,0.14) 0%,rgba(29,158,117,0) 62%);
+    animation:radar 7s ease-out infinite;transform-origin:center;}
+  .hero-radar.r2{left:auto;right:5%;top:5%;width:360px;height:360px;animation-delay:2.4s;}
+  @keyframes radar{
+    0%{transform:scale(0.7);opacity:0.0;}
+    30%{opacity:0.9;}
+    100%{transform:scale(1.35);opacity:0;}
+  }
+  .hero > *:not(.hero-radar){position:relative;z-index:1;}
+  .eyebrow{font-size:16px;font-weight:700;letter-spacing:0.30em;color:var(--ltg);}
+  h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:56px;line-height:1.08;letter-spacing:-0.015em;margin-top:14px;max-width:820px;}
+  h1 .g{color:var(--ltg);}
+  .hero p{margin-top:20px;font-size:20px;line-height:1.55;color:var(--t2);max-width:760px;}
+  .hero-stats{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap;}
+  .hpill{border:1px solid var(--line);border-radius:999px;padding:10px 20px;font-size:15px;font-weight:600;color:var(--plg);background:rgba(29,158,117,0.10);}
+  .hero-cta{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+  .clients{margin-top:24px;font-size:16px;color:var(--t3);}
+  .clients b{color:var(--t2);font-weight:700;}
+  .live-strip{margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;}
+  .live-strip .hpill{background:rgba(29,158,117,0.18);border-color:var(--green);}
+  .live-strip .hpill .lv{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ltg);margin-right:8px;vertical-align:middle;box-shadow:0 0 0 0 rgba(93,202,165,0.6);animation:livedot 2.4s ease-out infinite;}
+  @keyframes livedot{0%{box-shadow:0 0 0 0 rgba(93,202,165,0.55);}70%{box-shadow:0 0 0 10px rgba(93,202,165,0);}100%{box-shadow:0 0 0 0 rgba(93,202,165,0);}}
+
+  /* Release cards */
+  .releases{padding:36px 0 10px;display:flex;flex-direction:column;gap:26px;}
+  .rel{background:rgba(17,43,84,0.62);border:1px solid var(--line);border-radius:22px;
+    padding:38px 40px;display:grid;grid-template-columns:1.2fr 0.8fr;gap:40px;align-items:center;
+    transition:transform 340ms cubic-bezier(.2,.7,.2,1), box-shadow 340ms ease, border-color 340ms ease;}
+  .rel:hover{transform:translateY(-4px);border-color:rgba(29,158,117,0.55);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(29,158,117,0.25) inset;}
+  .rel.flip{grid-template-columns:0.8fr 1.2fr;}
+  .rel.flip .relcopy{order:2;}
+  .rel.flip .relvis{order:1;}
+  .relhead{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .relname{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:32px;}
+  .status{font-size:13.5px;font-weight:700;letter-spacing:0.12em;border-radius:999px;padding:6px 14px;}
+  .live{background:rgba(29,158,117,0.18);border:1px solid var(--green);color:var(--ltg);}
+  .pilot{background:rgba(214,226,245,0.08);border:1px solid rgba(214,226,245,0.25);color:var(--t3);}
+  .relkick{margin-top:6px;font-size:15px;font-weight:700;letter-spacing:0.2em;color:var(--t4);}
+  .relbody{margin-top:14px;font-size:18px;line-height:1.6;color:var(--t2);}
+  .chips{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{font-size:14.5px;font-weight:600;color:var(--plg);background:rgba(29,158,117,0.12);
+    border:1px solid var(--line);border-radius:999px;padding:7px 15px;}
+  .relcta{margin-top:24px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+  .relnote{font-size:14px;color:var(--t4);}
+
+  /* Visual stages */
+  .relvis{position:relative;min-height:420px;display:flex;align-items:center;justify-content:center;padding:20px 0;}
+  .visglow{position:absolute;width:420px;height:420px;border-radius:50%;filter:blur(4px);
+    background:radial-gradient(circle,rgba(29,158,117,0.22) 0%,rgba(29,158,117,0) 68%);z-index:0;}
+
+  /* Shared photoreal card note */
+  .stagenote{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+    font-size:11.5px;letter-spacing:0.14em;color:var(--t4);white-space:nowrap;}
+
+  /* ============ PHOTOREAL PHONE (Lead Scout) ============ */
+  .phone-scene{position:relative;width:300px;perspective:1400px;z-index:1;}
+  .phone-shadow{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);
+    width:280px;height:60px;border-radius:50%;filter:blur(28px);
+    background:radial-gradient(ellipse,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 70%);z-index:0;}
+  .phone{position:relative;width:300px;height:610px;
+    transform:rotateY(-8deg) rotateX(3deg);transform-style:preserve-3d;}
+  .phone-body{position:relative;width:100%;height:100%;border-radius:44px;
+    background:
+      linear-gradient(135deg,#3a3d42 0%,#1a1c1f 22%,#0a0b0d 50%,#1a1c1f 78%,#3a3d42 100%);
+    padding:10px;
+    box-shadow:
+      0 0 0 1.5px rgba(255,255,255,0.06) inset,
+      0 30px 60px -20px rgba(0,0,0,0.7),
+      0 12px 24px rgba(0,0,0,0.4);
+  }
+  .phone-body::before{content:"";position:absolute;inset:2px;border-radius:42px;pointer-events:none;
+    background:linear-gradient(160deg,rgba(255,255,255,0.18) 0%,rgba(255,255,255,0) 30%,rgba(255,255,255,0) 70%,rgba(255,255,255,0.10) 100%);
+    mix-blend-mode:screen;}
+  .phone-body::after{content:"";position:absolute;left:-2px;right:-2px;top:70px;height:40px;
+    background:linear-gradient(90deg,rgba(255,255,255,0.18),rgba(255,255,255,0));border-radius:2px;
+    pointer-events:none;}
+  .phone-side-btn{position:absolute;background:#0a0b0d;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);}
+  .phone-side-btn.mute{left:-2.5px;top:110px;width:3px;height:26px;border-radius:2px 0 0 2px;}
+  .phone-side-btn.vup{left:-2.5px;top:150px;width:3px;height:46px;border-radius:2px 0 0 2px;}
+  .phone-side-btn.vdn{left:-2.5px;top:206px;width:3px;height:46px;border-radius:2px 0 0 2px;}
+  .phone-side-btn.pwr{right:-2.5px;top:160px;width:3px;height:66px;border-radius:0 2px 2px 0;}
+  .phone-screen{position:relative;width:100%;height:100%;border-radius:34px;overflow:hidden;
+    background:#f4f6fa;
+    box-shadow:0 0 0 1px rgba(0,0,0,0.6) inset, 0 0 20px rgba(0,0,0,0.3) inset;}
+  .phone-notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);
+    width:96px;height:28px;border-radius:16px;background:#0a0b0d;z-index:5;
+    box-shadow:0 1px 2px rgba(0,0,0,0.6);}
+  .phone-notch::after{content:"";position:absolute;right:16px;top:50%;transform:translateY(-50%);
+    width:8px;height:8px;border-radius:50%;background:#0f1114;box-shadow:inset 0 0 2px rgba(90,140,200,0.35);}
+  .phone-glare{position:absolute;inset:0;border-radius:44px;pointer-events:none;overflow:hidden;z-index:6;}
+  .phone-glare::before{content:"";position:absolute;top:-40%;left:-30%;width:80%;height:180%;
+    transform:rotate(22deg);
+    background:linear-gradient(90deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.10) 45%,rgba(255,255,255,0.22) 50%,rgba(255,255,255,0.06) 60%,rgba(255,255,255,0) 100%);
+    mix-blend-mode:screen;}
+  .phone-glare::after{content:"";position:absolute;bottom:-20%;right:-20%;width:60%;height:80%;
+    background:radial-gradient(ellipse at center,rgba(255,255,255,0.10),rgba(255,255,255,0) 70%);}
+
+  /* Screen content */
+  .ps-status{position:absolute;top:14px;left:0;right:0;display:flex;justify-content:space-between;
+    padding:0 26px;font-size:14px;font-weight:600;color:#0a0b0d;z-index:4;letter-spacing:-0.01em;}
+  .ps-status .right{display:flex;align-items:center;gap:5px;}
+  .ps-status svg{display:block;}
+  .app{position:absolute;top:52px;left:0;right:0;bottom:0;padding:14px 16px 16px;
+    background:linear-gradient(180deg,#f4f6fa 0%,#e8ecf3 100%);z-index:1;}
+  .app-header{display:flex;align-items:center;gap:10px;margin-top:4px;}
+  .app-tile{width:34px;height:34px;border-radius:9px;background:#112B54;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 10px rgba(17,43,84,0.35);}
+  .app-tile svg{width:24px;height:24px;}
+  .app-title{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px;color:#0D2447;letter-spacing:-0.01em;}
+  .app-sub{margin-top:12px;font-size:12.5px;color:#4a5b7a;font-weight:600;letter-spacing:0.02em;}
+  .app-summary{margin-top:8px;padding:10px 12px;border-radius:10px;background:rgba(29,158,117,0.10);
+    border:1px solid rgba(29,158,117,0.30);font-size:12.5px;font-weight:700;color:#0F6E56;}
+  .p-list{margin-top:12px;display:flex;flex-direction:column;gap:9px;}
+  .prospect{background:#ffffff;border:1px solid rgba(17,43,84,0.10);border-radius:12px;padding:11px 12px;
+    box-shadow:0 2px 6px rgba(17,43,84,0.06);}
+  .p-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:14px;color:#0D2447;}
+  .p-meta{margin-top:2px;font-size:11.5px;color:#5a6a85;}
+  .p-tags{margin-top:7px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .p-tags .fit{background:#1D9E75;color:#fff;font-size:11px;font-weight:800;border-radius:6px;padding:3px 7px;letter-spacing:0.02em;}
+  .p-tags .ver{background:rgba(29,158,117,0.12);color:#0F6E56;font-size:11px;font-weight:700;border-radius:6px;padding:3px 7px;border:1px solid rgba(29,158,117,0.35);}
+  .p-tags .pending{background:rgba(143,165,201,0.18);color:#4a5b7a;font-size:11px;font-weight:700;border-radius:6px;padding:3px 7px;border:1px solid rgba(143,165,201,0.35);}
+  .p-cta{margin-top:9px;display:inline-flex;align-items:center;gap:6px;background:#1D9E75;color:#fff;
+    border:none;border-radius:8px;padding:6px 10px;font-family:'Geist',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;
+    box-shadow:0 3px 8px rgba(29,158,117,0.35);}
+  .phone-note{margin-top:22px;text-align:center;font-size:11.5px;letter-spacing:0.16em;color:var(--t4);}
+
+  /* ============ FEED POST (Autopilot Social) ============ */
+  .feed-scene{position:relative;width:340px;z-index:1;}
+  .feed-card{background:#ffffff;border-radius:16px;overflow:hidden;
+    box-shadow:0 24px 50px -18px rgba(0,0,0,0.55), 0 6px 14px rgba(0,0,0,0.25);
+    position:relative;}
+  .feed-card::before{content:"";position:absolute;top:0;left:0;right:0;height:60%;
+    background:linear-gradient(160deg,rgba(255,255,255,0.35),rgba(255,255,255,0) 60%);pointer-events:none;mix-blend-mode:screen;}
+  .feed-head{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;}
+  .feed-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;background:#112B54;display:flex;align-items:center;justify-content:center;flex:0 0 40px;
+    box-shadow:0 2px 6px rgba(17,43,84,0.25);}
+  .feed-avatar svg{width:30px;height:30px;}
+  .feed-meta{display:flex;flex-direction:column;gap:1px;min-width:0;}
+  .feed-name{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:15px;color:#0D2447;}
+  .feed-time{font-size:12px;color:#6b7a94;font-weight:500;}
+  .feed-dots{margin-left:auto;color:#8FA5C9;font-weight:800;letter-spacing:0.5px;font-size:16px;}
+  .feed-image{position:relative;background:linear-gradient(160deg,#13305A 0%,#0D2447 100%);
+    padding:26px 22px 24px;color:#fff;overflow:hidden;}
+  .feed-image::after{content:"";position:absolute;top:-40%;right:-30%;width:60%;height:180%;transform:rotate(20deg);
+    background:linear-gradient(90deg,rgba(93,202,165,0) 0%,rgba(93,202,165,0.10) 50%,rgba(93,202,165,0) 100%);}
+  .fi-kick{font-size:11px;font-weight:800;letter-spacing:0.22em;color:var(--ltg);}
+  .fi-head{margin-top:8px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:22px;line-height:1.2;color:#fff;max-width:280px;}
+  .fi-meta{margin-top:12px;font-size:13px;color:var(--t3);}
+  .fi-foot{margin-top:14px;font-size:11px;letter-spacing:0.16em;color:var(--t4);}
+  .feed-actions{display:flex;align-items:center;gap:22px;padding:12px 16px;border-top:1px solid rgba(17,43,84,0.08);color:#5a6a85;}
+  .feed-actions .act{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;}
+  .feed-actions svg{width:16px;height:16px;stroke:#5a6a85;fill:none;stroke-width:1.8;}
+  .refchip{position:absolute;bottom:-18px;right:-14px;background:rgba(13,36,71,0.96);
+    border:1px solid rgba(214,226,245,0.25);border-radius:12px;padding:10px 16px;font-size:13.5px;font-weight:600;color:var(--t3);
+    box-shadow:0 14px 30px rgba(0,0,0,0.4);z-index:2;}
+  .refchip b{color:var(--t2);}
+
+  /* ============ VERDICT WINDOW ============ */
+  .vwin-scene{position:relative;width:360px;z-index:1;}
+  .vwin{background:#ffffff;border-radius:14px;overflow:hidden;
+    box-shadow:0 26px 55px -18px rgba(0,0,0,0.55), 0 8px 18px rgba(0,0,0,0.3);position:relative;}
+  .vwin::before{content:"";position:absolute;top:0;left:0;right:0;height:50%;
+    background:linear-gradient(160deg,rgba(255,255,255,0.4),rgba(255,255,255,0) 60%);pointer-events:none;mix-blend-mode:screen;}
+  .vwin-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:linear-gradient(180deg,#eef1f6,#dfe4ec);border-bottom:1px solid rgba(17,43,84,0.08);}
+  .vwin-dot{width:11px;height:11px;border-radius:50%;background:#c9cfd8;box-shadow:inset 0 1px 0 rgba(255,255,255,0.6),inset 0 -1px 0 rgba(0,0,0,0.06);}
+  .vwin-title{margin:0 auto;font-size:11.5px;font-weight:800;letter-spacing:0.22em;color:#5a6a85;padding-right:34px;}
+  .vwin-body{padding:22px 22px 20px;background:linear-gradient(180deg,#ffffff,#f6f8fc);}
+  .vwin-kick{font-size:11.5px;font-weight:800;letter-spacing:0.22em;color:var(--gdeep);}
+  .vwin-head{margin-top:8px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:19px;color:#0D2447;line-height:1.25;}
+  .vwin .vbar{margin-top:14px;}
+  .vwin .vbar .lab{display:flex;justify-content:space-between;font-size:12.5px;color:#4a5b7a;font-weight:600;}
+  .vwin .vbar .track{margin-top:6px;height:9px;border-radius:5px;background:rgba(17,43,84,0.08);overflow:hidden;}
+  .vwin .vbar .fill{height:100%;border-radius:5px;background:var(--green);width:0;transition:width 900ms cubic-bezier(.2,.7,.2,1);}
+  .vwin .vbar .fill.f2{background:var(--ltg);}
+  .vwin .vbar .fill.f3{background:var(--gdeep);}
+  .vwin.animate .fill.f1{width:78%;}
+  .vwin.animate .fill.f2{width:52%;}
+  .vwin.animate .fill.f3{width:31%;}
+  .vwin-foot{margin-top:16px;font-size:11px;letter-spacing:0.16em;color:#8FA5C9;}
+
+  /* ============ TREND PULSE / TOOLS elevated cards ============ */
+  .card-scene{position:relative;width:340px;z-index:1;}
+  .card-real{position:relative;background:linear-gradient(180deg,#152F5A 0%,#0F2648 100%);
+    border:1px solid rgba(93,202,165,0.28);border-radius:16px;padding:22px 24px 20px;
+    box-shadow:0 26px 55px -20px rgba(0,0,0,0.6), 0 6px 14px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);}
+  .card-real::before{content:"";position:absolute;top:0;left:0;right:0;height:60%;border-radius:16px 16px 0 0;pointer-events:none;
+    background:linear-gradient(160deg,rgba(255,255,255,0.10),rgba(255,255,255,0) 55%);}
+  .card-real::after{content:"";position:absolute;top:0;right:0;bottom:0;width:1px;
+    background:linear-gradient(180deg,rgba(93,202,165,0.4),rgba(93,202,165,0) 60%);border-radius:0 16px 16px 0;pointer-events:none;}
+  .cr-kick{font-size:12px;font-weight:800;letter-spacing:0.22em;color:var(--ltg);}
+  .cr-head{margin-top:8px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:19px;line-height:1.25;color:#fff;}
+  .cr-meta{margin-top:8px;font-size:14px;color:var(--t3);}
+  .cr-price{margin-top:8px;font-size:15px;color:var(--plg);font-weight:700;}
+  .cr-foot{margin-top:14px;font-size:11.5px;letter-spacing:0.18em;color:var(--t4);}
+  .card-shadow{position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);
+    width:260px;height:44px;border-radius:50%;filter:blur(22px);
+    background:radial-gradient(ellipse,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0) 70%);z-index:0;}
+
+  /* Comparison */
+  .comparewrap{margin-top:50px;}
+  .comparewrap .eyebrow{text-align:center;display:block;}
+  .comparewrap h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:36px;line-height:1.15;text-align:center;margin-top:12px;}
+  .compare{margin-top:34px;display:grid;grid-template-columns:1fr 1.08fr 1fr;gap:20px;align-items:stretch;}
+  .ccol{background:rgba(17,43,84,0.62);border:1px solid rgba(214,226,245,0.16);border-radius:20px;padding:30px 28px;}
+  .ccol.us{border:1.5px solid var(--green);background:rgba(29,158,117,0.12);box-shadow:0 24px 55px rgba(0,0,0,0.30);}
+  .ctitle{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:22px;}
+  .ccol.us .ctitle{color:var(--ltg);}
+  .cprice{margin-top:8px;font-size:15px;font-weight:700;letter-spacing:0.08em;color:var(--t4);}
+  .ccol.us .cprice{color:var(--plg);}
+  .crow{margin-top:16px;font-size:16px;line-height:1.5;color:var(--t2);padding-top:14px;border-top:1px solid rgba(214,226,245,0.12);}
+  .ccol.us .crow{border-top:1px solid var(--line);}
+
+  /* FAQ */
+  .faqwrap{margin-top:50px;}
+  .faqwrap .eyebrow{text-align:center;display:block;}
+  .faqwrap h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:36px;line-height:1.15;text-align:center;margin-top:12px;}
+  .faqs{margin-top:30px;max-width:820px;margin-left:auto;margin-right:auto;display:flex;flex-direction:column;gap:14px;}
+  .faq{background:rgba(17,43,84,0.62);border:1px solid var(--line);border-radius:16px;padding:0;}
+  .faq summary{cursor:pointer;list-style:none;padding:20px 24px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:19px;color:var(--t1);display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary::after{content:"+";font-weight:800;color:var(--ltg);font-size:22px;flex:0 0 auto;}
+  .faq[open] summary::after{content:"\2212";}
+  .faq p{padding:0 24px 22px;font-size:16.5px;line-height:1.6;color:var(--t2);}
+
+  /* Proof band */
+  .proof{margin:44px 0;background:rgba(29,158,117,0.10);border:1px solid var(--line);border-radius:22px;
+    padding:34px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+  .proof h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:28px;}
+  .proof p{margin-top:8px;font-size:17px;color:var(--t2);max-width:640px;line-height:1.55;}
+
+  /* Final CTA */
+  .final{margin:20px 0 60px;background:var(--gdeep);border-radius:22px;padding:44px 40px;text-align:center;}
+  .final h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:36px;}
+  .final p{margin-top:12px;font-size:18px;color:var(--plg);}
+  .final .btn{margin-top:24px;background:#FFFFFF;color:var(--gdeep);}
+
+  footer{padding:26px 0 40px;text-align:center;font-size:14px;color:var(--t4);letter-spacing:0.06em;line-height:1.9;}
+
+  /* Reveal animations */
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity 460ms ease, transform 460ms cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1;transform:none;}
+  .reveal .chip{opacity:0;transform:translateY(6px);transition:opacity 340ms ease, transform 340ms ease;}
+  .reveal.in .chip{opacity:1;transform:none;}
+  .reveal.in .chip:nth-child(1){transition-delay:120ms;}
+  .reveal.in .chip:nth-child(2){transition-delay:200ms;}
+  .reveal.in .chip:nth-child(3){transition-delay:280ms;}
+  .reveal.in .chip:nth-child(4){transition-delay:360ms;}
+
+  @media (max-width:900px){
+    .rel,.rel.flip{grid-template-columns:1fr;gap:28px;}
+    .rel.flip .relcopy{order:1;} .rel.flip .relvis{order:2;}
+    h1{font-size:38px;}
+    .hero{padding:44px 0 20px;}
+    .hero-radar{width:340px;height:340px;}
+    .hero-radar.r2{display:none;}
+    .comparewrap h2{font-size:27px;}
+    .compare{grid-template-columns:1fr;}
+    .navlinks a.navhide{display:none;}
+    .rel{padding:28px 22px;}
+    .refchip{right:0;bottom:-22px;}
+    .relvis{min-height:auto;padding:10px 0 30px;}
+    .phone-scene,.phone{width:260px;}
+    .phone{height:528px;}
+    .feed-scene,.card-scene{width:100%;max-width:340px;}
+    .vwin-scene{width:100%;max-width:340px;}
+    .proof,.final{padding:26px 22px;}
+    .final h2{font-size:28px;}
+    .proof h2{font-size:22px;}
+    .visglow{width:280px;height:280px;}
+  }
+  @media (max-width:400px){
+    .wrap{padding:0 18px;}
+    h1{font-size:32px;}
+    .relname{font-size:26px;}
+    .phone-scene,.phone{width:236px;}
+    .phone{height:480px;}
+    .app{padding:12px 12px 12px;}
+    .p-name{font-size:13px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;}
+    .reveal{opacity:1 !important;transform:none !important;}
+    .reveal .chip{opacity:1 !important;transform:none !important;}
+    .vwin .vbar .fill.f1{width:78% !important;}
+    .vwin .vbar .fill.f2{width:52% !important;}
+    .vwin .vbar .fill.f3{width:31% !important;}
+    .hero-radar{display:none;}
+  }
+</style>
+<noscript>
+<style>
+  .reveal{opacity:1;transform:none;}
+  .reveal .chip{opacity:1;transform:none;}
+  .vwin .vbar .fill.f1{width:78%;}
+  .vwin .vbar .fill.f2{width:52%;}
+  .vwin .vbar .fill.f3{width:31%;}
+</style>
+</noscript>
+</head>
+<body>
+<div class="dots" aria-hidden="true"></div>
+
+<header class="wrap" role="banner">
+  <nav class="nav" aria-label="Primary">
+    <svg class="logo" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PostaraTrend logo">
+      <rect width="96" height="96" rx="24" fill="#112B54"/>
+      <rect x="18" y="56" width="10" height="18" rx="2" fill="#5DCAA5"/>
+      <rect x="33" y="46" width="10" height="28" rx="2" fill="#1D9E75"/>
+      <rect x="48" y="36" width="10" height="38" rx="2" fill="#0F6E56"/>
+      <rect x="63" y="26" width="10" height="48" rx="2" fill="#FFFFFF"/>
+      <path d="M60 22 L76 16 L74 33 Z" fill="#0F6E56"/>
+    </svg>
+    <a class="wordmark" href="/">Postara<span class="t">Trend</span></a>
+    <div class="navlinks">
+      <a href="/" class="navhide">Home</a>
+      <a href="/products.html" class="navhide">Shop</a>
+      <a href="/releases/" class="active navhide">Releases</a>
+      <a href="/#contact" class="btn bp">Talk to us <span class="ba">&#8594;</span></a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap" role="main">
+
+  <section class="hero" aria-labelledby="hero-h">
+    <div class="hero-radar" aria-hidden="true"></div>
+    <div class="hero-radar r2" aria-hidden="true"></div>
+    <div class="eyebrow">RELEASES</div>
+    <h1 id="hero-h">Everything on this page is <span class="g">running in production.</span></h1>
+    <p>No roadmap items and no concepts. These are the products and services PostaraTrend operates today, publishing, prospecting, and analyzing on live systems. Where a demo exists, you can open it and see the work.</p>
+    <div class="hero-cta">
+      <a class="btn bp" href="https://postaratrend-leadscout-demo.lovable.app" target="_blank" rel="noopener">Open the live demo <span class="ba">&#8594;</span></a>
+      <a class="btn bs" href="/#contact">Talk to us</a>
+    </div>
+    <div class="clients">Running today for <b>The 3rd Academy</b>, <b>Pantrifuge</b>, and our own brands.</div>
+    <div class="hero-stats">
+      <span class="hpill">Publishing since June 18, 2026</span>
+      <span class="hpill">Live counters on the homepage</span>
+      <span class="hpill">Calgary, Alberta</span>
+    </div>
+    <div class="live-strip" id="liveStrip" aria-live="polite"></div>
+  </section>
+
+  <section class="releases" aria-label="Releases">
+
+    <!-- Autopilot Social -->
+    <article class="rel reveal" id="autopilot">
+      <div class="relcopy">
+        <div class="relhead">
+          <span class="relname">Autopilot Social</span>
+          <span class="status live">LIVE</span>
+        </div>
+        <div class="relkick">GOVERNED AUTONOMOUS PUBLISHING</div>
+        <p class="relbody">Our flagship. An autonomous publishing system that decides what to say, writes it, renders the graphic, posts it, and refuses what fails its rules. Every decision is logged, including the refusals, and clients receive the evidence every month. Most content tools will write whatever they are asked. Ours refuses.</p>
+        <div class="chips">
+          <span class="chip">Editorial gates enforced in code</span>
+          <span class="chip">Public refusal record</span>
+          <span class="chip">Monthly evidence report</span>
+        </div>
+        <div class="relcta">
+          <a class="btn bp" href="/#services">See plans <span class="ba">&#8594;</span></a>
+          <a class="btn bs" href="/#ptshow">See published work</a>
+        </div>
+      </div>
+      <div class="relvis">
+        <div class="visglow" aria-hidden="true"></div>
+        <div class="feed-scene" role="img" aria-label="A generic social feed post by PostaraTrend, dated 21 Jul 2026, headline Youth Entrepreneurship Applications Are Surging Across Canada">
+          <div class="feed-card">
+            <div class="feed-head">
+              <div class="feed-avatar" aria-hidden="true">
+                <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="96" height="96" rx="18" fill="#112B54"/>
+                  <rect x="18" y="56" width="10" height="18" rx="2" fill="#5DCAA5"/>
+                  <rect x="33" y="46" width="10" height="28" rx="2" fill="#1D9E75"/>
+                  <rect x="48" y="36" width="10" height="38" rx="2" fill="#0F6E56"/>
+                  <rect x="63" y="26" width="10" height="48" rx="2" fill="#FFFFFF"/>
+                  <path d="M60 22 L76 16 L74 33 Z" fill="#0F6E56"/>
+                </svg>
+              </div>
+              <div class="feed-meta">
+                <span class="feed-name">PostaraTrend</span>
+                <span class="feed-time">21 Jul 2026</span>
+              </div>
+              <span class="feed-dots" aria-hidden="true">&#8230;</span>
+            </div>
+            <div class="feed-image">
+              <div class="fi-kick">TREND SIGNAL</div>
+              <div class="fi-head">Youth Entrepreneurship Applications Are Surging Across Canada</div>
+              <div class="fi-meta">Published autonomously to Facebook</div>
+              <div class="fi-foot">POSTARATREND &#183; 21 JUL 2026</div>
+            </div>
+            <div class="feed-actions" aria-hidden="true">
+              <span class="act"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6C19 16.5 12 21 12 21z"/></svg>Like</span>
+              <span class="act"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></svg>Comment</span>
+              <span class="act"><svg viewBox="0 0 24 24"><path d="M4 12l16-7-7 16-2-7z"/></svg>Share</span>
+            </div>
+          </div>
+          <div class="refchip"><b>Refused:</b> active partisan controversy</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Lead Scout -->
+    <article class="rel flip reveal" id="leadscout">
+      <div class="relcopy">
+        <div class="relhead">
+          <span class="relname">Lead Scout</span>
+          <span class="status live">LIVE</span>
+        </div>
+        <div class="relkick">AUTONOMOUS PROSPECTING</div>
+        <p class="relbody">Prospecting for businesses that sell to businesses. Every week it sweeps live local listings, scores each prospect with a breakdown you can inspect, verifies contact emails, and writes a first message that is ready to send. Also available in a Named Target edition that researches one high value prospect at a time behind a compliance gate.</p>
+        <div class="chips">
+          <span class="chip">Weekly live sweep</span>
+          <span class="chip">Explainable scoring</span>
+          <span class="chip">Verified emails</span>
+          <span class="chip">Drafts ready to send</span>
+        </div>
+        <div class="relcta">
+          <a class="btn bp" href="https://postaratrend-leadscout-demo.lovable.app" target="_blank" rel="noopener">Open the live demo <span class="ba">&#8594;</span></a>
+          <span class="relnote">The businesses in the demo are fictional.</span>
+        </div>
+      </div>
+      <div class="relvis">
+        <div class="visglow" aria-hidden="true"></div>
+        <div class="phone-scene" role="img" aria-label="A smartphone showing the Lead Scout weekly delivery for Monday July 27, with three fictional prospects: Ridgeline Physiotherapy, Harlow Auto Detailing, and Cedar Gate Dental Studio">
+          <div class="phone-shadow" aria-hidden="true"></div>
+          <div class="phone">
+            <div class="phone-body">
+              <span class="phone-side-btn mute" aria-hidden="true"></span>
+              <span class="phone-side-btn vup" aria-hidden="true"></span>
+              <span class="phone-side-btn vdn" aria-hidden="true"></span>
+              <span class="phone-side-btn pwr" aria-hidden="true"></span>
+              <div class="phone-screen">
+                <div class="phone-notch" aria-hidden="true"></div>
+                <div class="ps-status" aria-hidden="true">
+                  <span class="ps-time">9:41</span>
+                  <span class="right">
+                    <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="7" width="2.4" height="3" rx="0.5" fill="#0a0b0d"/><rect x="3.2" y="5" width="2.4" height="5" rx="0.5" fill="#0a0b0d"/><rect x="6.4" y="3" width="2.4" height="7" rx="0.5" fill="#0a0b0d"/><rect x="9.6" y="1" width="2.4" height="9" rx="0.5" fill="#0a0b0d"/><rect x="12.8" y="0" width="2.4" height="10" rx="0.5" fill="#0a0b0d" opacity="0.35"/></svg>
+                    <svg width="14" height="10" viewBox="0 0 14 10"><path d="M7 9.2a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM7 6.4c1.15 0 2.2.44 3 1.15l.9-1.05A5.6 5.6 0 0 0 7 5c-1.55 0-2.95.6-4 1.55l.9 1.05A4.4 4.4 0 0 1 7 6.4zM7 3.4c1.95 0 3.7.75 5 1.95l.9-1.05A7.6 7.6 0 0 0 7 2C4.85 2 2.9 2.85 1.5 4.25l.9 1.05A6.4 6.4 0 0 1 7 3.4z" fill="#0a0b0d"/></svg>
+                    <svg width="26" height="12" viewBox="0 0 26 12"><rect x="0.5" y="1" width="22" height="10" rx="2.4" fill="none" stroke="#0a0b0d" stroke-width="1"/><rect x="23" y="4" width="1.5" height="4" rx="0.5" fill="#0a0b0d"/><rect x="2" y="2.5" width="17" height="7" rx="1.4" fill="#1D9E75"/></svg>
+                  </span>
+                </div>
+                <div class="app">
+                  <div class="app-header">
+                    <div class="app-tile" aria-hidden="true">
+                      <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="96" height="96" rx="18" fill="#112B54"/>
+                        <rect x="18" y="56" width="10" height="18" rx="2" fill="#5DCAA5"/>
+                        <rect x="33" y="46" width="10" height="28" rx="2" fill="#1D9E75"/>
+                        <rect x="48" y="36" width="10" height="38" rx="2" fill="#0F6E56"/>
+                        <rect x="63" y="26" width="10" height="48" rx="2" fill="#FFFFFF"/>
+                        <path d="M60 22 L76 16 L74 33 Z" fill="#0F6E56"/>
+                      </svg>
+                    </div>
+                    <div class="app-title">Lead Scout</div>
+                  </div>
+                  <div class="app-sub">Weekly Delivery &#183; Monday, July 27</div>
+                  <div class="app-summary">3 new prospects &#183; 2 verified emails</div>
+                  <div class="p-list">
+                    <div class="prospect">
+                      <div class="p-name">Ridgeline Physiotherapy</div>
+                      <div class="p-meta">Calgary &#183; 3 platform gaps</div>
+                      <div class="p-tags"><span class="fit">92 FIT</span><span class="ver">&#10003; Verified email</span></div>
+                      <button class="p-cta" type="button" tabindex="-1">View draft message</button>
+                    </div>
+                    <div class="prospect">
+                      <div class="p-name">Harlow Auto Detailing</div>
+                      <div class="p-meta">Calgary &#183; 4 platform gaps</div>
+                      <div class="p-tags"><span class="fit">87 FIT</span><span class="ver">&#10003; Verified email</span></div>
+                    </div>
+                    <div class="prospect">
+                      <div class="p-name">Cedar Gate Dental Studio</div>
+                      <div class="p-meta">Airdrie &#183; 2 platform gaps</div>
+                      <div class="p-tags"><span class="fit">78 FIT</span><span class="pending">Email pending</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="phone-glare" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="phone-note">SAMPLE DATA FOR ILLUSTRATION</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Verdict Engine -->
+    <article class="rel reveal" id="verdict">
+      <div class="relcopy">
+        <div class="relhead">
+          <span class="relname">Verdict Engine</span>
+          <span class="status pilot">PILOT</span>
+        </div>
+        <div class="relkick">FEEDBACK AND REVIEW INTELLIGENCE</div>
+        <p class="relbody">The engine reads real customer feedback and produces a grounded verdict on what to fix, what to build, and what to watch. Every claim must cite verbatim source lines, every count is computed in code, and the engine refuses to report when the corpus is too thin to support a conclusion.</p>
+        <div class="chips">
+          <span class="chip">Verbatim citations required</span>
+          <span class="chip">Counts computed in code</span>
+          <span class="chip">Refuses thin evidence</span>
+        </div>
+        <div class="relcta">
+          <a class="btn bp" href="/#contact">Ask about the pilot <span class="ba">&#8594;</span></a>
+        </div>
+      </div>
+      <div class="relvis">
+        <div class="visglow" aria-hidden="true"></div>
+        <div class="vwin-scene" role="img" aria-label="A desktop application window titled VERDICT, showing citation counts for delivery delays, praise for staff, and pricing questions">
+          <div class="vwin" id="vwin">
+            <div class="vwin-bar" aria-hidden="true">
+              <span class="vwin-dot"></span>
+              <span class="vwin-dot"></span>
+              <span class="vwin-dot"></span>
+              <span class="vwin-title">VERDICT</span>
+            </div>
+            <div class="vwin-body">
+              <div class="vwin-kick">VERDICT</div>
+              <div class="vwin-head">What your reviews are telling you</div>
+              <div class="vbar"><div class="lab"><span>Delivery delays</span><span>12 citations</span></div><div class="track"><div class="fill f1"></div></div></div>
+              <div class="vbar"><div class="lab"><span>Praise for staff</span><span>8 citations</span></div><div class="track"><div class="fill f2"></div></div></div>
+              <div class="vbar"><div class="lab"><span>Pricing questions</span><span>5 citations</span></div><div class="track"><div class="fill f3"></div></div></div>
+              <div class="vwin-foot">SAMPLE DATA FOR ILLUSTRATION</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Trend Pulse Canada -->
+    <article class="rel flip reveal" id="trendpulse">
+      <div class="relcopy">
+        <div class="relhead">
+          <span class="relname">Trend Pulse Canada</span>
+          <span class="status live">LIVE</span>
+        </div>
+        <div class="relkick">TREND INTELLIGENCE</div>
+        <p class="relbody">Weekly trend briefings for Canadian small businesses, researched, written, rendered, and published autonomously to our own page. It is the same intelligence that feeds our publishing decisions, running in public so you can judge the quality before you buy anything.</p>
+        <div class="chips">
+          <span class="chip">Published on our own page</span>
+          <span class="chip">Canadian SMB focus</span>
+        </div>
+        <div class="relcta">
+          <a class="btn bp" href="/#ptshow">See the Showroom <span class="ba">&#8594;</span></a>
+        </div>
+      </div>
+      <div class="relvis">
+        <div class="visglow" aria-hidden="true"></div>
+        <div class="card-scene" role="img" aria-label="Trend Pulse Canada weekly card">
+          <div class="card-shadow" aria-hidden="true"></div>
+          <div class="card-real">
+            <div class="cr-kick">TREND PULSE CANADA</div>
+            <div class="cr-head">What Canadian small businesses should watch this week</div>
+            <div class="cr-meta">Researched and published autonomously</div>
+            <div class="cr-foot">POSTARATREND &#183; WEEKLY</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Digital tools -->
+    <article class="rel reveal" id="tools">
+      <div class="relcopy">
+        <div class="relhead">
+          <span class="relname">Digital Tools Shop</span>
+          <span class="status live">LIVE</span>
+        </div>
+        <div class="relkick">GUIDES AND LANDLORD TOOLS</div>
+        <p class="relbody">Practical guides and tools you can buy today, including the YYC Rental Studio line built for Alberta landlords. Priced for small operators and delivered instantly.</p>
+        <div class="chips">
+          <span class="chip">Instant delivery</span>
+          <span class="chip">Alberta landlord tools</span>
+        </div>
+        <div class="relcta">
+          <a class="btn bp" href="/products.html">Visit the shop <span class="ba">&#8594;</span></a>
+        </div>
+      </div>
+      <div class="relvis">
+        <div class="visglow" aria-hidden="true"></div>
+        <div class="card-scene" role="img" aria-label="YYC Rental Studio product card">
+          <div class="card-shadow" aria-hidden="true"></div>
+          <div class="card-real">
+            <div class="cr-kick">YYC RENTAL STUDIO</div>
+            <div class="cr-head">Tools that pay for themselves in one tenancy</div>
+            <div class="cr-price">From CA$11.99</div>
+            <div class="cr-foot">DIGITAL DELIVERY</div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="comparewrap reveal" id="compare" aria-labelledby="compare-h">
+    <span class="eyebrow">PICK YOUR CATEGORY</span>
+    <h2 id="compare-h">Cheap tools post anything. Agencies cost thousands.<br>We refuse in writing.</h2>
+    <div class="compare">
+      <div class="ccol reveal">
+        <div class="ctitle">AI posting tools</div>
+        <div class="cprice">LOW MONTHLY PRICE</div>
+        <div class="crow">They will write whatever they are asked, on any topic, in any climate.</div>
+        <div class="crow">No record exists of what should not have been said.</div>
+        <div class="crow">You find out about a bad post after your customers do.</div>
+      </div>
+      <div class="ccol us reveal">
+        <div class="ctitle">PostaraTrend</div>
+        <div class="cprice">FROM CA$249 A MONTH</div>
+        <div class="crow">Your rules are enforced in code before anything publishes.</div>
+        <div class="crow">A refusal record you can inspect, on our own page first.</div>
+        <div class="crow">Evidence of everything published and declined, every month.</div>
+      </div>
+      <div class="ccol reveal">
+        <div class="ctitle">Human agencies</div>
+        <div class="cprice">CA$1,500 AND UP EACH MONTH</div>
+        <div class="crow">Real judgement, applied by hand, at hand built speed.</div>
+        <div class="crow">You cannot see what they declined to say on your behalf.</div>
+        <div class="crow">The cost scales with headcount, not with output.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faqwrap reveal" id="faq" aria-labelledby="faq-h">
+    <span class="eyebrow">FAIR QUESTIONS</span>
+    <h2 id="faq-h">What buyers ask us before they sign.</h2>
+    <div class="faqs">
+      <details class="faq">
+        <summary>What will the system refuse to publish?</summary>
+        <p>Death and tragedy exploitation, active partisan controversy, claims it cannot ground in a real source, and anything that falls outside the rules calibrated for your business. When the call is close, it suppresses and records the reason instead of gambling with your name.</p>
+      </details>
+      <details class="faq">
+        <summary>What happens when it gets something wrong?</summary>
+        <p>Every decision is logged with its reason, published and refused alike, so a miss is visible instead of buried. When a rule needs tightening, we tighten it in code, and the change applies to every post from that moment on. You are never relying on a promise to be more careful.</p>
+      </details>
+      <details class="faq">
+        <summary>Who owns the accounts and the content?</summary>
+        <p>You do. The system publishes to pages you own, and everything it publishes or declines on your behalf is delivered to you in the monthly evidence report. If we part ways, your pages, your content, and your record go with you.</p>
+      </details>
+      <details class="faq">
+        <summary>How do we start?</summary>
+        <p>With a conversation about what you sell, where you sell it, and what must never be said. We calibrate your rules first, then the system begins publishing on your pages with every decision on the record from day one. Use the contact form and tell us about your business.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="proof reveal">
+    <div>
+      <h2>We publish our own numbers.</h2>
+      <p>The homepage counters count everything our fleet has published and refused since June 18, 2026, refreshed from the live logs. The refusals are on the record because the judgement is the product.</p>
+    </div>
+    <a class="btn bs" href="/#ptstats">See the live counters <span class="ba">&#8594;</span></a>
+  </section>
+
+  <section class="final reveal">
+    <h2>Want this running for your business?</h2>
+    <p>Tell us what you sell and where. We will show you what the system would do for you.</p>
+    <a class="btn" href="/#contact">Start the conversation <span class="ba">&#8594;</span></a>
+  </section>
+
+</main>
+
+<footer class="wrap" role="contentinfo">
+  postaratrend.ca &#183; Calgary, Alberta &#183; N 51.0447 &#183; W 114.0719<br>
+  &#169; 2026 PostaraTrend Technologies Inc.
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Scroll reveals
+  var revealEls = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) {
+          e.target.classList.add("in");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: "0px 0px -40px 0px" });
+    for (var ri = 0; ri < revealEls.length; ri++) { io.observe(revealEls[ri]); }
+
+    // Verdict bar animation
+    var vwin = document.getElementById("vwin");
+    if (vwin) {
+      var vo = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) { vwin.classList.add("animate"); vo.unobserve(vwin); }
+        });
+      }, { threshold: 0.35 });
+      vo.observe(vwin);
+    }
+  } else {
+    for (var rj = 0; rj < revealEls.length; rj++) { revealEls[rj].classList.add("in"); }
+    var vw = document.getElementById("vwin"); if (vw) vw.classList.add("animate");
+  }
+
+  // Live data fetch. Render NOTHING on any failure.
+  function fmt(n){ try { return Number(n).toLocaleString("en-CA"); } catch(_){ return String(n); } }
+  function isPositiveInt(v){ return typeof v === "number" && isFinite(v) && v >= 0 && Math.floor(v) === v; }
+
+  function withTimeout(url, ms){
+    var ctl = ("AbortController" in window) ? new AbortController() : null;
+    var opts = { credentials: "omit", cache: "no-store" };
+    if (ctl) opts.signal = ctl.signal;
+    var timer = setTimeout(function(){ if (ctl) ctl.abort(); }, ms);
+    return fetch(url, opts).then(function(r){
+      clearTimeout(timer);
+      if (!r.ok) throw new Error("bad status");
+      return r.json();
+    }, function(err){ clearTimeout(timer); throw err; });
+  }
+
+  function addPill(label, value){
+    var strip = document.getElementById("liveStrip");
+    if (!strip) return;
+    var span = document.createElement("span");
+    span.className = "hpill";
+    span.innerHTML = '<span class="lv" aria-hidden="true"></span>' +
+      '<strong style="color:#fff;font-weight:700;">' + fmt(value) + '</strong> ' + label;
+    strip.appendChild(span);
+  }
+
+  if (typeof fetch === "function") {
+    withTimeout("/data/stats.json", 4000).then(function(d){
+      if (!d || typeof d !== "object" || !d.totals || typeof d.totals !== "object") return;
+      if (isPositiveInt(d.totals.published)) addPill("published", d.totals.published);
+      if (isPositiveInt(d.totals.refused)) addPill("refused", d.totals.refused);
+    }).catch(function(){ /* silent */ });
+
+    // Scout pill held back on purpose. The live scout.json counts are known to be
+    // inflated by junk workbook rows. Flip SHOW_SCOUT_PILL to true only after the
+    // Scans and Prospects tabs are cleaned and the Scout Stats Publisher has rerun.
+    var SHOW_SCOUT_PILL = false;
+    if (SHOW_SCOUT_PILL) {
+      withTimeout("/data/scout.json", 4000).then(function(d){
+        if (!d || typeof d !== "object" || !Array.isArray(d.headline)) return;
+        for (var i = 0; i < d.headline.length; i++) {
+          var h = d.headline[i];
+          if (h && h.label === "businesses scanned" && isPositiveInt(h.value)) {
+            addPill("businesses scanned", h.value);
+            break;
+          }
+        }
+      }).catch(function(){ /* silent */ });
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
