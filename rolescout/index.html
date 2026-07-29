@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Role Scout by PostaraTrend. The resume an employer can actually believe.</title>
+<meta name="description" content="Role Scout reads the resume you upload, matches it against real roles in your country, and shows you honestly where you fit. Every line stays yours and stays true.">
+<link rel="canonical" href="https://postaratrend.ca/rolescout/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Role Scout by PostaraTrend">
+<meta property="og:description" content="The resume an employer can actually believe. Attested content, honest match scores, verified tailoring, and a verification link employers can open.">
+<meta property="og:url" content="https://postaratrend.ca/rolescout/">
+<meta property="og:image" content="https://postaratrend.ca/android-chrome-512x512.png">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="../favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--darkest:#0D2447;--navy:#1A3A6B;--nbg:#13305A;--nd:#112B54;--green:#1D9E75;--gdeep:#0F6E56;--ltg:#5DCAA5;--plg:#A3E4CC;--line:rgba(29,158,117,0.25);--amber:#D9A441;--ink:#EAF2FF;--mut:#9FB3D1}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Geist',system-ui,sans-serif;background:var(--darkest);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.15}
+a{color:var(--ltg);text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.kick{font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ltg)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:10px;font-weight:600;font-size:15px;border:1px solid transparent;cursor:pointer;transition:transform .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.bp{background:var(--green);color:#fff}
+.bs{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.18);color:var(--ink)}
+header{position:sticky;top:0;z-index:50;background:rgba(13,36,71,0.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.08)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px;color:#fff}
+.logo span{color:var(--ltg)}
+.nl{display:flex;gap:26px;font-size:14px;font-weight:500}
+.nl a{color:var(--mut)}
+.nl a:hover{color:#fff}
+.hero{padding:88px 0 64px;background:radial-gradient(900px 480px at 70% -10%,rgba(29,158,117,0.16),transparent),var(--darkest)}
+.hero h1{font-size:clamp(34px,5.4vw,58px);font-weight:800;max-width:820px;margin:14px 0 20px}
+.hero h1 em{font-style:normal;color:var(--plg)}
+.hero p.sub{font-size:18px;color:var(--mut);max-width:680px;margin-bottom:30px}
+.ctarow{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.trustline{margin-top:18px;font-size:13px;color:var(--mut)}
+#statsband{display:none;margin-top:38px;border:1px solid var(--line);border-radius:14px;padding:18px 22px;background:var(--nd)}
+#statsband.on{display:flex;gap:34px;flex-wrap:wrap}
+.stat b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:26px;color:var(--plg)}
+.stat i{font-style:normal;font-size:13px;color:var(--mut)}
+section{padding:70px 0}
+.sechead{max-width:720px;margin-bottom:36px}
+.sechead h2{font-size:clamp(26px,3.6vw,38px);font-weight:800;margin:10px 0 12px}
+.sechead p{color:var(--mut);font-size:16px}
+.probgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pcard{background:var(--nd);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:24px}
+.pcard h3{font-size:18px;margin-bottom:8px;color:#fff}
+.pcard p{font-size:14px;color:var(--mut)}
+.simsec{background:var(--nbg);border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06)}
+.simnote{display:inline-block;background:rgba(217,164,65,0.12);border:1px solid rgba(217,164,65,0.4);color:#EBCB8F;font-size:13px;padding:8px 14px;border-radius:9px;margin-bottom:22px}
+.simbox{background:var(--darkest);border:1px solid rgba(255,255,255,0.12);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.35)}
+.simtop{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.08);background:var(--nd)}
+.simtop .t{font-size:13px;font-weight:600;color:var(--mut)}
+.dots{display:flex;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,0.18);transition:background .25s}
+.dot.on{background:var(--green)}
+.simstage{min-height:400px;padding:28px 26px}
+.simstage h3{font-size:20px;margin-bottom:4px}
+.stageword{font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ltg);margin-bottom:14px}
+.simctl{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);background:var(--nd)}
+.simctl .hintt{font-size:13px;color:var(--mut);max-width:56%}
+.filechip{display:inline-flex;align-items:center;gap:10px;background:var(--nd);border:1px solid rgba(255,255,255,0.14);border-radius:10px;padding:12px 16px;font-size:14px;margin-bottom:18px}
+.filechip b{color:#fff;font-weight:600}
+.rline{display:flex;gap:10px;align-items:baseline;padding:7px 10px;border-radius:8px;font-size:14px;opacity:0;transform:translateY(6px);animation:rise .4s ease forwards}
+.rline .sec{flex:0 0 auto;font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--ltg);background:rgba(29,158,117,0.12);border:1px solid var(--line);border-radius:6px;padding:2px 7px}
+.rline .txt{color:var(--ink)}
+@keyframes rise{to{opacity:1;transform:none}}
+.attestcard{background:var(--nd);border:1px solid var(--line);border-radius:14px;padding:26px;max-width:560px}
+.attestcard p{font-size:15px;margin-bottom:18px}
+.stamp{display:none;margin-top:18px;align-items:center;gap:10px;color:var(--plg);font-weight:600;font-size:15px}
+.stamp.on{display:flex}
+.check{width:22px;height:22px;border-radius:50%;background:var(--green);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;flex:0 0 auto}
+.matchwrap{display:flex;gap:30px;align-items:flex-start;flex-wrap:wrap}
+.ringbox{flex:0 0 150px;text-align:center}
+.ringbox svg{transform:rotate(-90deg)}
+.ringnum{font-family:'Bricolage Grotesque',sans-serif;font-size:34px;font-weight:800;color:#fff;margin-top:-102px;position:relative;pointer-events:none}
+.ringlab{font-size:12px;color:var(--mut);margin-top:48px}
+.mcol{flex:1;min-width:260px}
+.mcol h4{font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--mut);margin:14px 0 8px}
+.mitem{display:flex;gap:9px;font-size:14px;padding:4px 0;align-items:baseline}
+.oc{width:16px;height:16px;border-radius:50%;border:2px solid var(--mut);flex:0 0 auto;position:relative;top:2px}
+.rationale{background:var(--nd);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px 16px;font-size:14px;color:var(--ink);margin-top:6px}
+.tline{display:flex;gap:10px;align-items:baseline;padding:6px 10px;font-size:14px;opacity:0;animation:rise .4s ease forwards}
+.prov{flex:0 0 auto;font-size:10px;color:var(--ltg);border:1px solid var(--line);border-radius:6px;padding:2px 7px;white-space:nowrap}
+.refusal{margin-top:20px;background:rgba(217,164,65,0.08);border:1px solid rgba(217,164,65,0.5);border-radius:12px;padding:18px 20px;opacity:0;animation:rise .5s ease .3s forwards}
+.refusal .rt{font-size:11px;font-weight:700;letter-spacing:0.12em;color:#EBCB8F;margin-bottom:6px}
+.refusal p{font-size:14px}
+.vbanner{background:rgba(29,158,117,0.1);border:1px solid var(--green);border-radius:12px;padding:16px 20px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+.vbanner p{font-size:14px}
+.istrip{display:flex;gap:22px;flex-wrap:wrap;background:var(--nd);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--mut);margin-bottom:18px}
+.istrip b{color:#fff;display:block;font-size:18px;font-family:'Bricolage Grotesque',sans-serif}
+.sharechip{display:inline-flex;gap:10px;align-items:center;background:var(--nd);border:1px solid rgba(255,255,255,0.14);border-radius:10px;padding:11px 15px;font-size:13px;color:var(--mut)}
+.sharechip code{color:var(--plg);font-size:13px}
+.viewed{margin-top:12px;font-size:13px;color:var(--plg);opacity:0;animation:rise .4s ease .5s forwards}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.step{background:var(--nd);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px 16px}
+.step b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-size:15px;color:#fff;margin:8px 0 6px}
+.step p{font-size:13px;color:var(--mut)}
+.stepn{width:26px;height:26px;border-radius:50%;background:rgba(29,158,117,0.15);border:1px solid var(--line);color:var(--plg);font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+.meanbox{background:var(--nd);border:1px solid var(--line);border-radius:14px;padding:28px;max-width:820px}
+.meanbox p{font-size:15px;margin-bottom:12px}
+.meanbox p:last-child{margin-bottom:0}
+.personas{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+faq-x{display:block}
+details{background:var(--nd);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:0;margin-bottom:12px;max-width:820px}
+summary{cursor:pointer;padding:18px 22px;font-weight:600;font-size:15px;color:#fff;list-style:none;display:flex;justify-content:space-between;align-items:center}
+summary::after{content:"+";color:var(--ltg);font-size:20px}
+details[open] summary::after{content:"\2212"}
+details p{padding:0 22px 18px;font-size:14px;color:var(--mut)}
+.ctaband{background:linear-gradient(135deg,var(--navy),var(--nbg));border-top:1px solid rgba(255,255,255,0.08);text-align:center;padding:84px 0}
+.ctaband h2{font-size:clamp(26px,4vw,40px);font-weight:800;margin-bottom:14px}
+.ctaband p{color:var(--mut);max-width:560px;margin:0 auto 28px}
+footer{border-top:1px solid rgba(255,255,255,0.08);padding:36px 0;font-size:13px;color:var(--mut)}
+footer .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:900px){.probgrid,.personas{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,1fr)}.nl{display:none}.simctl .hintt{display:none}}
+@media(max-width:560px){.steps{grid-template-columns:1fr}.simstage{padding:20px 16px}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:0.01ms !important;transition:none !important}html{scroll-behavior:auto}}
+.herowrap{display:grid;grid-template-columns:1.02fr .98fr;gap:44px;align-items:center}
+.herocopy{min-width:0}
+.hero .herocopy h1,.hero .herocopy p.sub{max-width:620px}
+.heroviz{min-width:0}
+.pv{width:100%;height:auto;display:block;overflow:visible}
+.pvcard{fill:rgba(255,255,255,0.03);stroke:rgba(255,255,255,0.12)}
+.pvlab{font-family:'Geist',system-ui,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;fill:#9FB3D1}
+.pvbase{fill:rgba(255,255,255,0.09)}
+.pvlit{fill:#1D9E75}
+.pvfill{fill:#5DCAA5;transform-box:fill-box;transform-origin:left center}
+.pvghost{fill:none;stroke:rgba(255,255,255,0.18);stroke-dasharray:5 5}
+.pvth{fill:none;stroke:#1D9E75;stroke-width:2;stroke-linecap:round}
+.pvref{stroke:#D9A441}
+.pvmark{fill:#D9A441}
+.pvtag rect{fill:rgba(217,164,65,0.14);stroke:rgba(217,164,65,0.55)}
+.pvtag text{font-family:'Geist',system-ui,sans-serif;font-size:11px;fill:#EBCB8F}
+.pvbadge rect{fill:rgba(29,158,117,0.16);stroke:#1D9E75}
+.pvbadge text{font-family:'Geist',system-ui,sans-serif;font-size:11px;fill:#A3E4CC}
+.pv.anim .pvth{stroke-dasharray:1;stroke-dashoffset:1}
+@keyframes pvdraw0{0%,7.5%{stroke-dashoffset:1;opacity:1}16.88%{stroke-dashoffset:0;opacity:1}95.0%{stroke-dashoffset:0;opacity:1}99.38%,100%{stroke-dashoffset:0;opacity:0}}
+.pv.anim .t0{animation:pvdraw0 16.0s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes pvlit0{0%,6.25%{opacity:0}9.38%{opacity:1}95.0%{opacity:1}99.38%,100%{opacity:0}}
+.pv.anim .l0{animation:pvlit0 16.0s ease infinite}
+@keyframes pvfill0{0%,16.88%{transform:scaleX(0)}20.0%{transform:scaleX(1)}95.0%{transform:scaleX(1);opacity:1}99.38%,100%{transform:scaleX(1);opacity:0}}
+.pv.anim .f0{animation:pvfill0 16.0s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes pvdraw1{0%,19.37%{stroke-dashoffset:1;opacity:1}28.75%{stroke-dashoffset:0;opacity:1}95.0%{stroke-dashoffset:0;opacity:1}99.38%,100%{stroke-dashoffset:0;opacity:0}}
+.pv.anim .t1{animation:pvdraw1 16.0s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes pvlit1{0%,18.12%{opacity:0}21.25%{opacity:1}95.0%{opacity:1}99.38%,100%{opacity:0}}
+.pv.anim .l1{animation:pvlit1 16.0s ease infinite}
+@keyframes pvfill2{0%,28.75%{transform:scaleX(0)}31.87%{transform:scaleX(1)}95.0%{transform:scaleX(1);opacity:1}99.38%,100%{transform:scaleX(1);opacity:0}}
+.pv.anim .f2{animation:pvfill2 16.0s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes pvdraw2{0%,31.25%{stroke-dashoffset:1;opacity:1}40.62%{stroke-dashoffset:0;opacity:1}95.0%{stroke-dashoffset:0;opacity:1}99.38%,100%{stroke-dashoffset:0;opacity:0}}
+.pv.anim .t2{animation:pvdraw2 16.0s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes pvlit2{0%,30.0%{opacity:0}33.12%{opacity:1}95.0%{opacity:1}99.38%,100%{opacity:0}}
+.pv.anim .l2{animation:pvlit2 16.0s ease infinite}
+@keyframes pvfill1{0%,40.62%{transform:scaleX(0)}43.75%{transform:scaleX(1)}95.0%{transform:scaleX(1);opacity:1}99.38%,100%{transform:scaleX(1);opacity:0}}
+.pv.anim .f1{animation:pvfill1 16.0s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes pvdraw3{0%,43.12%{stroke-dashoffset:1;opacity:1}52.5%{stroke-dashoffset:0;opacity:1}95.0%{stroke-dashoffset:0;opacity:1}99.38%,100%{stroke-dashoffset:0;opacity:0}}
+.pv.anim .t3{animation:pvdraw3 16.0s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes pvlit3{0%,41.87%{opacity:0}45.0%{opacity:1}95.0%{opacity:1}99.38%,100%{opacity:0}}
+.pv.anim .l3{animation:pvlit3 16.0s ease infinite}
+@keyframes pvfill4{0%,52.5%{transform:scaleX(0)}55.62%{transform:scaleX(1)}95.0%{transform:scaleX(1);opacity:1}99.38%,100%{transform:scaleX(1);opacity:0}}
+.pv.anim .f4{animation:pvfill4 16.0s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes pvdraw4{0%,55.0%{stroke-dashoffset:1;opacity:1}64.38%{stroke-dashoffset:0;opacity:1}95.0%{stroke-dashoffset:0;opacity:1}99.38%,100%{stroke-dashoffset:0;opacity:0}}
+.pv.anim .t4{animation:pvdraw4 16.0s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes pvlit4{0%,53.75%{opacity:0}56.88%{opacity:1}95.0%{opacity:1}99.38%,100%{opacity:0}}
+.pv.anim .l4{animation:pvlit4 16.0s ease infinite}
+@keyframes pvfill3{0%,64.38%{transform:scaleX(0)}67.5%{transform:scaleX(1)}95.0%{transform:scaleX(1);opacity:1}99.38%,100%{transform:scaleX(1);opacity:0}}
+.pv.anim .f3{animation:pvfill3 16.0s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes pvdraw5{0%,66.88%{stroke-dashoffset:1;opacity:1}76.25%{stroke-dashoffset:0;opacity:1}95.0%{stroke-dashoffset:0;opacity:1}99.38%,100%{stroke-dashoffset:0;opacity:0}}
+.pv.anim .t5{animation:pvdraw5 16.0s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes pvlit5{0%,65.62%{opacity:0}68.75%{opacity:1}95.0%{opacity:1}99.38%,100%{opacity:0}}
+.pv.anim .l5{animation:pvlit5 16.0s ease infinite}
+@keyframes pvtaga{0%,76.88%{opacity:0}80.62%{opacity:1}95.0%{opacity:1}99.38%,100%{opacity:0}}
+.pv.anim .pvtag{animation:pvtaga 16.0s ease infinite}
+@keyframes pvmarka{0%,74.38%{opacity:0}76.88%{opacity:1}95.0%{opacity:1}99.38%,100%{opacity:0}}
+.pv.anim .pvmark{animation:pvmarka 16.0s ease infinite}
+@keyframes pvbadgea{0%,82.5%{opacity:0;transform:translateY(4px)}86.88%{opacity:1;transform:none}95.0%{opacity:1;transform:none}99.38%,100%{opacity:0;transform:none}}
+.pv.anim .pvbadge{animation:pvbadgea 16.0s ease infinite}
+@keyframes pvghosta{0%,6.25%{opacity:0}10.0%{opacity:1}95.0%{opacity:1}99.38%,100%{opacity:0}}
+.pv.anim .pvghost{animation:pvghosta 16.0s ease infinite}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1)}
+.reveal.seen{opacity:1;transform:none}
+.pcard,.step{transition:transform .25s cubic-bezier(.22,.61,.36,1),border-color .25s ease,box-shadow .25s ease}
+.pcard:hover,.step:hover{transform:translateY(-4px);border-color:var(--line);box-shadow:0 16px 34px rgba(0,0,0,0.28)}
+.simstage{transition:opacity .28s ease}
+.simstage.swap{animation:simfade .38s cubic-bezier(.22,.61,.36,1)}
+@keyframes simfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(max-width:900px){.herowrap{grid-template-columns:1fr;gap:30px}.hero{padding:64px 0 52px}}
+@media(max-width:560px){.pvlab,.pvtag text,.pvbadge text{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.pv.anim *{animation:none !important}}
+</style>
+<noscript><style>.rline,.tline,.refusal,.viewed{opacity:1;transform:none}.reveal{opacity:1;transform:none}#simjs{display:none}</style></noscript>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="../">Postara<span>Trend</span></a>
+    <nav class="nl">
+      <a href="../">Home</a>
+      <a href="../products.html">Products</a>
+      <a href="../releases/">Releases</a>
+      <a href="../#contact">Talk to us</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap herowrap">
+    <div class="herocopy">
+    <div class="kick">Role Scout</div>
+    <h1>The resume an employer can <em>actually believe.</em></h1>
+    <p class="sub">Everyone else helps job seekers shout louder into the pile. Role Scout reads what is true in your resume, matches it honestly against real postings, and proves it to the employer, line by line.</p>
+    <div class="ctarow">
+      <a class="btn bp" href="https://role-whisperer-finder.lovable.app" target="_blank" rel="noopener">Get started</a>
+      <a class="btn bs" href="#simulation">See how it works</a>
+    </div>
+    <div class="trustline">Free while in launch. No credit card. Your resume is never used to train AI models.</div>
+    <div id="statsband"></div>
+    </div>
+    <div class="heroviz" aria-hidden="true">
+      <svg class="pv" viewBox="0 0 420 300" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg">
+      <rect x="12" y="44" width="160" height="190" rx="12" class="pvcard"/>
+      <text x="22" y="34" class="pvlab">Attested resume</text>
+      <rect x="248" y="44" width="160" height="214" rx="12" class="pvcard"/>
+      <text x="258" y="34" class="pvlab">Tailored resume</text>
+      <rect x="22" y="68" width="140" height="8" rx="4" class="pvbase"/>
+      <rect x="22" y="68" width="140" height="8" rx="4" class="pvlit l0"/>
+      <rect x="22" y="94" width="129" height="8" rx="4" class="pvbase"/>
+      <rect x="22" y="94" width="129" height="8" rx="4" class="pvlit l1"/>
+      <rect x="22" y="120" width="118" height="8" rx="4" class="pvbase"/>
+      <rect x="22" y="120" width="118" height="8" rx="4" class="pvlit l2"/>
+      <rect x="22" y="146" width="134" height="8" rx="4" class="pvbase"/>
+      <rect x="22" y="146" width="134" height="8" rx="4" class="pvlit l3"/>
+      <rect x="22" y="172" width="109" height="8" rx="4" class="pvbase"/>
+      <rect x="22" y="172" width="109" height="8" rx="4" class="pvlit l4"/>
+      <rect x="22" y="198" width="123" height="8" rx="4" class="pvbase"/>
+      <rect x="22" y="198" width="123" height="8" rx="4" class="pvlit l5"/>
+      <rect x="258" y="68" width="129" height="8" rx="4" class="pvbase"/>
+      <rect x="258" y="68" width="129" height="8" rx="4" class="pvfill f0"/>
+      <rect x="258" y="94" width="118" height="8" rx="4" class="pvbase"/>
+      <rect x="258" y="94" width="118" height="8" rx="4" class="pvfill f1"/>
+      <rect x="258" y="120" width="134" height="8" rx="4" class="pvbase"/>
+      <rect x="258" y="120" width="134" height="8" rx="4" class="pvfill f2"/>
+      <rect x="258" y="146" width="109" height="8" rx="4" class="pvbase"/>
+      <rect x="258" y="146" width="109" height="8" rx="4" class="pvfill f3"/>
+      <rect x="258" y="172" width="123" height="8" rx="4" class="pvbase"/>
+      <rect x="258" y="172" width="123" height="8" rx="4" class="pvfill f4"/>
+      <rect x="258" y="198" width="98" height="8" rx="4" class="pvghost"/>
+      <path d="M162 72 C 210 72, 210 72, 258 72" pathLength="1" class="pvth t0"/>
+      <path d="M162 98 C 210 98, 210 124, 258 124" pathLength="1" class="pvth t1"/>
+      <path d="M162 124 C 210 124, 210 98, 258 98" pathLength="1" class="pvth t2"/>
+      <path d="M162 150 C 210 150, 210 176, 258 176" pathLength="1" class="pvth t3"/>
+      <path d="M162 176 C 210 176, 210 150, 258 150" pathLength="1" class="pvth t4"/>
+      <path d="M162 202 C 185 202, 195 202, 204 202" pathLength="1" class="pvth pvref t5"/>
+      <circle cx="210" cy="202" r="5" class="pvmark"/>
+      <g class="pvtag"><rect x="96" y="266" width="228" height="22" rx="11"/><text x="210" y="281" text-anchor="middle">Refused. Not in the attested resume.</text></g>
+      <g class="pvbadge"><rect x="258" y="224" width="140" height="22" rx="11"/><text x="328" y="239" text-anchor="middle">Verified. Nothing invented.</text></g>
+      </svg></div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sechead">
+      <div class="kick">The problem</div>
+      <h2>Employers stopped believing resumes. AI made it worse.</h2>
+      <p>Hundreds of applications land on every posting, many of them inflated by tools that will write anything. Employers respond by trusting nothing, and honest applicants pay the price.</p>
+    </div>
+    <div class="probgrid">
+      <div class="pcard"><h3>The pile got taller</h3><p>Application volume keeps climbing while response rates fall. Shouting louder into that pile is a race nobody wins.</p></div>
+      <div class="pcard"><h3>AI tools invent</h3><p>Most resume tools happily add skills you never claimed. That is exactly what employers have learned to screen against.</p></div>
+      <div class="pcard"><h3>Trust is the opening</h3><p>The one applicant an employer can verify stands apart from every applicant an employer must doubt. Role Scout makes you that applicant.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="simsec" id="simulation">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="kick">Interactive simulation</div>
+      <h2>Watch what happens to a resume inside Role Scout.</h2>
+      <p>Step through the exact journey your resume takes. Including the moment the system refuses to lie for you.</p>
+    </div>
+    <div class="simnote">This is a simulation. The person, the resume, the posting, and every number below are fictional. Your real resume goes through exactly these steps.</div>
+    <div class="simbox">
+      <div class="simtop">
+        <div class="t" id="simtitle">Step 1 of 5: Upload and transcription</div>
+        <div class="dots" id="simdots"></div>
+      </div>
+      <div class="simstage" id="simstage" aria-live="polite"></div>
+      <div class="simctl" id="simjs">
+        <div class="hintt" id="simhint"></div>
+        <div style="display:flex;gap:10px">
+          <button class="btn bs" id="simback" type="button">Back</button>
+          <button class="btn bp" id="simnext" type="button">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sechead">
+      <div class="kick">How it works</div>
+      <h2>Five steps. Nothing invented at any of them.</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="stepn">1</span><b>Upload</b><p>Your resume is transcribed line by line, verbatim. Nothing is changed and nothing is added.</p></div>
+      <div class="step"><span class="stepn">2</span><b>Attest</b><p>You review every line and confirm it is true. Everything downstream rests on your word.</p></div>
+      <div class="step"><span class="stepn">3</span><b>Match</b><p>Real postings in your country are scored against your attested lines. Gaps are named plainly, never hidden.</p></div>
+      <div class="step"><span class="stepn">4</span><b>Tailor</b><p>A tailored resume is drafted where every line traces to attested content. Anything unsupported is refused and logged.</p></div>
+      <div class="step"><span class="stepn">5</span><b>Verify and share</b><p>An independent check confirms provenance. You can share a live verification link an employer can open, and see when they do.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sechead">
+      <div class="kick">The verified banner</div>
+      <h2>What verification means, exactly.</h2>
+    </div>
+    <div class="meanbox">
+      <p>When a tailored resume carries the verified banner, an independent check has confirmed that every line of it is supported by the lines you attested, and that nothing was invented by the system. The verification page shows an employer the provenance counts behind that claim.</p>
+      <p>Verification is a statement about provenance, not a guarantee of your career history. That part is yours, which is the point: Role Scout puts your word back at the center and then protects it. When the system cannot support a line from your attested content, it refuses to write the line, and the refusal is recorded.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sechead">
+      <div class="kick">Who it is for</div>
+      <h2>Built for people whose story deserves to be believed.</h2>
+    </div>
+    <div class="personas">
+      <div class="pcard"><h3>Newcomers to Canada</h3><p>Your experience is real but unfamiliar to local employers. A verified, honestly matched resume travels further than a rewritten one.</p></div>
+      <div class="pcard"><h3>Career changers</h3><p>Honest gap analysis shows you exactly what a target role asks for that your attested history does not yet cover, so you can close it instead of papering over it.</p></div>
+      <div class="pcard"><h3>Anyone tired of the pile</h3><p>If you have applied two hundred times into silence, the answer is not application two hundred and one. It is being the applicant an employer can check.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sechead">
+      <div class="kick">Fair questions</div>
+      <h2>Asked plainly, answered plainly.</h2>
+    </div>
+    <details><summary>Will it make my resume look better than I am?</summary><p>No, and that is deliberate. Role Scout reorders, selects, and phrases from what you attested. It will not add a skill, a title, or a number you did not claim. When a posting asks for something your attested resume does not contain, the gap is shown to you and nothing is written to cover it.</p></details>
+    <details><summary>What does the employer actually see?</summary><p>Only what you choose to share: a tailored resume, its verified status, and the provenance counts. Your attested source resume is never shown on a verification page, and sharing is off by default.</p></details>
+    <details><summary>Where do the job postings come from?</summary><p>From public employer job boards, refreshed automatically, with every posting linking back to its source. Postings that leave their source are retired.</p></details>
+    <details><summary>What does it cost?</summary><p>Role Scout is free during launch. If paid plans arrive later, they will be announced inside the app before anything changes.</p></details>
+    <details><summary>Who is behind it?</summary><p>Role Scout is built by PostaraTrend Technologies Inc., an Alberta company that builds governed publishing and intelligence tools. The same rule runs through everything we ship: if it is not true, it does not go out.</p></details>
+  </div>
+</section>
+
+<div class="ctaband">
+  <div class="wrap">
+    <h2>Be the applicant an employer can check.</h2>
+    <p>Upload your resume, attest what is true, and let the truth do the arguing.</p>
+    <a class="btn bp" href="https://role-whisperer-finder.lovable.app" target="_blank" rel="noopener">Get started with Role Scout</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap frow">
+    <div>Role Scout is a product of PostaraTrend Technologies Inc., Calgary, Alberta.</div>
+    <div><a href="../releases/">All releases</a> &nbsp;&middot;&nbsp; <a href="../privacy/">Privacy</a> &nbsp;&middot;&nbsp; <a href="../#contact">Contact</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+/* Stats band: renders ONLY if data/rolescout.json exists and parses. Never renders zeros or placeholders. */
+var SHOW_STATS=false;
+if(SHOW_STATS){
+  fetch("../data/rolescout.json").then(function(r){return r.ok?r.json():null}).then(function(j){
+    if(!j||!j.counters||!j.counters.length)return;
+    var band=document.getElementById("statsband"),ok=false;
+    j.counters.forEach(function(c){
+      if(typeof c.value!=="number"||!c.label)return;
+      var d=document.createElement("div");d.className="stat";
+      var b=document.createElement("b");b.textContent=c.value.toLocaleString();
+      var i=document.createElement("i");i.textContent=c.label;
+      d.appendChild(b);d.appendChild(i);band.appendChild(d);ok=true;
+    });
+    if(ok)band.className="on";
+  }).catch(function(){});
+}
+
+/* Simulation: scripted, client side, fictional data. Zero backend calls. */
+var LINES=[
+ ["CONTACT","Amara Osei, Calgary AB, amara.osei@example.com"],
+ ["SUMMARY","IT support professional with four years on a busy service desk"],
+ ["EXPERIENCE","Service Desk Analyst, Meridian Office Group, 2022 to present"],
+ ["EXPERIENCE","Resolved an average of forty tickets per week across hardware, software, and access issues"],
+ ["EXPERIENCE","Administered user accounts and group policy in Active Directory"],
+ ["EXPERIENCE","Trained four new hires on the ticketing system and escalation paths"],
+ ["EDUCATION","Diploma in Information Technology, Bow Valley College, 2021"],
+ ["SKILLS","Windows 10 and 11, Microsoft 365, remote support tools, customer communication"]
+];
+var TAILORED=[
+ ["Amara Osei","Line 1"],
+ ["Service Desk Analyst with four years of hands on support experience","Lines 2 and 3"],
+ ["Resolved an average of forty tickets per week across hardware, software, and access issues","Line 4"],
+ ["Administered user accounts and group policy in Active Directory","Line 5"],
+ ["Trained four new hires on the ticketing system and escalation paths","Line 6"],
+ ["Windows 10 and 11, Microsoft 365, remote support tools","Line 8"]
+];
+function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;}
+function stageword(s,w,h){s.appendChild(el("div","stageword",w));s.appendChild(el("h3",null,h));}
+
+function stage1(s){
+  stageword(s,"Step 1","A resume arrives and is transcribed, verbatim.");
+  var chip=el("div","filechip");chip.appendChild(el("span",null,"\uD83D\uDCC4"));
+  var nb=el("b",null,"Amara_Osei_Resume.docx");chip.appendChild(nb);
+  chip.appendChild(el("span",null,"uploaded"));s.appendChild(chip);
+  LINES.forEach(function(L,i){
+    var r=el("div","rline");r.style.animationDelay=(0.15*i)+"s";
+    r.appendChild(el("span","sec",L[0]));r.appendChild(el("span","txt",L[1]));s.appendChild(r);
+  });
+}
+function stage2(s){
+  stageword(s,"Step 2","Amara attests that every line is true.");
+  var c=el("div","attestcard");
+  c.appendChild(el("p",null,"By attesting, you confirm that every line shown here is true. Everything Role Scout produces for you rests on this confirmation."));
+  var b=el("button","btn bp","Attest: every line is true");b.type="button";
+  var st=el("div","stamp");st.appendChild(el("span","check","\u2713"));st.appendChild(el("span",null,"Attested as Version 1. Nothing downstream can draw on anything else."));
+  b.addEventListener("click",function(){st.className="stamp on";b.disabled=true;b.style.opacity="0.5";});
+  c.appendChild(b);c.appendChild(st);s.appendChild(c);
+}
+function stage3(s){
+  stageword(s,"Step 3","A real posting is scored, honestly.");
+  var chip=el("div","filechip");chip.appendChild(el("b",null,"IT Support Specialist"));chip.appendChild(el("span",null,"Northgate Field Services, Calgary AB"));s.appendChild(chip);
+  var w=el("div","matchwrap");
+  var rb=el("div","ringbox");
+  rb.innerHTML='<svg width="150" height="150" viewBox="0 0 150 150"><circle cx="75" cy="75" r="64" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10"/><circle id="ringarc" cx="75" cy="75" r="64" fill="none" stroke="#1D9E75" stroke-width="10" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402" style="transition:stroke-dashoffset 1.2s ease"/></svg>';
+  rb.appendChild(el("div","ringnum","74"));rb.appendChild(el("div","ringlab","Match score"));w.appendChild(rb);
+  var mc=el("div","mcol");
+  mc.appendChild(el("h4",null,"Strengths, grounded in attested lines"));
+  ["Four years of direct service desk experience","Active Directory administration is attested","Ticket volume is evidenced, not estimated"].forEach(function(t){
+    var m=el("div","mitem");var ck=el("span","check","\u2713");m.appendChild(ck);m.appendChild(el("span",null,t));mc.appendChild(m);
+  });
+  mc.appendChild(el("h4",null,"Gaps, named plainly"));
+  ["The posting asks for ServiceNow administration. No attested line covers it.","No attested experience in a field service environment."].forEach(function(t){
+    var m=el("div","mitem");m.appendChild(el("span","oc"));m.appendChild(el("span",null,t));mc.appendChild(m);
+  });
+  mc.appendChild(el("div","rationale","The attested history fits the core of this role: ticket resolution, account administration, and user support. The posting names ServiceNow, which the attested resume does not contain, and that gap is shown rather than hidden."));
+  w.appendChild(mc);s.appendChild(w);
+  window.setTimeout(function(){var a=document.getElementById("ringarc");if(a)a.style.strokeDashoffset=String(402-402*0.74);},150);
+}
+function stage4(s){
+  stageword(s,"Step 4","A tailored resume is drafted. Watch what gets refused.");
+  TAILORED.forEach(function(T,i){
+    var r=el("div","tline");r.style.animationDelay=(0.15*i)+"s";
+    r.appendChild(el("span","prov","From attested "+T[1]));r.appendChild(el("span",null,T[0]));s.appendChild(r);
+  });
+  var ref=el("div","refusal");
+  ref.appendChild(el("div","rt","REFUSAL RECORDED"));
+  var p=el("p");p.appendChild(document.createTextNode("The posting asks for ServiceNow administration. The attested resume contains no ServiceNow experience, so no line about it was written. The refusal is logged in the ledger. Other tools would have added it. That is exactly why employers stopped believing them."));
+  ref.appendChild(p);s.appendChild(ref);
+}
+function stage5(s){
+  stageword(s,"Step 5","Verified, and shareable on Amara's terms.");
+  var vb=el("div","vbanner");vb.appendChild(el("span","check","\u2713"));
+  vb.appendChild(el("p",null,"Verified by Role Scout against Version 1 of the attested source resume. Every line traces to attested content. Nothing was invented."));
+  s.appendChild(vb);
+  var strip=el("div","istrip");
+  [["6","tailored lines"],["6","traced to attested lines"],["1","refusal recorded"],["0","lines invented"]].forEach(function(c){
+    var d=el("div");d.appendChild(el("b",null,c[0]));d.appendChild(document.createTextNode(c[1]));strip.appendChild(d);
+  });
+  s.appendChild(strip);
+  var sc=el("div","sharechip");sc.appendChild(el("span",null,"Verification link:"));
+  var code=el("code",null,"rolescout \u2044 verify \u2044 a1b2c3d4");sc.appendChild(code);s.appendChild(sc);
+  s.appendChild(el("div","viewed","Viewed 1 time by someone other than Amara. She can rotate or disable this link at any moment."));
+}
+
+var STAGES=[
+ {t:"Step 1 of 5: Upload and transcription",h:"Every line lands exactly as written, tagged by section. Typos and all: the transcript is verbatim.",f:stage1},
+ {t:"Step 2 of 5: Attestation",h:"Try the button. Attestation is the seeker's own statement of truth, and it is the foundation for everything after.",f:stage2},
+ {t:"Step 3 of 5: Honest matching",h:"A 74 with named gaps beats a flattering 95 nobody believes. Gaps are information, never errors.",f:stage3},
+ {t:"Step 4 of 5: Tailoring with refusal",h:"Every line carries its provenance. The amber card is the moment no other tool has.",f:stage4},
+ {t:"Step 5 of 5: Verification and sharing",h:"The employer can open the link and check the claim. The seeker sees when they do.",f:stage5}
+];
+var cur=0;
+var stagebox=document.getElementById("simstage"),title=document.getElementById("simtitle"),hint=document.getElementById("simhint"),dotsbox=document.getElementById("simdots"),back=document.getElementById("simback"),next=document.getElementById("simnext");
+if(stagebox&&title&&dotsbox&&back&&next){
+  STAGES.forEach(function(_,i){var d=el("span","dot");d.id="d"+i;dotsbox.appendChild(d);});
+  function render(){
+    stagebox.textContent="";title.textContent=STAGES[cur].t;if(hint)hint.textContent=STAGES[cur].h;
+    STAGES[cur].f(stagebox);
+    STAGES.forEach(function(_,i){document.getElementById("d"+i).className=i<=cur?"dot on":"dot";});
+    back.style.visibility=cur===0?"hidden":"visible";
+    next.textContent=cur===STAGES.length-1?"Start over":"Next";
+  }
+  back.addEventListener("click",function(){if(cur>0){cur--;render();}});
+  next.addEventListener("click",function(){cur=cur===STAGES.length-1?0:cur+1;render();});
+  render();
+}
+})();
+
+/* Hero provenance animation: decorative, aria hidden. Final state is the static default,
+   so no script and reduced motion both show the completed picture. */
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var pv=document.querySelector(".pv");
+  if(pv&&!reduce)pv.className.baseVal!==undefined?pv.classList.add("anim"):pv.setAttribute("class","pv anim");
+})();
+
+/* Scroll reveals */
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var nodes=document.querySelectorAll("section .sechead, .pcard, .step, .meanbox, details, .simbox, .ctaband .wrap");
+  var list=[],i;
+  for(i=0;i<nodes.length;i++)list.push(nodes[i]);
+  if(reduce||!("IntersectionObserver" in window)){
+    for(i=0;i<list.length;i++)list[i].className+=" reveal seen";
+    return;
+  }
+  for(i=0;i<list.length;i++)list[i].className+=" reveal";
+  var io=new IntersectionObserver(function(entries){
+    for(var k=0;k<entries.length;k++){
+      if(entries[k].isIntersecting){entries[k].target.className+=" seen";io.unobserve(entries[k].target);}
+    }
+  },{rootMargin:"0px 0px -8% 0px",threshold:0.08});
+  for(i=0;i<list.length;i++)io.observe(list[i]);
+})();
+
+/* Simulation polish only: a gentle fade in on stage change. Stage logic untouched. */
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce)return;
+  var stage=document.getElementById("simstage"),b=document.getElementById("simback"),n=document.getElementById("simnext");
+  if(!stage||!b||!n)return;
+  function swap(){
+    stage.classList.remove("swap");
+    void stage.offsetWidth;
+    stage.classList.add("swap");
+  }
+  b.addEventListener("click",swap);
+  n.addEventListener("click",swap);
+})();
+</script>
+</body>
+</html>
