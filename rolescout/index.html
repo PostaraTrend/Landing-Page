@@ -194,6 +194,9 @@ footer .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 @media(max-width:900px){.herowrap{grid-template-columns:1fr;gap:30px}.hero{padding:64px 0 52px}}
 @media(max-width:560px){.pvlab,.pvtag text,.pvbadge text{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.pv.anim *{animation:none !important}}
+.vidsec{background:var(--nd)}
+.vidbox{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--darkest)}
+.vidbox video{width:100%;display:block}
 </style>
 <noscript><style>.rline,.tline,.refusal,.viewed{opacity:1;transform:none}.reveal{opacity:1;transform:none}#simjs{display:none}</style></noscript>
 </head>
@@ -277,6 +280,21 @@ footer .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
       <div class="pcard"><h3>The pile got taller</h3><p>Application volume keeps climbing while response rates fall. Shouting louder into that pile is a race nobody wins.</p></div>
       <div class="pcard"><h3>AI tools invent</h3><p>Most resume tools happily add skills you never claimed. That is exactly what employers have learned to screen against.</p></div>
       <div class="pcard"><h3>Trust is the opening</h3><p>The one applicant an employer can verify stands apart from every applicant an employer must doubt. Role Scout makes you that applicant.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="vidsec">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="kick">The demonstration</div>
+      <h2>A minute and a half. The whole journey.</h2>
+      <p>Watch a resume become the one an employer can actually believe, from upload to the live verification link, including the moment the system refuses to invent experience. Everything on screen is fictional sample data.</p>
+    </div>
+    <div class="vidbox">
+      <video controls preload="metadata" poster="media/rolescout-demo-poster.jpg" src="media/rolescout-demo.mp4">
+        <p>Your browser cannot play this video. You can step through the same journey in the interactive simulation below.</p>
+      </video>
     </div>
   </div>
 </section>
