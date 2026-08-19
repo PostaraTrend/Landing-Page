@@ -225,7 +225,7 @@
   const ROLE_SCOUT_CONFIG = {
     SUPABASE_URL: "https://kdcxdirvtnfvpxyxvzpg.supabase.co",
     SUPABASE_ANON_KEY: "sb_publishable_I3sHtxBivCac5aBBVk__sA_C5IDwF-s",  // publishable key, safe in a public page
-    PAGE_SIZE: 24
+    PAGE_SIZE: 60
   };
 </script>
 
@@ -349,108 +349,167 @@ function sourceMeta(src){
 
 const MARKET_ORDER = ["Canada","USA","UK","Ireland","UAE","Nigeria","Saudi Arabia","Qatar","Kuwait","Oman","Bahrain","Angola","Global"];
 
+/* Source filter options: friendly label -> the source values it matches.
+   Grouped labels cover several ingest sources at once. */
+const SOURCE_FILTERS = [
+  {label:"USAJOBS", vals:["usajobs"]},
+  {label:"Reed", vals:["reed"]},
+  {label:"The Muse", vals:["themuse"]},
+  {label:"Remotive", vals:["remotive"]},
+  {label:"Jobicy", vals:["jobicy"]},
+  {label:"Himalayas", vals:["himalayas"]},
+  {label:"RemoteJobs.org", vals:["remotejobs"]},
+  {label:"Employer sites", vals:["greenhouse","lever","ashby","smartrecruiters","workable","recruitee","personio"]},
+  {label:"Aggregated listings", vals:["techmap","jobdata"]},
+  {label:"Job Bank", vals:["jobbank"]}
+];
+
+const CFG = ROLE_SCOUT_CONFIG;
+const LIVE = !!(CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
+const PAGE = CFG.PAGE_SIZE || 60;
+const COLS = "title,employer,location,posted_date,source,url,country";
+
 /* ---------- state ---------- */
-const state = { all:[], filtered:[], shown:0, live:false };
+const state = { rows:[], total:0, offset:0, done:false, loading:false, sample:false, q:"", market:"", srcIdx:"" };
 const els = {
   grid: document.getElementById("grid"),
   count: document.getElementById("count"),
   q: document.getElementById("q"),
   market: document.getElementById("market"),
   source: document.getElementById("source"),
-  more: document.getElementById("moreBtn")
+  more: document.getElementById("moreBtn"),
+  banner: document.getElementById("sampleBanner")
 };
 
 init();
 
-async function init(){
-  showSkeletons();
-  const cfg = ROLE_SCOUT_CONFIG;
-  if(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY){
-    try{
-      state.all = await fetchLive(cfg);
-      state.live = true;
-    }catch(err){
-      console.warn("Live fetch failed, showing sample set.", err);
-      state.all = SAMPLE.slice();
-      state.liveFailed = true;
-    }
-  }else{
-    state.all = SAMPLE.slice();
-  }
+function init(){
   buildFilters();
   bindEvents();
-  applyFilters();
-  if(state.liveFailed){ const b=document.getElementById("sampleBanner"); if(b) b.hidden=false; }
+  reload();
 }
 
-async function fetchLive(cfg){
-  const base = cfg.SUPABASE_URL.replace(/\/+$/,"");
-  const cols = "title,employer,location,posted_date,source,url,country";
-  const endpoint = base + "/rest/v1/postings?select=" + cols +
-              "&active=eq.true&order=posted_date.desc.nullslast&limit=1000";
-  const res = await fetch(endpoint, {
-    headers:{ apikey: cfg.SUPABASE_ANON_KEY, Authorization: "Bearer " + cfg.SUPABASE_ANON_KEY }
-  });
-  if(!res.ok) throw new Error("HTTP " + res.status);
-  const rows = await res.json();
-  return rows.filter(r => r && r.title && r.url);
-}
-
-/* ---------- filters ---------- */
 function buildFilters(){
-  const markets = new Set(state.all.map(j => j.country).filter(Boolean));
-  MARKET_ORDER.forEach(m => { if(markets.has(m)) addOption(els.market, m, m); });
-  [...markets].filter(m => !MARKET_ORDER.includes(m)).sort().forEach(m => addOption(els.market, m, m));
-
-  const seen = new Map();
-  state.all.forEach(j => { const m = sourceMeta(j.source); if(!seen.has(m.label)) seen.set(m.label, j.source); });
-  [...seen.keys()].sort().forEach(label => addOption(els.source, label, label));
+  MARKET_ORDER.forEach(m => addOption(els.market, m, m));
+  SOURCE_FILTERS.forEach((s,i) => addOption(els.source, String(i), s.label));
 }
 function addOption(sel, value, text){ const o=document.createElement("option"); o.value=value; o.textContent=text; sel.appendChild(o); }
 
 function bindEvents(){
   let t;
-  els.q.addEventListener("input", ()=>{ clearTimeout(t); t=setTimeout(applyFilters,140); });
-  els.market.addEventListener("change", applyFilters);
-  els.source.addEventListener("change", applyFilters);
-  els.more.addEventListener("click", ()=>{ state.shown += ROLE_SCOUT_CONFIG.PAGE_SIZE; renderPage(); });
+  els.q.addEventListener("input", ()=>{ clearTimeout(t); t=setTimeout(reload,180); });
+  els.market.addEventListener("change", reload);
+  els.source.addEventListener("change", reload);
+  els.more.addEventListener("click", loadMore);
 }
 
-function applyFilters(){
-  const q = els.q.value.trim().toLowerCase();
-  const market = els.market.value;
-  const source = els.source.value;
-  state.filtered = state.all.filter(j=>{
-    if(market && j.country !== market) return false;
-    if(source && sourceMeta(j.source).label !== source) return false;
-    if(q){
-      const hay = (j.title+" "+(j.employer||"")+" "+(j.location||"")).toLowerCase();
-      if(!hay.includes(q)) return false;
+function readFilters(){
+  state.q = els.q.value.trim();
+  state.market = els.market.value;
+  state.srcIdx = els.source.value;
+}
+
+/* Build the PostgREST filter string from the current selections (shared by rows and count) */
+function filterQuery(){
+  let p = "active=eq.true";
+  if(state.market) p += "&country=eq." + encodeURIComponent(state.market);
+  if(state.srcIdx !== ""){
+    const vals = SOURCE_FILTERS[+state.srcIdx].vals;
+    p += vals.length === 1
+      ? "&source=eq." + encodeURIComponent(vals[0])
+      : "&source=in.(" + vals.map(encodeURIComponent).join(",") + ")";
+  }
+  if(state.q){
+    const term = state.q.replace(/[(),*]/g,"").trim();  // strip characters that would break the or() syntax
+    if(term){
+      const like = "*" + encodeURIComponent(term) + "*";
+      p += "&or=(title.ilike." + like + ",employer.ilike." + like + ",location.ilike." + like + ")";
     }
+  }
+  return p;
+}
+
+/* Fetch one page of rows. On the first page (reset) also read the exact total from Content-Range. */
+async function fetchPage(reset){
+  const base = CFG.SUPABASE_URL.replace(/\/+$/,"");
+  const url = base + "/rest/v1/postings?select=" + COLS + "&" + filterQuery() +
+              "&order=posted_date.desc.nullslast&limit=" + PAGE + "&offset=" + state.offset;
+  const headers = { apikey: CFG.SUPABASE_ANON_KEY, Authorization: "Bearer " + CFG.SUPABASE_ANON_KEY };
+  if(reset) headers.Prefer = "count=exact";
+  const res = await fetch(url, { headers });
+  if(!res.ok) throw new Error("HTTP " + res.status);
+  const batch = (await res.json()).filter(r => r && r.title && r.url);
+  if(reset){
+    const cr = res.headers.get("content-range") || "";
+    const tot = cr.split("/")[1];
+    state.total = (tot && tot !== "*") ? parseInt(tot, 10) : batch.length;
+    state.rows = batch;
+  }else{
+    state.rows = state.rows.concat(batch);
+  }
+  state.offset += batch.length;
+  state.done = state.rows.length >= state.total || batch.length < PAGE;
+  return batch;
+}
+
+/* Sample mode (only if the live fetch fails): filter the built-in SAMPLE client-side. */
+function sampleLoad(){
+  const q = state.q.toLowerCase();
+  const vals = state.srcIdx !== "" ? SOURCE_FILTERS[+state.srcIdx].vals : null;
+  const f = SAMPLE.filter(j=>{
+    if(state.market && j.country !== state.market) return false;
+    if(vals && !vals.includes((j.source||"").toLowerCase())) return false;
+    if(q && !((j.title+" "+(j.employer||"")+" "+(j.location||"")).toLowerCase().includes(q))) return false;
     return true;
   });
-  state.shown = ROLE_SCOUT_CONFIG.PAGE_SIZE;
-  renderPage();
+  state.rows = f; state.total = f.length; state.done = true;
+}
+
+async function reload(){
+  readFilters();
+  state.offset = 0; state.done = false;
+  showSkeletons();
+  if(LIVE && !state.sample){
+    try{ await fetchPage(true); }
+    catch(err){ console.warn("Live fetch failed, using sample.", err); state.sample = true; }
+  }
+  if(state.sample){ sampleLoad(); if(els.banner) els.banner.hidden = false; }
+  renderReset();
+}
+
+async function loadMore(){
+  if(state.loading || state.done || state.sample) return;
+  state.loading = true; els.more.textContent = "Loading...";
+  let batch = [];
+  try{ batch = await fetchPage(false); }
+  catch(err){ console.warn("Load more failed.", err); }
+  state.loading = false; els.more.textContent = "Show more jobs";
+  appendRows(batch);
 }
 
 /* ---------- render ---------- */
-function renderPage(){
-  const total = state.filtered.length;
-  els.count.innerHTML = total
-    ? "<span>"+total+"</span> open "+(total===1?"position":"positions")
+function setCount(){
+  const t = state.total;
+  els.count.innerHTML = t
+    ? "<span>" + t.toLocaleString("en-CA") + "</span> open " + (t===1?"position":"positions")
     : "No postings match your search";
+}
+function renderReset(){
+  setCount();
   els.grid.innerHTML = "";
-
-  if(total === 0){
+  if(state.total === 0){
     const e=document.createElement("div"); e.className="empty";
     e.innerHTML="<strong>Nothing here yet</strong>Try a broader keyword, or choose a different market or source.";
     els.grid.appendChild(e);
     els.more.hidden = true;
     return;
   }
-  const slice = state.filtered.slice(0, state.shown);
-  slice.forEach(j => els.grid.appendChild(card(j)));
-  els.more.hidden = state.shown >= total;
+  state.rows.forEach(j => els.grid.appendChild(card(j)));
+  els.more.hidden = state.done;
+}
+function appendRows(batch){
+  batch.forEach(j => els.grid.appendChild(card(j)));
+  els.more.hidden = state.done;
 }
 
 function card(j){
