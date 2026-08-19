@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse Jobs | Role Scout</title>
+<meta name="description" content="Browse open job postings on Role Scout. No account needed. Every posting links to its original source, including Job Bank, the Government of Canada job board.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     ROLE SCOUT, PUBLIC JOBS PAGE
+     Design tokens
+     ============================================================ */
+  :root{
+    --paper:#F5F4EF;         /* warm cool paper, the page ground */
+    --card:#FFFFFF;
+    --ink:#17231E;           /* deep evergreen ink for text */
+    --ink-soft:#4A574F;      /* secondary text */
+    --ink-faint:#7C877F;     /* captions, meta */
+    --forest:#1F5C46;        /* primary brand green */
+    --forest-deep:#0E3A2A;
+    --amber:#B87118;         /* wayfinding accent, actions and highlights */
+    --amber-soft:#F3E6D2;
+    --line:#E4E2D9;          /* hairline borders */
+    --line-strong:#D5D3C7;
+    --jobbank:#0B4B8F;       /* Government of Canada blue, used only on the Job Bank badge */
+    --jobbank-soft:#E4EDF7;
+    --focus:#B87118;
+    --radius:14px;
+    --radius-sm:9px;
+    --shadow:0 1px 2px rgba(23,35,30,.04), 0 8px 24px rgba(23,35,30,.05);
+    --maxw:1080px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Inter",system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  h1,h2,h3{font-family:"Bricolage Grotesque","Inter",sans-serif;font-weight:700;letter-spacing:-.01em;margin:0;}
+  button{font-family:inherit;cursor:pointer;}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px;}
+
+  /* ---------- Header ---------- */
+  header.site{
+    position:sticky;top:0;z-index:20;
+    background:rgba(245,244,239,.86);
+    backdrop-filter:saturate(1.2) blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;}
+  .mark{width:34px;height:34px;flex:0 0 auto;}
+  .brand-name{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:20px;letter-spacing:-.02em;color:var(--ink);}
+  .brand-tag{font-size:12.5px;color:var(--ink-faint);margin-top:1px;letter-spacing:.01em;}
+  .signin{
+    font-size:14px;font-weight:500;color:var(--forest-deep);
+    text-decoration:none;padding:9px 15px;border:1px solid var(--line-strong);
+    border-radius:999px;white-space:nowrap;transition:border-color .15s,background .15s;
+  }
+  .signin:hover{border-color:var(--forest);background:#fff;}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:52px 0 30px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--forest);margin-bottom:18px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);}
+  .hero h1{font-size:clamp(30px,5vw,50px);line-height:1.03;max-width:15ch;}
+  .hero h1 .u{
+    background:linear-gradient(transparent 62%,var(--amber-soft) 62%);
+    padding:0 .05em;
+  }
+  .hero p.lede{
+    margin:20px 0 0;max-width:56ch;font-size:clamp(16px,2vw,18px);color:var(--ink-soft);
+  }
+
+  /* route motif under hero */
+  .route{margin:26px 0 4px;height:14px;width:100%;max-width:520px;opacity:.7;}
+
+  /* ---------- Search panel ---------- */
+  .panel{
+    margin-top:22px;background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;
+    display:grid;grid-template-columns:1fr 190px 190px;gap:12px;
+  }
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field label{
+    font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);
+    padding-left:2px;
+  }
+  .control{
+    appearance:none;width:100%;background:#fff;border:1px solid var(--line-strong);
+    border-radius:var(--radius-sm);padding:12px 13px;font-size:15px;color:var(--ink);
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .search-wrap{position:relative;}
+  .search-wrap .control{padding-left:40px;}
+  .search-wrap svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--ink-faint);}
+  select.control{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237C877F' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
+  .control:focus{outline:none;border-color:var(--forest);box-shadow:0 0 0 3px rgba(31,92,70,.14);}
+
+  /* ---------- Results meta ---------- */
+  .meta-row{
+    display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    margin:34px 0 16px;flex-wrap:wrap;
+  }
+  .count{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:22px;}
+  .count span{color:var(--forest);}
+  .freshness{font-size:13px;color:var(--ink-faint);display:inline-flex;align-items:center;gap:7px;}
+  .freshness .live{width:8px;height:8px;border-radius:50%;background:var(--forest);box-shadow:0 0 0 0 rgba(31,92,70,.5);animation:pulse 2.4s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,92,70,.45);}70%{box-shadow:0 0 0 7px rgba(31,92,70,0);}100%{box-shadow:0 0 0 0 rgba(31,92,70,0);}}
+
+  /* ---------- Job grid ---------- */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  .job{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 20px 18px;display:flex;flex-direction:column;gap:12px;
+    transition:border-color .15s, transform .15s, box-shadow .15s;
+  }
+  .job:hover{border-color:var(--line-strong);transform:translateY(-2px);box-shadow:var(--shadow);}
+  .job-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .job h3{font-size:18px;line-height:1.22;}
+  .job h3 a{text-decoration:none;}
+  .job h3 a:hover{color:var(--forest);}
+  .job .employer{font-size:14.5px;color:var(--ink-soft);font-weight:500;margin-top:3px;}
+  .job .where{font-size:13.5px;color:var(--ink-faint);margin-top:2px;}
+
+  /* source badge */
+  .badge{
+    flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;
+    font-size:11.5px;font-weight:600;letter-spacing:.02em;
+    padding:5px 10px;border-radius:999px;white-space:nowrap;
+    background:#F1F0EA;color:var(--ink-soft);border:1px solid var(--line);
+  }
+  .badge.jobbank{background:var(--jobbank-soft);color:var(--jobbank);border-color:#CBDCEF;}
+  .badge .compass{width:12px;height:12px;}
+
+  .job-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:4px;}
+  .posted{font-size:12.5px;color:var(--ink-faint);}
+  .origin-note{font-size:12px;color:var(--jobbank);margin-top:-4px;}
+  .view{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:13.5px;font-weight:600;color:#fff;background:var(--forest);
+    padding:9px 14px;border-radius:999px;text-decoration:none;border:1px solid var(--forest);
+    transition:background .15s,border-color .15s;
+  }
+  .view:hover{background:var(--forest-deep);border-color:var(--forest-deep);}
+  .view svg{transition:transform .15s;}
+  .view:hover svg{transform:translate(2px,-2px);}
+
+  /* sample fallback banner */
+  .sample-banner{
+    margin:22px 0 -6px;padding:12px 15px;border-radius:var(--radius-sm);
+    background:var(--amber-soft);border:1px solid #E7D4B4;color:#7A4E12;
+    font-size:13.5px;
+  }
+  .sample-banner[hidden]{display:none;}
+
+  /* empty + load more */
+  .empty{
+    grid-column:1/-1;text-align:center;padding:56px 20px;color:var(--ink-soft);
+    border:1px dashed var(--line-strong);border-radius:var(--radius);background:rgba(255,255,255,.5);
+  }
+  .empty strong{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:19px;color:var(--ink);margin-bottom:6px;}
+  .more-row{display:flex;justify-content:center;margin:26px 0 8px;}
+  .more{
+    font-size:14.5px;font-weight:600;color:var(--forest-deep);background:#fff;
+    border:1px solid var(--line-strong);border-radius:999px;padding:12px 22px;transition:border-color .15s,background .15s;
+  }
+  .more:hover{border-color:var(--forest);}
+  .more[hidden]{display:none;}
+
+  /* skeleton */
+  .skeleton{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;height:168px;overflow:hidden;position:relative;}
+  .skeleton::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(0,0,0,.035),transparent);animation:sweep 1.3s infinite;}
+  @keyframes sweep{100%{transform:translateX(100%);}}
+
+  /* ---------- Footer ---------- */
+  footer.site{margin-top:60px;border-top:1px solid var(--line);background:#fff;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:30px;padding:40px 0 30px;}
+  footer h4{font-family:"Bricolage Grotesque",sans-serif;font-size:15px;margin:0 0 10px;}
+  footer p{font-size:14px;color:var(--ink-soft);margin:0 0 12px;max-width:60ch;}
+  .attrib{font-size:13px;color:var(--ink-faint);}
+  .foot-mark{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .foot-mark span{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:17px;}
+  .legal{border-top:1px solid var(--line);padding:16px 0;font-size:12.5px;color:var(--ink-faint);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .legal a{color:var(--forest-deep);}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:820px){
+    .panel{grid-template-columns:1fr;}
+    .grid{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr;gap:22px;}
+    .hero{padding:38px 0 22px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+  }
+  :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px;}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     CONFIG
+     To pull live postings, paste your Supabase project URL and the
+     PUBLIC anon key below. Leave them blank to preview on sample data.
+     A read only access policy on the active postings must be enabled
+     for anonymous visitors, so the page can read without a login.
+     ============================================================ -->
+<script>
+  const ROLE_SCOUT_CONFIG = {
+    SUPABASE_URL: "https://kdcxdirvtnfvpxyxvzpg.supabase.co",
+    SUPABASE_ANON_KEY: "sb_publishable_I3sHtxBivCac5aBBVk__sA_C5IDwF-s",  // publishable key, safe in a public page
+    PAGE_SIZE: 24
+  };
+</script>
+
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="/rolescout/" aria-label="Role Scout home">
+      <svg class="mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" stroke="#1F5C46" stroke-width="2.5"/>
+        <path d="M24 9l4.6 12.9L41 24l-12.4 2.1L24 39l-4.6-12.9L7 24l12.4-2.1L24 9z" fill="#B87118"/>
+        <circle cx="24" cy="24" r="3.1" fill="#0E3A2A"/>
+      </svg>
+      <span>
+        <span class="brand-name">Role Scout</span>
+        <div class="brand-tag">Find your next role</div>
+      </span>
+    </a>
+    <a class="signin" href="/rolescout/" id="signinLink">Sign in for matching</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <span class="eyebrow"><span class="dot"></span> Free to browse</span>
+    <h1>Open jobs, <span class="u">open to everyone</span>.</h1>
+    <p class="lede">Search live postings from employers, public job boards, and Job Bank, the Government of Canada job board. No account and no email needed to look. Every posting links straight to its original source.</p>
+
+    <svg class="route" viewBox="0 0 520 14" fill="none" aria-hidden="true">
+      <path d="M4 7h512" stroke="#D5D3C7" stroke-width="2" stroke-dasharray="1 9" stroke-linecap="round"/>
+      <circle cx="4" cy="7" r="4" fill="#1F5C46"/>
+      <circle cx="516" cy="7" r="5" fill="#B87118"/>
+    </svg>
+
+    <div class="panel" role="search">
+      <div class="field search-wrap">
+        <label for="q">Search</label>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="q" class="control" type="text" placeholder="Title, employer, or location" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="market">Market</label>
+        <select id="market" class="control"><option value="">All markets</option></select>
+      </div>
+      <div class="field">
+        <label for="source">Source</label>
+        <select id="source" class="control"><option value="">All sources</option></select>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="sample-banner" id="sampleBanner" hidden>Showing sample postings for preview. The live listings could not be reached just now, so this is placeholder data.</div>
+    <div class="meta-row">
+      <div class="count" id="count" aria-live="polite">Loading postings</div>
+      <div class="freshness"><span class="live"></span> Updated daily from every source</div>
+    </div>
+
+    <div class="grid" id="grid" aria-live="polite"></div>
+
+    <div class="more-row">
+      <button class="more" id="moreBtn" hidden>Show more jobs</button>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="foot-mark">
+        <svg width="26" height="26" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="22" stroke="#1F5C46" stroke-width="2.5"/><path d="M24 9l4.6 12.9L41 24l-12.4 2.1L24 39l-4.6-12.9L7 24l12.4-2.1L24 9z" fill="#B87118"/></svg>
+        <span>Role Scout</span>
+      </div>
+      <p>Role Scout is a free service of PostaraTrend Technologies Inc. Anyone can browse and open every posting on this page without creating an account or sharing an email address.</p>
+    </div>
+    <div>
+      <h4>Where these jobs come from</h4>
+      <p class="attrib">Postings are gathered from several sources, including employer career sites, public job boards, and Job Bank, the Government of Canada job board. Each posting links to its original source, where you can read the full details and apply.</p>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <span>&copy; 2026 PostaraTrend Technologies Inc. Calgary, Alberta.</span>
+    <span><a href="/rolescout/">About Role Scout</a></span>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   DATA LAYER
+   Live mode reads from Supabase REST when config is present.
+   Otherwise the page renders on the SAMPLE set below so it can
+   be previewed and reviewed with no backend.
+   ============================================================ */
+
+const SAMPLE = [
+  {title:"Settlement Support Worker", employer:"Calgary Newcomer Centre", location:"Calgary, AB", posted_date:daysAgo(1), source:"jobbank", country:"Canada", url:"https://www.jobbank.gc.ca/jobsearch/jobposting/00000001"},
+  {title:"Registered Nurse, Acute Care", employer:"Alberta Health Services", location:"Edmonton, AB", posted_date:daysAgo(2), source:"jobbank", country:"Canada", url:"https://www.jobbank.gc.ca/jobsearch/jobposting/00000002"},
+  {title:"Junior Software Developer", employer:"Neo Financial", location:"Calgary, AB", posted_date:daysAgo(1), source:"greenhouse", country:"Canada", url:"https://boards.greenhouse.io/example/jobs/1"},
+  {title:"Warehouse Associate", employer:"Sysco Canada", location:"Winnipeg, MB", posted_date:daysAgo(3), source:"jobbank", country:"Canada", url:"https://www.jobbank.gc.ca/jobsearch/jobposting/00000003"},
+  {title:"Customer Success Manager", employer:"Jobber", location:"Remote, Canada", posted_date:daysAgo(2), source:"lever", country:"Canada", url:"https://jobs.lever.co/example/1"},
+  {title:"IT Service Desk Analyst", employer:"City of Calgary", location:"Calgary, AB", posted_date:daysAgo(4), source:"jobbank", country:"Canada", url:"https://www.jobbank.gc.ca/jobsearch/jobposting/00000004"},
+  {title:"Data Analyst", employer:"Reed Talent Solutions", location:"London, UK", posted_date:daysAgo(2), source:"reed", country:"UK", url:"https://www.reed.co.uk/jobs/example/1"},
+  {title:"Product Designer", employer:"Remotive Partner", location:"Remote, Worldwide", posted_date:daysAgo(3), source:"remotive", country:"Global", url:"https://remotive.com/remote-jobs/example/1"},
+  {title:"Accounting Clerk", employer:"MNP LLP", location:"Red Deer, AB", posted_date:daysAgo(5), source:"jobbank", country:"Canada", url:"https://www.jobbank.gc.ca/jobsearch/jobposting/00000005"},
+  {title:"Federal Program Analyst", employer:"U.S. Department of Commerce", location:"Washington, DC", posted_date:daysAgo(2), source:"usajobs", country:"USA", url:"https://www.usajobs.gov/job/000000001"},
+  {title:"Early Childhood Educator", employer:"YMCA Calgary", location:"Calgary, AB", posted_date:daysAgo(6), source:"jobbank", country:"Canada", url:"https://www.jobbank.gc.ca/jobsearch/jobposting/00000006"},
+  {title:"DevOps Engineer", employer:"Ashby Example Co", location:"Remote, Canada", posted_date:daysAgo(3), source:"ashby", country:"Canada", url:"https://jobs.ashbyhq.com/example/1"}
+];
+
+/* label + linkback wording per source */
+function sourceMeta(src){
+  const s = (src||"").toLowerCase();
+  if(s === "jobbank") return {label:"Job Bank", jobbank:true};
+  const named = {
+    usajobs:"USAJOBS", reed:"Reed", remotive:"Remotive", jobicy:"Jobicy",
+    himalayas:"Himalayas", themuse:"The Muse", muse:"The Muse",
+    remotejobs:"RemoteJobs.org", fantastic:"Fantastic.jobs"
+  };
+  if(named[s]) return {label:named[s], jobbank:false};
+  if(["greenhouse","lever","ashby","smartrecruiters","workable","recruitee","personio"].includes(s)) return {label:"Employer site", jobbank:false};
+  return {label:"Job listing", jobbank:false};
+}
+
+const MARKET_ORDER = ["Canada","USA","UK","Ireland","UAE","Nigeria","Saudi Arabia","Qatar","Kuwait","Oman","Bahrain","Angola","Global"];
+
+/* ---------- state ---------- */
+const state = { all:[], filtered:[], shown:0, live:false };
+const els = {
+  grid: document.getElementById("grid"),
+  count: document.getElementById("count"),
+  q: document.getElementById("q"),
+  market: document.getElementById("market"),
+  source: document.getElementById("source"),
+  more: document.getElementById("moreBtn")
+};
+
+init();
+
+async function init(){
+  showSkeletons();
+  const cfg = ROLE_SCOUT_CONFIG;
+  if(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY){
+    try{
+      state.all = await fetchLive(cfg);
+      state.live = true;
+    }catch(err){
+      console.warn("Live fetch failed, showing sample set.", err);
+      state.all = SAMPLE.slice();
+      state.liveFailed = true;
+    }
+  }else{
+    state.all = SAMPLE.slice();
+  }
+  buildFilters();
+  bindEvents();
+  applyFilters();
+  if(state.liveFailed){ const b=document.getElementById("sampleBanner"); if(b) b.hidden=false; }
+}
+
+async function fetchLive(cfg){
+  const base = cfg.SUPABASE_URL.replace(/\/+$/,"");
+  const cols = "title,employer,location,posted_date,source,url,country";
+  const endpoint = base + "/rest/v1/postings?select=" + cols +
+              "&active=eq.true&order=posted_date.desc.nullslast&limit=1000";
+  const res = await fetch(endpoint, {
+    headers:{ apikey: cfg.SUPABASE_ANON_KEY, Authorization: "Bearer " + cfg.SUPABASE_ANON_KEY }
+  });
+  if(!res.ok) throw new Error("HTTP " + res.status);
+  const rows = await res.json();
+  return rows.filter(r => r && r.title && r.url);
+}
+
+/* ---------- filters ---------- */
+function buildFilters(){
+  const markets = new Set(state.all.map(j => j.country).filter(Boolean));
+  MARKET_ORDER.forEach(m => { if(markets.has(m)) addOption(els.market, m, m); });
+  [...markets].filter(m => !MARKET_ORDER.includes(m)).sort().forEach(m => addOption(els.market, m, m));
+
+  const seen = new Map();
+  state.all.forEach(j => { const m = sourceMeta(j.source); if(!seen.has(m.label)) seen.set(m.label, j.source); });
+  [...seen.keys()].sort().forEach(label => addOption(els.source, label, label));
+}
+function addOption(sel, value, text){ const o=document.createElement("option"); o.value=value; o.textContent=text; sel.appendChild(o); }
+
+function bindEvents(){
+  let t;
+  els.q.addEventListener("input", ()=>{ clearTimeout(t); t=setTimeout(applyFilters,140); });
+  els.market.addEventListener("change", applyFilters);
+  els.source.addEventListener("change", applyFilters);
+  els.more.addEventListener("click", ()=>{ state.shown += ROLE_SCOUT_CONFIG.PAGE_SIZE; renderPage(); });
+}
+
+function applyFilters(){
+  const q = els.q.value.trim().toLowerCase();
+  const market = els.market.value;
+  const source = els.source.value;
+  state.filtered = state.all.filter(j=>{
+    if(market && j.country !== market) return false;
+    if(source && sourceMeta(j.source).label !== source) return false;
+    if(q){
+      const hay = (j.title+" "+(j.employer||"")+" "+(j.location||"")).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  state.shown = ROLE_SCOUT_CONFIG.PAGE_SIZE;
+  renderPage();
+}
+
+/* ---------- render ---------- */
+function renderPage(){
+  const total = state.filtered.length;
+  els.count.innerHTML = total
+    ? "<span>"+total+"</span> open "+(total===1?"position":"positions")
+    : "No postings match your search";
+  els.grid.innerHTML = "";
+
+  if(total === 0){
+    const e=document.createElement("div"); e.className="empty";
+    e.innerHTML="<strong>Nothing here yet</strong>Try a broader keyword, or choose a different market or source.";
+    els.grid.appendChild(e);
+    els.more.hidden = true;
+    return;
+  }
+  const slice = state.filtered.slice(0, state.shown);
+  slice.forEach(j => els.grid.appendChild(card(j)));
+  els.more.hidden = state.shown >= total;
+}
+
+function card(j){
+  const meta = sourceMeta(j.source);
+  const el = document.createElement("article"); el.className="job";
+
+  const top = document.createElement("div"); top.className="job-top";
+  const head = document.createElement("div");
+  const h = document.createElement("h3");
+  const a = document.createElement("a");
+  a.href = j.url; a.target="_blank"; a.rel="noopener noreferrer";
+  a.textContent = j.title;
+  h.appendChild(a); head.appendChild(h);
+  if(j.employer){ const emp=document.createElement("div"); emp.className="employer"; emp.textContent=j.employer; head.appendChild(emp); }
+  if(j.location){ const w=document.createElement("div"); w.className="where"; w.textContent=j.location; head.appendChild(w); }
+  top.appendChild(head);
+
+  const badge = document.createElement("span");
+  badge.className = "badge" + (meta.jobbank ? " jobbank" : "");
+  badge.innerHTML = '<svg class="compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z" fill="currentColor" stroke="none"/></svg>' + escapeHtml(meta.label);
+  badge.setAttribute("title","Source: "+meta.label);
+  top.appendChild(badge);
+  el.appendChild(top);
+
+  if(meta.jobbank){
+    const note=document.createElement("div"); note.className="origin-note";
+    note.textContent="Original posting on Job Bank, the Government of Canada job board.";
+    el.appendChild(note);
+  }
+
+  const foot=document.createElement("div"); foot.className="job-foot";
+  const posted=document.createElement("span"); posted.className="posted"; posted.textContent = postedLabel(j.posted_date);
+  foot.appendChild(posted);
+
+  const view=document.createElement("a");
+  view.className="view"; view.href=j.url; view.target="_blank"; view.rel="noopener noreferrer";
+  view.innerHTML = 'View original posting <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>';
+  view.setAttribute("aria-label","View original posting for "+j.title+" on "+meta.label);
+  foot.appendChild(view);
+
+  el.appendChild(foot);
+  return el;
+}
+
+/* ---------- helpers ---------- */
+function showSkeletons(){
+  els.grid.innerHTML="";
+  for(let i=0;i<6;i++){ const s=document.createElement("div"); s.className="skeleton"; els.grid.appendChild(s); }
+}
+function daysAgo(n){ const d=new Date(); d.setDate(d.getDate()-n); return d.toISOString().slice(0,10); }
+function postedLabel(dateStr){
+  if(!dateStr) return "Recently posted";
+  const d=new Date(dateStr); if(isNaN(d)) return "Recently posted";
+  const days=Math.floor((Date.now()-d.getTime())/86400000);
+  if(days<=0) return "Posted today";
+  if(days===1) return "Posted yesterday";
+  if(days<7) return "Posted "+days+" days ago";
+  if(days<14) return "Posted last week";
+  if(days<31) return "Posted "+Math.floor(days/7)+" weeks ago";
+  return "Posted on "+d.toLocaleDateString("en-CA",{month:"short",day:"numeric"});
+}
+function escapeHtml(str){ const d=document.createElement("div"); d.textContent=str==null?"":String(str); return d.innerHTML; }
+</script>
+</body>
+</html>
