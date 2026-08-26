@@ -1,30 +1,30 @@
 {
-  "updated_at": "2026-08-26T06:00:07.052Z",
+  "updated_at": "2026-08-26T18:00:06.228Z",
   "totals": {
-    "published": 1298,
+    "published": 1302,
     "refused": 70
   },
   "windows": {
     "published_7d": 124,
-    "published_30d": 583
+    "published_30d": 585
   },
   "period_start": "2026-06-18T19:06:30.422Z",
-  "period_end": "2026-08-26T02:39:02.496Z",
-  "last_published": "2026-08-26T02:39:02.496Z",
+  "period_end": "2026-08-26T17:07:09.691Z",
+  "last_published": "2026-08-26T17:07:09.691Z",
   "lanes": [
     {
       "label": "Trend Radar Nigeria",
-      "published": 1009,
+      "published": 1010,
       "refused": 41,
       "first_published": "2026-06-26T21:13:40.872Z",
-      "last_published": "2026-08-26T02:39:02.496Z"
+      "last_published": "2026-08-26T17:07:09.691Z"
     },
     {
       "label": "PostaraTrend",
-      "published": 284,
+      "published": 287,
       "refused": 15,
       "first_published": "2026-06-18T19:06:30.422Z",
-      "last_published": "2026-08-26T00:00:15.931Z"
+      "last_published": "2026-08-26T16:00:24.378Z"
     },
     {
       "label": "Content Publisher",
