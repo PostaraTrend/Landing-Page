@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Browse Jobs | Role Scout</title>
-<meta name="description" content="Browse open job postings on Role Scout. No account needed. Every posting links to its original source, including Job Bank, the Government of Canada job board.">
+<meta name="description" content="Browse open job postings on Role Scout, and search Job Bank, the Government of Canada job board, from the same page. No account needed. Every posting links to its original source.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -188,6 +188,23 @@
   .skeleton::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(0,0,0,.035),transparent);animation:sweep 1.3s infinite;}
   @keyframes sweep{100%{transform:translateX(100%);}}
 
+  /* ---------- Job Bank widget ---------- */
+  .jb-panel{
+    margin:44px 0 0;padding:26px 24px 20px;border-radius:var(--radius);
+    background:#fff;border:1px solid var(--line);border-top:4px solid var(--jobbank);
+  }
+  .jb-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:16px;}
+  .jb-head h2{font-family:"Bricolage Grotesque",sans-serif;font-size:22px;letter-spacing:-.01em;margin:0 0 6px;}
+  .jb-head p{margin:0;font-size:14.5px;color:var(--ink-soft);max-width:62ch;}
+  .jb-tag{
+    display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+    font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    background:var(--jobbank-soft);color:var(--jobbank);border:1px solid #CBDCEF;border-radius:999px;padding:5px 11px;
+  }
+  .jb-frame{border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden;background:#fff;}
+  .jb-frame iframe{display:block;}
+  .jb-note{font-size:12.5px;color:var(--ink-faint);margin:12px 0 0;}
+
   /* ---------- Footer ---------- */
   footer.site{margin-top:60px;border-top:1px solid var(--line);background:#fff;}
   .foot-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:30px;padding:40px 0 30px;}
@@ -250,7 +267,7 @@
   <section class="hero wrap">
     <span class="eyebrow"><span class="dot"></span> Free to browse</span>
     <h1>Open jobs, <span class="u">open to everyone</span>.</h1>
-    <p class="lede">Search live postings from employers, public job boards, and Job Bank, the Government of Canada job board. No account and no email needed to look. Every posting links straight to its original source.</p>
+    <p class="lede">Search live postings from employers and public job boards, and search Job Bank, the Government of Canada job board, further down this page. No account and no email needed to look. Every posting links straight to its original source.</p>
 
     <svg class="route" viewBox="0 0 520 14" fill="none" aria-hidden="true">
       <path d="M4 7h512" stroke="#D5D3C7" stroke-width="2" stroke-dasharray="1 9" stroke-linecap="round"/>
@@ -288,6 +305,22 @@
       <button class="more" id="moreBtn" hidden>Show more jobs</button>
     </div>
   </section>
+
+  <section class="wrap" aria-labelledby="jbTitle">
+    <div class="jb-panel">
+      <div class="jb-head">
+        <div>
+          <h2 id="jbTitle">Also search Job Bank</h2>
+          <p>Job Bank is the Government of Canada job board. Search it here for jobs across Canada, including public sector and regional roles. Results open on jobbank.gc.ca, with no account needed.</p>
+        </div>
+        <span class="jb-tag">Government of Canada</span>
+      </div>
+      <div class="jb-frame">
+        <iframe src="https://www.jobbank.gc.ca/widgetjs/" width="100%" height="500" frameborder="0" title="Job Bank job search" loading="lazy"></iframe>
+      </div>
+      <p class="jb-note">This search tool is provided by Job Bank and hosted here unmodified. Hosting it does not indicate endorsement or approval from Job Bank or the Government of Canada.</p>
+    </div>
+  </section>
 </main>
 
 <footer class="site">
@@ -301,7 +334,7 @@
     </div>
     <div>
       <h4>Where these jobs come from</h4>
-      <p class="attrib">Postings are gathered from several sources, including employer career sites, public job boards, and Job Bank, the Government of Canada job board. Each posting links to its original source, where you can read the full details and apply.</p>
+      <p class="attrib">Postings are gathered from several sources, including employer career sites and public job boards. Each posting links to its original source, where you can read the full details and apply. The Job Bank search on this page is provided by the Government of Canada and opens results on jobbank.gc.ca.</p>
     </div>
   </div>
   <div class="wrap legal">
@@ -360,8 +393,7 @@ const SOURCE_FILTERS = [
   {label:"Himalayas", vals:["himalayas"]},
   {label:"RemoteJobs.org", vals:["remotejobs"]},
   {label:"Employer sites", vals:["greenhouse","lever","ashby","smartrecruiters","workable","recruitee","personio"]},
-  {label:"Aggregated listings", vals:["techmap","jobdata"]},
-  {label:"Job Bank", vals:["jobbank"]}
+  {label:"Aggregated listings", vals:["techmap","jobdata"]}
 ];
 
 const CFG = ROLE_SCOUT_CONFIG;
