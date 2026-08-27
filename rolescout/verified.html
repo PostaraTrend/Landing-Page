@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verified beats volume. Why Role Scout is different, and what employers can check.</title>
+<meta name="description" content="Most job search tools help you apply to more roles. Role Scout helps you send a resume an employer can check. Here is the difference, side by side, and what the verification link shows an employer.">
+<link rel="canonical" href="https://postaratrend.ca/rolescout/verified.html">
+<link rel="icon" href="../favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--darkest:#0D2447;--navy:#1A3A6B;--nbg:#13305A;--nd:#112B54;--green:#1D9E75;--gdeep:#0F6E56;--ltg:#5DCAA5;--plg:#A3E4CC;--line:rgba(29,158,117,0.25);--amber:#D9A441;--ink:#EAF2FF;--mut:#9FB3D1}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Geist',system-ui,sans-serif;background:var(--darkest);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.15}
+a{color:var(--ltg);text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.kick{font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ltg)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:10px;font-weight:600;font-size:15px;border:1px solid transparent;cursor:pointer;transition:transform .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.bp{background:var(--green);color:#fff}
+.bs{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.18);color:var(--ink)}
+header{position:sticky;top:0;z-index:50;background:rgba(13,36,71,0.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.08)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px;color:#fff}
+.logo span{color:var(--ltg)}
+.nl{display:flex;gap:26px;font-size:14px;font-weight:500}
+.nl a{color:var(--mut)}
+.nl a:hover,.nl a.on{color:#fff}
+.hero{padding:84px 0 56px;background:radial-gradient(900px 480px at 70% -10%,rgba(29,158,117,0.16),transparent),var(--darkest)}
+.hero h1{font-size:clamp(34px,5.4vw,56px);font-weight:800;max-width:820px;margin:14px 0 20px}
+.hero h1 em{font-style:normal;color:var(--plg)}
+.hero p.sub{font-size:18px;color:var(--mut);max-width:700px;margin-bottom:30px}
+.ctarow{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+section{padding:66px 0}
+.sechead{max-width:760px;margin-bottom:34px}
+.sechead h2{font-size:clamp(26px,3.6vw,38px);font-weight:800;margin:10px 0 12px}
+.sechead p{color:var(--mut);font-size:16px}
+.alt{background:var(--nbg);border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06)}
+.cmp{width:100%;border-collapse:separate;border-spacing:0;background:var(--nd);border:1px solid rgba(255,255,255,0.1);border-radius:14px;overflow:hidden}
+.cmp th,.cmp td{padding:16px 18px;text-align:left;vertical-align:top;font-size:14.5px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.cmp th{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;color:#fff;background:rgba(255,255,255,0.04)}
+.cmp th.rs,.cmp td.rs{background:rgba(29,158,117,0.10);border-left:1px solid var(--line)}
+.cmp td:first-child{color:#fff;font-weight:600;width:24%}
+.cmp td{color:var(--mut)}
+.cmp td.rs{color:var(--ink)}
+.cmp tr:last-child td{border-bottom:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--nd);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:24px}
+.card h3{font-size:18px;margin-bottom:8px;color:#fff}
+.card p{font-size:14px;color:var(--mut)}
+.linkdemo{background:var(--darkest);border:1px solid rgba(255,255,255,0.12);border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.35);max-width:760px}
+.ltop{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid rgba(255,255,255,0.08);background:var(--nd);font-size:13px;color:var(--mut)}
+.ltop code{color:var(--plg)}
+.lbody{padding:22px 24px}
+.vbanner{background:rgba(29,158,117,0.1);border:1px solid var(--green);border-radius:12px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+.vbanner p{font-size:14px}
+.check{width:22px;height:22px;border-radius:50%;background:var(--green);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;flex:0 0 auto}
+.istrip{display:flex;gap:22px;flex-wrap:wrap;background:var(--nd);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px 18px;font-size:13px;color:var(--mut);margin-bottom:14px}
+.istrip b{color:#fff;display:block;font-size:18px;font-family:'Bricolage Grotesque',sans-serif}
+.lnote{font-size:13px;color:var(--mut)}
+.readlist{max-width:820px}
+.readlist div{display:grid;grid-template-columns:200px 1fr;gap:18px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.08);font-size:14.5px}
+.readlist div:last-child{border-bottom:0}
+.readlist b{color:#fff}
+.readlist span{color:var(--mut)}
+details{background:var(--nd);border:1px solid rgba(255,255,255,0.08);border-radius:12px;margin-bottom:12px;max-width:820px}
+summary{cursor:pointer;padding:18px 22px;font-weight:600;font-size:15px;color:#fff;list-style:none;display:flex;justify-content:space-between;align-items:center}
+summary::after{content:"+";color:var(--ltg);font-size:20px}
+details[open] summary::after{content:"\2212"}
+details p{padding:0 22px 18px;font-size:14px;color:var(--mut)}
+.ctaband{background:linear-gradient(135deg,var(--navy),var(--nbg));border-top:1px solid rgba(255,255,255,0.08);text-align:center;padding:80px 0}
+.ctaband h2{font-size:clamp(26px,4vw,40px);font-weight:800;margin-bottom:14px}
+.ctaband p{color:var(--mut);max-width:560px;margin:0 auto 28px}
+footer{border-top:1px solid rgba(255,255,255,0.08);padding:36px 0;font-size:13px;color:var(--mut)}
+footer .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:900px){.grid3{grid-template-columns:1fr}.nl{display:none}.readlist div{grid-template-columns:1fr;gap:4px}.cmp td:first-child{width:auto}}
+@media(max-width:640px){.cmp{display:block;overflow-x:auto}}
+@media(prefers-reduced-motion:reduce){*{transition:none !important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="../">Postara<span>Trend</span></a>
+    <nav class="nl">
+      <a href="../">Home</a>
+      <a href="./">Role Scout</a>
+      <a class="on" href="verified.html">Why verified</a>
+      <a href="rolescout-jobs.html">Browse jobs</a>
+      <a href="../#contact">Talk to us</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="kick">Role Scout</div>
+    <h1>Verified beats <em>volume.</em></h1>
+    <p class="sub">Most job search tools help you apply to more roles, faster, with a resume that says whatever the posting wants to hear. Role Scout does the opposite. It helps you send one resume an employer can check, line by line, against what you attested. This page shows the difference side by side, and what an employer sees when you share the link.</p>
+    <div class="ctarow">
+      <a class="btn bp" href="https://rolescout-postaratrend.lovable.app" target="_blank" rel="noopener">Get started</a>
+      <a class="btn bs" href="#employers">For employers</a>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sechead">
+      <div class="kick">Side by side</div>
+      <h2>Two ways to use AI in a job search.</h2>
+      <p>One optimises for how many applications go out. The other optimises for what happens after an employer opens yours.</p>
+    </div>
+    <table class="cmp">
+      <tr><th></th><th>Volume tools</th><th class="rs">Role Scout</th></tr>
+      <tr><td>What happens to your resume</td><td>Rewritten to match the posting. Skills, titles and numbers can be added if the posting asks for them.</td><td class="rs">Reordered and rephrased from lines you attested. Nothing is added. Every line points back to its source.</td></tr>
+      <tr><td>When a posting asks for something you lack</td><td>The gap is filled so the resume passes the filter.</td><td class="rs">The gap is shown to you and left honest. If a truthful version cannot be built, Role Scout declines and records why.</td></tr>
+      <tr><td>Who presses apply</td><td>Often the tool, hundreds of times, with the same resume.</td><td class="rs">You, every time, on the employer's own site, with a resume made for that role.</td></tr>
+      <tr><td>What the employer can check</td><td>Nothing. The resume is its own only evidence.</td><td class="rs">A verification link: the verified banner, the version it was checked against, and the provenance counts behind every line.</td></tr>
+      <tr><td>Cover letter</td><td>Generated from the posting. Claims are not checked.</td><td class="rs">Every claim sentence must be supported by your attested lines, or the letter is declined.</td></tr>
+      <tr><td>After the interview is booked</td><td>Usually nothing.</td><td class="rs">An interview pack built from your real gaps, and a 30, 60 and 90 day plan for the role.</td></tr>
+      <tr><td>Where your data lives</td><td>Varies. Often not stated.</td><td class="rs">In Canada. Your resume is never used to train AI models. Sharing is off until you turn it on.</td></tr>
+      <tr><td>Postings you found elsewhere</td><td>Some tools accept a paste.</td><td class="rs">Paste any posting from any board or employer site. It is scored and tailored like every other match.</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="alt" id="employers">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="kick">For employers and recruiters</div>
+      <h2>What the verification link shows you.</h2>
+      <p>When a candidate shares a Role Scout link, you are looking at the one resume in your pile that carries its own evidence. Here is how to read it in thirty seconds.</p>
+    </div>
+    <div class="linkdemo">
+      <div class="ltop"><span>Verification page</span><code>Shared by the candidate</code></div>
+      <div class="lbody">
+        <div class="vbanner"><span class="check">&#10003;</span><p><b>Verified against Version 3 of the candidate's attested resume.</b> Verified on the date shown. Every line below was checked against lines the candidate confirmed as true.</p></div>
+        <div class="istrip"><span><b>58</b>lines</span><span><b>23</b>reworded</span><span><b>4</b>merged</span><span><b>31</b>unchanged</span><span><b>0</b>added</span></div>
+        <p class="lnote">The counts are the claim. Reworded and merged lines are the tailoring. Added is always zero, because Role Scout cannot add. If the candidate edited the document after the check, the page says so instead of showing the banner.</p>
+      </div>
+    </div>
+    <div class="readlist" style="margin-top:34px">
+      <div><b>Verified banner</b><span>An independent check confirmed that every line is supported by the candidate's attested lines and that the system invented nothing.</span></div>
+      <div><b>Version</b><span>Which attested version of the resume the check ran against. A candidate who updates their resume attests it again and the version number goes up.</span></div>
+      <div><b>Provenance counts</b><span>How many lines were kept, reworded or merged, and how many were added. Added is the number to watch, and it is always zero.</span></div>
+      <div><b>Modified after verification</b><span>If the candidate changed the document after the check, the page says so and the banner is withheld until the resume is tailored and checked again.</span></div>
+      <div><b>What it does not claim</b><span>Verification is a statement about provenance, not a background check. It proves the tailored resume matches what the candidate attested. Whether the attested history is true remains the candidate's word, which is exactly where it should sit.</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sechead">
+      <div class="kick">Why it matters now</div>
+      <h2>Employers have stopped taking resumes at face value.</h2>
+      <p>Hiring teams say AI enhanced resumes have made skills harder to verify, and verification products are being built into the hiring process. In that world, the applicant who can be checked is the applicant who gets the call.</p>
+    </div>
+    <div class="grid3">
+      <div class="card"><h3>For the seeker</h3><p>You stop competing on volume, which you cannot win, and start competing on trust, which nobody else in the pile can offer.</p></div>
+      <div class="card"><h3>For the employer</h3><p>One link replaces the first round of doubt. What is on the page is what the candidate attested, checked, with the counts to prove it.</p></div>
+      <div class="card"><h3>For the people who help seekers</h3><p>Newcomer centres and career offices can put a verified application in front of an employer without vouching for what they cannot see. The link does the vouching.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="kick">Fair questions</div>
+      <h2>Asked plainly, answered plainly.</h2>
+    </div>
+    <details><summary>Does verified mean the candidate is telling the truth?</summary><p>It means the tailored resume matches what the candidate attested, line by line, with nothing added by the system. The attested history itself is the candidate's own statement, the same as any resume. Verification removes the tool from the list of things you have to doubt.</p></details>
+    <details><summary>Can a candidate edit the resume after it is verified?</summary><p>Yes, and the verification page will say so. The banner returns only after the resume is tailored and checked again against the attested lines.</p></details>
+    <details><summary>Does Role Scout apply on the candidate's behalf?</summary><p>No, by design. The candidate applies on your site, in person, with a resume made for your role. Nothing is submitted automatically anywhere.</p></details>
+    <details><summary>What can I see on the verification page?</summary><p>The tailored resume, the verified banner, the version it was checked against and the provenance counts. The candidate's source resume is never shown, and sharing is off until the candidate turns it on.</p></details>
+    <details><summary>Is there a cost to employers?</summary><p>No. Opening a verification link is free and needs no account.</p></details>
+  </div>
+</section>
+
+<div class="ctaband">
+  <div class="wrap">
+    <h2>Be the applicant an employer can check.</h2>
+    <p>Upload your resume, attest what is true, and let the truth do the arguing.</p>
+    <a class="btn bp" href="https://rolescout-postaratrend.lovable.app" target="_blank" rel="noopener">Get started with Role Scout</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap frow">
+    <div>Role Scout is a product of PostaraTrend Technologies Inc., Calgary, Alberta.</div>
+    <div><a href="./">Role Scout</a> &nbsp;&middot;&nbsp; <a href="rolescout-jobs.html">Browse jobs</a> &nbsp;&middot;&nbsp; <a href="../privacy/">Privacy</a> &nbsp;&middot;&nbsp; <a href="../#contact">Contact</a></div>
+  </div>
+</footer>
+</body>
+</html>
