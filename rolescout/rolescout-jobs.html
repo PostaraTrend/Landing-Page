@@ -293,7 +293,7 @@
   </section>
 
   <section class="wrap">
-    <div class="sample-banner" id="sampleBanner" hidden>Showing sample postings for preview. The live listings could not be reached just now, so this is placeholder data.</div>
+    <div class="sample-banner" id="sampleBanner" hidden>Showing sample postings for preview. The live listings could not be reached just now, so this is placeholder data. <button id="retryLiveBtn" style="background:none;border:none;padding:0;margin-left:4px;font:inherit;font-weight:700;color:inherit;text-decoration:underline;cursor:pointer;">Try again</button></div>
     <div class="meta-row">
       <div class="count" id="count" aria-live="polite">Loading postings</div>
       <div class="freshness"><span class="live"></span> Updated daily from every source</div>
@@ -433,6 +433,8 @@ function bindEvents(){
   els.market.addEventListener("change", reload);
   els.source.addEventListener("change", reload);
   els.more.addEventListener("click", loadMore);
+  const retryBtn = document.getElementById("retryLiveBtn");
+  if(retryBtn) retryBtn.addEventListener("click", retryLive);
 }
 
 function readFilters(){
@@ -497,16 +499,37 @@ function sampleLoad(){
   state.rows = f; state.total = f.length; state.done = true;
 }
 
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+/* Try the live fetch up to 3 times with a short backoff before giving up to
+   sample mode. A single transient failure (a slow first connection, a
+   dropped request) must not permanently strand the page on placeholder
+   data for the rest of the visit. */
 async function reload(){
   readFilters();
-  state.offset = 0; state.done = false;
+  state.offset = 0; state.done = false; state.sample = false;
   showSkeletons();
-  if(LIVE && !state.sample){
-    try{ await fetchPage(true); }
-    catch(err){ console.warn("Live fetch failed, using sample.", err); state.sample = true; }
+  if(LIVE){
+    let ok = false;
+    for(let attempt = 1; attempt <= 3 && !ok; attempt++){
+      try{ await fetchPage(true); ok = true; }
+      catch(err){
+        console.warn("Live fetch attempt " + attempt + " failed.", err);
+        if(attempt < 3) await sleep(500 * attempt);
+      }
+    }
+    if(!ok) state.sample = true;
+  }else{
+    state.sample = true;
   }
-  if(state.sample){ sampleLoad(); if(els.banner) els.banner.hidden = false; }
+  if(els.banner) els.banner.hidden = !state.sample;
+  if(state.sample) sampleLoad();
   renderReset();
+}
+
+function retryLive(){
+  if(els.banner) els.banner.hidden = true;
+  reload();
 }
 
 async function loadMore(){
