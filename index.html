@@ -163,6 +163,7 @@ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000
 @keyframes lines-flicker{0%,100%{opacity:.12}50%{opacity:.22}}
 /* PILLARS */
 .pills{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.personas{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
 .pill{background:rgba(255,255,255,.035);border:1px solid rgba(29,158,117,.14);border-radius:14px;padding:36px 28px;transition:transform .35s cubic-bezier(.4,0,.2,1),border-color .35s,background .35s;position:relative;overflow:hidden}
 .pill:hover{transform:translateY(-6px);border-color:rgba(29,158,117,.4);background:rgba(29,158,117,.05)}
 .pill::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0;transition:opacity .35s;transform:scaleX(.3);transform-origin:center}
@@ -387,6 +388,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 .scope{display:none}
 .hero-c{padding:60px 32px}
 .pills{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+.personas{grid-template-columns:repeat(2,1fr);max-width:520px;margin:0 auto}
 .prod-grid{grid-template-columns:1fr;max-width:460px;margin:0 auto 24px}
 .shop-grid{grid-template-columns:repeat(2,1fr);gap:16px}
 .dev-feats{grid-template-columns:1fr}
@@ -497,6 +499,7 @@ html{scroll-behavior:auto}
 </a>
 <div class="nr">
 <a href="#about" class="nk">About</a>
+<a href="#personas" class="nk">Who We Serve</a>
 <a href="#services" class="nk">Services</a>
 <a href="products.html" class="nk">Shop</a>
 <a href="rolescout/" class="nk">Role Scout</a>
@@ -1303,13 +1306,29 @@ html{scroll-behavior:auto}
 <div class="steps">
 <div class="step"><div class="step-num">1</div><h3>Detect</h3><div class="step-sub">Trend Intelligence</div><p>The platform continuously monitors social media, news, search trends, and public data to identify cultural and commercial trends as they emerge — before they peak.</p></div>
 <div class="step"><div class="step-num">2</div><h3>Create</h3><div class="step-sub">AI Content Generation</div><p>Detected trends are transformed into branded content — captions, graphics, and video — tailored to your brand voice, audience, and platform requirements, with automated quality checks before anything ships.</p></div>
-<div class="step"><div class="step-num">3</div><h3>Publish</h3><div class="step-sub">Reviewed Distribution</div><p>Approved content is published across your social channels on a planned schedule. Performance data feeds back into the system to improve future output.</p></div>
+<div class="step"><div class="step-num">3</div><h3>Publish</h3><div class="step-sub">Reviewed Distribution</div><p>Approved content is published directly to your Facebook page on a planned schedule. Performance data feeds back into the system to improve future output.</p></div>
 </div>
 <div class="stats">
 <div class="sc"><div class="sc-n">24/7</div><div class="sc-l">Continuous trend monitoring</div></div>
 <div class="sc"><div class="sc-n">AI</div><div class="sc-l">Powered content generation</div></div>
 <div class="sc"><div class="sc-n">QA</div><div class="sc-l">Quality-gated before publish</div></div>
 <div class="sc"><div class="sc-n">SMB</div><div class="sc-l">Built for small business</div></div>
+</div>
+</div>
+</section>
+<!-- WHO WE SERVE -->
+<section class="sec bg3" id="personas">
+<div class="wrap">
+<div class="sh">
+<div class="sl">Who We Serve</div>
+<h2>Built for teams that cannot afford to <span class="gu">fall behind</span>.</h2>
+<p>Brands, creators, agencies, and organisations that need to stay visible and relevant across social channels without building a full in-house content operation.</p>
+</div>
+<div class="personas">
+<div class="pill"><div class="pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div><h3>Brands and Retailers</h3><p>Local and online businesses that need consistent, on-trend content without hiring an in-house team.</p></div>
+<div class="pill"><div class="pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><h3>Content Creators</h3><p>Individuals building an audience who want trend-aware posts without spending hours on research.</p></div>
+<div class="pill"><div class="pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>Marketing Agencies</h3><p>Agencies managing multiple client accounts who need a scalable, quality-gated content pipeline.</p></div>
+<div class="pill"><div class="pi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 22V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v18"/><path d="M14 9h5a1 1 0 0 1 1 1v12"/><path d="M2 22h20"/><path d="M9 6h.01M9 10h.01M9 14h.01M9 18h.01"/></svg></div><h3>Organisations</h3><p>Larger teams that need governed, brand-safe publishing at scale, with clear approval rules.</p></div>
 </div>
 </div>
 </section>
@@ -1395,7 +1414,7 @@ html{scroll-behavior:auto}
 <p>Trend intelligence for the digital age. We help brands, creators, and organisations identify and act on cultural and commercial trends before the competition does.</p>
 </div>
 <div class="ft-links">
-<div class="ft-col"><h4>Company</h4><a href="#about">About</a><a href="#services">Services</a><a href="products.html">Shop</a><a href="rolescout/">Role Scout</a><a href="releases/">Releases</a><a href="/learn">Learn</a><a href="#how">How It Works</a><a href="#faq">FAQ</a><a href="#signup">Updates</a><a href="#contact">Contact</a></div>
+<div class="ft-col"><h4>Company</h4><a href="#about">About</a><a href="#personas">Who We Serve</a><a href="#services">Services</a><a href="products.html">Shop</a><a href="rolescout/">Role Scout</a><a href="releases/">Releases</a><a href="/learn">Learn</a><a href="#how">How It Works</a><a href="#faq">FAQ</a><a href="#signup">Updates</a><a href="#contact">Contact</a></div>
 <div class="ft-col"><h4>Connect</h4><a href="https://linkedin.com/company/postaratrend-technologies" target="_blank" rel="noopener">LinkedIn</a><a href="https://facebook.com/PostaraTrendTechnologies" target="_blank" rel="noopener">Facebook</a><a href="mailto:inquiries@postaratrend.ca">inquiries@postaratrend.ca</a></div>
 <div class="ft-col"><h4>Legal</h4><a href="/privacy">Privacy Policy</a><a href="/terms">Terms of Service</a><a href="/data-deletion">Data Deletion</a></div>
 </div>
