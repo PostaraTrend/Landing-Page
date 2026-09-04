@@ -48,6 +48,9 @@ section{padding:66px 0}
 .cmp td{color:var(--mut)}
 .cmp td.rs{color:var(--ink)}
 .cmp tr:last-child td{border-bottom:0}
+.disclose{background:var(--nd);border:1px solid rgba(255,255,255,0.1);border-left:3px solid var(--amber);border-radius:10px;padding:14px 18px;margin-bottom:20px;max-width:820px}
+.disclose p{font-size:13.5px;color:var(--mut)}
+.disclose b{color:#fff}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .card{background:var(--nd);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:24px}
 .card h3{font-size:18px;margin-bottom:8px;color:#fff}
@@ -112,10 +115,11 @@ footer .frow{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 <section>
   <div class="wrap">
     <div class="sechead">
-      <div class="kick">Side by side</div>
+      <div class="kick">Side by side &middot; Last reviewed September 3, 2026</div>
       <h2>Two ways to use AI in a job search.</h2>
       <p>One optimises for how many applications go out. The other optimises for what happens after an employer opens yours. A one click apply button can send a hundred applications in the time it takes to make coffee, and a hundred other people can press the same button on the same job.</p>
     </div>
+    <div class="disclose"><p><b>Disclosure:</b> this comparison is published by Role Scout. To keep it useful rather than promotional, the left column describes patterns we found common across the volume apply and AI resume tailoring tools we researched, not any single named product, since a naming decision on our own side is still open. Where a claim about how those tools generally work could not be confirmed from public sources, the cell says so rather than guesses.</p></div>
     <table class="cmp">
       <tr><th></th><th>Volume tools</th><th class="rs">Role Scout</th></tr>
       <tr><td>What happens to your resume</td><td>Rewritten to match the posting. Skills, titles and numbers can be added if the posting asks for them.</td><td class="rs">Reordered and rephrased from lines you attested. Nothing is added. Every line points back to its source.</td></tr>
