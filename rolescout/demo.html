@@ -1,0 +1,1177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Role Scout: end to end</title>
+<style>
+  :root{
+    --navy:#1F2A44;
+    --navy-d:#0D2818;
+    --teal:#14663F;
+    --teal-l:#5DCAA5;
+    --green-deep:#0F5132;
+    --amber:#B8791A;
+    --amber-bg:#FBF1E1;
+    --refuse:#C0392B;
+    --refuse-bg:#FCE7E4;
+    --refuse-border:#F3C6C0;
+    --cream:#FBFAF7;
+    --line:#E4E1D8;
+    --mut:#5B6472;
+    --ink:#1F2A44;
+    --white:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:var(--navy-d);
+    color:var(--ink);
+    font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .stage{
+    position:relative;
+    width:100%;
+    max-width:1040px;
+    height:100vh;
+    max-height:640px;
+    background:var(--cream);
+    border-radius:0;
+    overflow:hidden;
+    display:flex;
+    flex-direction:row;
+  }
+  .mainpanel{
+    position:relative;
+    flex:1; min-width:0;
+    display:flex; flex-direction:column;
+    height:100%;
+  }
+  .browserwin{
+    width:100%; max-width:1040px;
+    display:flex; flex-direction:column;
+    box-shadow:0 40px 100px rgba(0,0,0,.5);
+    border-radius:0;
+    overflow:hidden;
+  }
+  @media (min-width:760px){
+    .browserwin{ border-radius:14px; height:680px; margin:20px; }
+    .stage{ height:auto; flex:1; max-height:none; }
+  }
+  .browserbar{
+    flex:0 0 auto;
+    background:#E7E4DC;
+    display:flex; align-items:center; gap:10px;
+    padding:10px 14px;
+  }
+  .browserdots{ display:flex; gap:6px }
+  .browserdots i{ width:10px;height:10px;border-radius:50%; background:#CFCBBF; display:block }
+  .browserurl{
+    flex:1; background:#fff; border-radius:7px; padding:6px 12px;
+    font-size:11.5px; color:var(--mut); font-family:ui-monospace,Menlo,monospace;
+    overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+    display:flex; align-items:center; gap:6px;
+  }
+  .browserurl .lock{ color:var(--teal); font-size:10px }
+
+  /* ---- Start overlay ---- */
+  #start-overlay{
+    position:absolute; inset:0; z-index:50;
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy-d) 100%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:40px; gap:22px; color:#fff;
+  }
+  #start-overlay .mark{
+    width:56px;height:56px;border-radius:14px;
+    background:var(--teal); display:flex;align-items:center;justify-content:center;
+    font-weight:800; font-size:22px; color:#fff; letter-spacing:-.02em;
+  }
+  #start-overlay h1{ font-size:clamp(22px,4vw,32px); margin:0; font-weight:700; letter-spacing:-.01em; }
+  #start-overlay p{ margin:0; color:#B9C2D4; max-width:440px; font-size:15px; line-height:1.55 }
+  #start-overlay button{
+    margin-top:6px;
+    background:var(--teal); color:#fff; border:none; border-radius:100px;
+    padding:14px 30px; font-size:15px; font-weight:600; cursor:pointer;
+    box-shadow:0 8px 24px rgba(29,122,107,.4);
+  }
+  #start-overlay .foot{ font-size:12px; color:#7C87A0; margin-top:2px }
+
+  /* ---- Chrome ---- */
+  .chrome{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 22px 0; flex:0 0 auto;
+  }
+  .brand{ font-weight:800; font-size:14px; color:var(--navy); letter-spacing:-.01em }
+  .brand span{ color:var(--teal) }
+  .stagecount{ font-size:12px; color:var(--mut); font-variant-numeric:tabular-nums }
+
+  .progress{
+    display:flex; gap:5px; padding:10px 22px 0; flex:0 0 auto;
+  }
+  .progress i{
+    flex:1; height:3px; border-radius:3px; background:var(--line); overflow:hidden; position:relative;
+    cursor:pointer;
+  }
+  .progress i:hover{ background:#D7D3C6 }
+  .progress i b{
+    position:absolute; inset:0; width:0%; background:var(--teal); display:block;
+    transition:width linear;
+  }
+  .progress i.done b{ width:100% !important; transition:none }
+
+  /* ---- Scenes ---- */
+  .scenes{ position:relative; flex:1 1 auto; min-height:0; }
+  .scene{
+    position:absolute; inset:0;
+    display:flex;
+    padding:16px 40px;
+    align-items:center;
+    justify-content:center;
+    overflow-y:auto;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .18s ease;
+  }
+  .scene.active{ opacity:1; pointer-events:auto }
+  .scene-inner{ width:100%; max-width:760px; margin:auto; }
+  .kicker-row{ display:flex; align-items:center; gap:8px; margin-bottom:8px }
+  .kicker{
+    font-size:11px; font-weight:700; letter-spacing:.06em; color:var(--teal);
+  }
+  .tier-tag{
+    font-size:10px; font-weight:700; letter-spacing:.02em; padding:2px 8px; border-radius:100px;
+  }
+  .tier-tag.free{ background:#E3F3F0; color:var(--teal) }
+  .tier-tag.paid{ background:var(--navy); color:#fff }
+  .scene h2{
+    font-size:clamp(20px,3vw,28px); margin:0 0 10px; letter-spacing:-.01em; line-height:1.15;
+  }
+  .scene p.sub{ color:var(--mut); font-size:14.5px; line-height:1.6; max-width:560px; margin:0 0 22px }
+
+  /* generic card frame used across scenes */
+  .frame{
+    background:#fff; border:1px solid var(--line); border-radius:14px;
+    padding:20px 22px; box-shadow:0 10px 30px rgba(31,42,68,.06);
+    position:relative; min-height:64px;
+  }
+
+  /* loading state, used before a generated result appears */
+  .loading-state{
+    display:flex; align-items:center; gap:10px; color:var(--mut); font-size:13px;
+    padding:6px 2px;
+  }
+  .spinner{
+    width:15px;height:15px;border-radius:50%;
+    border:2px solid var(--line); border-top-color:var(--teal);
+    animation:spin .7s linear infinite; flex:0 0 auto;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg) } }
+  .result-content{ opacity:0; transition:opacity .35s ease }
+  .result-content.show{ opacity:1 }
+
+  /* Scene 1: entry checklist */
+  .entry-check{ display:flex; align-items:flex-start; gap:10px; font-size:13.5px; color:var(--ink); padding:8px 0; border-bottom:1px solid var(--line) }
+  .entry-check:last-child{ border-bottom:none }
+  .entry-check-mark{ width:18px;height:18px;border-radius:50%; background:var(--teal); color:#fff; font-size:10px; display:flex;align-items:center;justify-content:center; flex:0 0 auto; margin-top:1px }
+
+  /* Scene 1: entry-scene, full bleed split screen */
+  .scene.entry-scene{ padding:0; align-items:stretch; justify-content:stretch }
+  .entry-split{ display:flex; width:100%; min-height:100%; }
+  .entry-photo{
+    flex:1.15; position:relative; min-width:0;
+    background:
+      linear-gradient(0deg, rgba(10,20,15,.55) 0%, rgba(10,20,15,.15) 45%, rgba(135,190,235,0) 60%),
+      linear-gradient(180deg, #6FA8DC 0%, #A9CBE8 55%, #D7E6F0 100%);
+    padding:26px 24px;
+    display:flex; flex-direction:column; justify-content:flex-start;
+  }
+  .entry-photo::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:46%;
+    background-image:
+      linear-gradient(180deg, transparent 0%, rgba(15,25,20,.5) 100%),
+      repeating-linear-gradient(90deg, #3B4A52 0 26px, #46565F 26px 52px);
+    clip-path: polygon(0% 100%, 0% 55%, 4% 55%, 4% 35%, 9% 35%, 9% 60%, 14% 60%, 14% 20%, 19% 20%, 19% 65%, 25% 65%, 25% 40%, 30% 40%, 30% 70%, 36% 70%, 36% 15%, 41% 15%, 41% 68%, 47% 68%, 47% 30%, 52% 30%, 52% 72%, 58% 72%, 58% 25%, 64% 25%, 64% 62%, 70% 62%, 70% 45%, 76% 45%, 76% 66%, 82% 66%, 82% 20%, 88% 20%, 88% 58%, 94% 58%, 94% 40%, 100% 40%, 100% 100%);
+    z-index:0;
+  }
+  .entry-kicker-row{ display:flex; gap:8px; align-items:center; position:relative; z-index:2; margin-bottom:auto }
+  .entry-overlay{
+    position:relative; z-index:2; background:rgba(15,25,32,.6); backdrop-filter:blur(2px);
+    border-radius:14px; padding:22px 22px 18px; color:#fff; max-width:340px;
+  }
+  .entry-overlay h3{ font-size:19px; margin:0 0 4px; font-weight:800 }
+  .entry-tagline{ font-size:12px; color:#D3DCE6; margin:0 0 14px }
+  .entry-overlay .entry-check{ display:flex; align-items:flex-start; gap:8px; font-size:11.5px; color:#EDEFF2; padding:5px 0; border-bottom:none; line-height:1.45 }
+  .entry-overlay .entry-check-mark{ background:var(--teal-l); color:#0F2A20 }
+  .entry-links{ margin-top:12px; display:flex; flex-direction:column; gap:4px }
+  .entry-links a{ font-size:10.5px; color:#BFD4E8; text-decoration:underline; cursor:pointer }
+
+  .entry-formside{ flex:1; display:flex; align-items:flex-start; justify-content:center; padding:26px 22px; overflow-y:auto; background:var(--cream) }
+  .entry-formcard{ width:100%; max-width:300px }
+  .entry-formcard h2{ font-size:22px; margin:0 0 8px }
+  .entry-formcard > p{ font-size:11.5px; color:var(--mut); line-height:1.55; margin:0 0 16px }
+  .entry-tabs{ display:flex; gap:18px; margin-bottom:14px; font-size:13px; font-weight:600 }
+  .entry-tabs span{ color:var(--mut) }
+  .entry-tab-active{ background:var(--teal); color:#fff !important; padding:6px 16px; border-radius:100px }
+  .entry-label{ display:block; font-size:11px; font-weight:700; color:var(--ink); margin:10px 0 4px }
+  .entry-input{ border:1px solid var(--line); border-radius:8px; height:32px; background:#fff }
+  .entry-submit{ margin-top:16px; background:var(--navy); color:#fff; text-align:center; padding:10px; border-radius:8px; font-size:13px; font-weight:600 }
+  .entry-fine{ font-size:10px; color:var(--mut); line-height:1.5; margin:10px 0 0 }
+  .entry-footlink{ display:block; text-align:center; font-size:10.5px; color:var(--teal); text-decoration:underline; margin-top:10px; cursor:pointer }
+
+  @media (max-width:760px){
+    .entry-split{ flex-direction:column }
+    .entry-photo{ padding:18px 16px 60px }
+    .entry-overlay{ max-width:none }
+  }
+
+  /* Scene 1: check */
+  .checkbox{ display:flex; align-items:center; gap:14px; }
+  .filetag{
+    width:44px;height:44px;border-radius:10px;background:#F1F0EA;
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--mut);
+  }
+  .checkline{ font-size:14px; color:var(--ink) }
+  .checkline b{ display:block; font-size:13px; color:var(--mut); font-weight:500; margin-top:2px }
+  .checkbadge{
+    margin-left:auto; background:var(--amber-bg); color:var(--amber); font-size:12px; font-weight:700;
+    padding:5px 10px; border-radius:100px; opacity:0; transform:translateY(4px);
+    transition:all .5s ease;
+  }
+  .checkbadge.show{ opacity:1; transform:none }
+
+  /* Scene 2 & 3: step wizard */
+  .stepwizard{ display:flex; align-items:center; margin-bottom:18px }
+  .stepcircle{
+    width:26px;height:26px;border-radius:50%; display:flex;align-items:center;justify-content:center;
+    font-size:11px; font-weight:700; flex:0 0 auto; border:2px solid var(--line); color:var(--mut); background:#fff;
+  }
+  .stepcircle.done{ background:var(--teal); border-color:var(--teal); color:#fff }
+  .stepcircle.now{ border-color:var(--teal); color:var(--teal) }
+  .stepline{ flex:1; height:2px; background:var(--line) }
+  .stepline.done{ background:var(--teal) }
+  .truthbanner{
+    display:flex; align-items:center; gap:12px; background:#E3F3F0; border-radius:10px; padding:14px;
+    margin-bottom:14px;
+  }
+  .truthbanner .icon-tile{ background:#fff }
+  .truthbanner b{ display:block; font-size:13.5px; color:var(--ink) }
+  .truthbanner span{ font-size:12px; color:var(--mut) }
+  .attest-line{
+    display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid var(--line);
+    font-size:13.5px;
+  }
+  .attest-line:last-child{ border-bottom:none }
+  .dot{ width:18px;height:18px;border-radius:50%; border:2px solid var(--line); flex:0 0 auto; margin-top:1px; position:relative }
+  .dot.on{ border-color:var(--teal); background:var(--teal) }
+  .dot.on::after{ content:"✓"; position:absolute; inset:0; color:#fff; font-size:11px; display:flex;align-items:center;justify-content:center }
+
+  /* Scene 4: matches, real card pattern */
+  .tipbanner{
+    display:flex; align-items:center; gap:10px; background:#E3F3F0; border-left:3px solid var(--teal);
+    border-radius:8px; padding:10px 14px; font-size:12.5px; color:#0F4D3A; margin-bottom:12px;
+  }
+  .matchcontrols{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px; font-size:12px }
+  .matchcontrols a{ color:var(--teal); font-weight:600; text-decoration:underline }
+  .noc-select{ border:1px solid var(--line); border-radius:8px; padding:5px 10px; color:var(--mut); background:#fff }
+  .findbtn{ margin-left:auto; border:1px solid var(--line); border-radius:8px; padding:7px 12px; font-weight:600; color:var(--ink); background:#fff }
+  .matchcard{
+    border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:12px; background:#fff;
+  }
+  .matchcard:last-child{ margin-bottom:0 }
+  .matchcard-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px }
+  .matchcard-title{ font-size:15px; font-weight:700; color:var(--ink) }
+  .matchcard-sub{ font-size:12.5px; color:var(--mut); margin-top:2px }
+  .matchmeta{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:6px }
+  .noc-chip{ font-size:10.5px; color:var(--mut); border:1px solid var(--line); padding:2px 8px; border-radius:100px }
+  .ee-chip{ font-size:10.5px; font-weight:700; color:var(--teal); background:#E3F3F0; padding:2px 8px; border-radius:100px }
+  .source-line{ font-size:11px; color:var(--mut); margin-top:4px }
+  .rationale{ font-size:12.5px; color:var(--ink); line-height:1.6; margin-top:10px }
+  .scorering{ position:relative; width:56px; height:56px; flex:0 0 auto; text-align:center }
+  .scorering svg{ width:56px; height:56px; transform:rotate(-90deg); position:absolute; inset:0 }
+  .scorering .ring-num{
+    position:relative; height:56px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .scorering .ring-num b{ font-size:16px; font-weight:800; color:var(--navy); line-height:1 }
+  .scorering .ring-num span{ font-size:8px; color:var(--mut); letter-spacing:.04em; margin-top:1px }
+  .matchtag{ display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; padding:3px 9px; border-radius:100px; margin-top:8px }
+  .matchtag.verified{ background:#E3F3F0; color:var(--teal) }
+  .matchtag.own{ background:var(--amber-bg); color:var(--amber) }
+  .matchstats{ display:flex; gap:14px; font-size:12px; color:var(--mut); margin-top:10px; padding-top:10px; border-top:1px solid var(--line) }
+  .matchstats span{ display:flex; align-items:center; gap:4px }
+  .matchbtns{ display:flex; gap:8px; margin-top:12px }
+  .matchbtn{ flex:1; text-align:center; padding:9px; border-radius:8px; font-size:12.5px; font-weight:600 }
+  .matchbtn.outline{ border:1px solid var(--line); color:var(--ink) }
+  .matchbtn.solid{ background:var(--teal); color:#fff }
+
+  /* Scene 4: coverage / gaps */
+  .cov-row{ display:flex; align-items:center; gap:10px; font-size:13.5px; padding:8px 0 }
+  .chip{ width:16px;height:16px;border-radius:50%; flex:0 0 auto }
+  .chip.have{ background:var(--teal) }
+  .chip.gap{ border:2px solid var(--line); background:#fff }
+
+  /* Scene 6: tailor + verify (real card pattern) */
+  .pipeline{ display:flex; align-items:center; gap:8px; margin-bottom:16px; flex-wrap:wrap }
+  .pipestep{
+    display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; color:var(--mut);
+    padding:5px 10px; border-radius:100px; border:1px solid var(--line); background:#fff;
+    transition:all .4s ease;
+  }
+  .pipestep .pipedot{ width:7px;height:7px;border-radius:50%; background:var(--line); transition:background .4s ease }
+  .pipestep.done{ color:var(--ink) }
+  .pipestep.done .pipedot{ background:var(--teal) }
+  .pipestep.active{ color:var(--white); background:var(--navy); border-color:var(--navy) }
+  .pipestep.active .pipedot{ background:var(--teal-l); box-shadow:0 0 0 3px rgba(93,202,165,.3); animation:pulse 1.2s infinite }
+  @keyframes pulse{ 0%,100%{ opacity:1 } 50%{ opacity:.4 } }
+  .pipearrow{ color:var(--line); font-size:12px }
+
+  .claimcard{
+    display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--line);
+    opacity:0; transform:translateY(4px); transition:all .45s ease;
+  }
+  .claimcard.show{ opacity:1; transform:none }
+  .claimcard:last-of-type{ border-bottom:none }
+  .icon-tile{
+    width:32px;height:32px;border-radius:8px;background:#E3F3F0;color:var(--teal);
+    display:flex;align-items:center;justify-content:center;font-size:15px; flex:0 0 auto;
+  }
+  .claim-body{ flex:1; min-width:0 }
+  .used-tag{
+    display:inline-block; font-size:10.5px; font-weight:700; color:var(--teal); background:#E3F3F0;
+    padding:2px 8px; border-radius:100px; margin-bottom:4px;
+  }
+  .claim-text{ font-size:13px; font-weight:600; color:var(--ink); line-height:1.35 }
+  .claim-caption{ font-size:11.5px; color:var(--mut); margin-top:2px }
+  .check-circle{
+    width:22px;height:22px;border-radius:50%; background:#E3F3F0; color:var(--teal);
+    display:flex;align-items:center;justify-content:center; font-size:11px; flex:0 0 auto; margin-top:2px;
+    opacity:0; transform:scale(.7); transition:all .3s ease;
+  }
+  .check-circle.show{ opacity:1; transform:scale(1) }
+  .refuse-card{
+    margin-top:6px; background:var(--refuse-bg); border:1px solid var(--refuse-border); border-radius:10px;
+    padding:12px 14px; display:flex; gap:10px; align-items:flex-start;
+    opacity:0; transform:translateY(6px); transition:all .5s ease;
+  }
+  .refuse-card.show{ opacity:1; transform:none }
+  .refuse-card .refuse-icon{ color:var(--refuse); font-size:16px; flex:0 0 auto; margin-top:1px }
+  .refuse-card b{ display:block; color:var(--refuse); font-size:12px; font-weight:700; margin-bottom:2px }
+  .refuse-card p{ margin:0; font-size:12px; color:#7A2E24; line-height:1.5 }
+
+  .statband{
+    margin-top:16px; background:var(--navy-d); border-radius:10px; padding:16px;
+    color:#fff; display:flex; flex-direction:column; gap:12px;
+    opacity:0; transform:translateY(6px); transition:all .5s ease;
+  }
+  .statband.show{ opacity:1; transform:none }
+  .statband-head{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700 }
+  .statband-grid{ display:flex; justify-content:space-between }
+  .statband-grid div{ text-align:center }
+  .statband-grid b{ display:block; font-size:20px; font-weight:800; color:var(--teal-l) }
+  .statband-grid span{ font-size:10.5px; color:#B9C2D4 }
+
+  /* Scene 6: export */
+  .exportrow{ display:flex; gap:10px; }
+  .exportcard{ flex:1; border:1px solid var(--line); border-radius:10px; padding:14px; text-align:center; font-size:12.5px; color:var(--mut) }
+  .exportcard b{ display:block; color:var(--ink); font-size:13.5px; margin-bottom:4px }
+
+  /* Scene 7: verify link */
+  .vbadge{ display:inline-flex; align-items:center; gap:6px; background:#E3F3F0; color:var(--teal); font-size:12px; font-weight:700; padding:6px 12px; border-radius:100px }
+  .viewedline{ font-size:12.5px; color:var(--mut); margin-top:12px }
+  .identitycard{ display:flex; align-items:center; gap:12px; margin-bottom:16px }
+  .avatar-circle{ width:44px;height:44px;border-radius:50%; background:#E3F3F0; color:var(--teal); display:flex;align-items:center;justify-content:center; font-weight:800; font-size:15px; flex:0 0 auto }
+  .identitycard b{ display:block; font-size:14.5px; color:var(--ink) }
+  .identitycard span{ font-size:12px; color:var(--mut) }
+  .identitycard .role{ color:var(--teal); font-weight:600 }
+  .stat4grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px }
+  .stat4tile{ border:1px solid var(--line); border-radius:10px; padding:10px 4px; text-align:center }
+  .stat4tile b{ display:block; font-size:17px; font-weight:800; color:var(--ink) }
+  .stat4tile span{ font-size:9.5px; color:var(--mut); text-transform:uppercase; letter-spacing:.02em }
+  .viewedpill{ display:inline-flex; align-items:center; gap:6px; background:var(--amber-bg); color:var(--amber); font-size:12px; font-weight:600; padding:6px 12px; border-radius:100px }
+
+  /* Scene: reference confirmation, per-line pattern */
+  .refline{ padding:11px 0; border-bottom:1px solid var(--line) }
+  .refline:last-child{ border-bottom:none }
+  .refline .claim-text{ font-size:13px; color:var(--ink); margin-bottom:5px }
+  .reflink{ font-size:11.5px; color:var(--amber); text-decoration:underline; cursor:pointer }
+  .refawait{ font-size:11.5px; color:var(--mut); font-style:italic }
+  .refconfirmed-pill{
+    display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600;
+    color:var(--teal); background:#E3F3F0; padding:4px 10px; border-radius:100px;
+  }
+
+  /* Scene: cover letter, real page pattern */
+  .lettervbanner{
+    display:flex; align-items:center; gap:12px; background:#E3F3F0; border:1px solid #BFE3D8;
+    border-radius:10px; padding:12px 14px; margin-bottom:14px;
+  }
+  .lettervbanner-check{ width:24px;height:24px;border-radius:50%; background:var(--teal); color:#fff; flex:0 0 auto; display:flex;align-items:center;justify-content:center; font-size:12px }
+  .lettervbanner b{ display:block; font-size:12.5px; color:var(--ink) }
+  .lettervbanner div span{ font-size:11px; color:var(--mut) }
+  .letteractions{ display:flex; gap:8px; margin-bottom:12px }
+  .lettertracker{ font-size:12px; color:var(--mut); margin-bottom:16px }
+  .lettertracker-btn{ border:1px solid var(--line); border-radius:100px; padding:4px 12px; font-size:11.5px; font-weight:600; color:var(--ink); margin-left:4px }
+  .letterheadrow{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding-top:10px; border-top:1px solid var(--line) }
+  .letter-kicker{ font-size:10.5px; font-weight:700; letter-spacing:.06em; color:var(--teal) }
+  .letter-sources{ font-size:11px; color:var(--mut); display:flex; align-items:center; gap:5px }
+  .lettertext{ font-size:13px; line-height:1.7; color:var(--ink); margin:0 }
+  .letterhl{ color:var(--teal); text-decoration:underline; text-decoration-color:#9ED4C4 }
+
+  /* Scene 11: interview prep */
+  .qcard{ border-left:3px solid var(--teal); padding:8px 0 8px 12px; font-size:13px; margin-bottom:8px }
+  .qcard.gapq{ border-left-color:var(--amber) }
+  .qcard small{ display:block; color:var(--mut); margin-top:3px; font-size:12px }
+  .mocklabel{ font-size:12px; font-weight:700; color:var(--ink); margin:14px 0 6px }
+  .optionrow{ display:flex; gap:8px }
+  .optioncard{ flex:1; border:1px solid var(--line); border-radius:9px; padding:10px 12px }
+  .optioncard.selected{ border-color:var(--teal); background:#E3F3F0 }
+  .optioncard b{ display:block; font-size:12.5px; color:var(--ink) }
+  .optioncard span{ font-size:11px; color:var(--mut) }
+  .optionpill{ border:1px solid var(--line); border-radius:100px; padding:6px 14px; font-size:12px; font-weight:600; color:var(--ink) }
+  .optionpill.selected{ border-color:var(--teal); color:var(--teal) }
+  .mockreassure{ font-size:11.5px; color:var(--mut); margin:12px 0 10px }
+  .mockbtns{ display:flex; gap:8px }
+  .mockbtn{ padding:9px 18px; border-radius:8px; font-size:12.5px; font-weight:600 }
+  .mockbtn.dark{ background:var(--navy); color:#fff }
+  .mockbtn.outline{ border:1px solid var(--line); color:var(--ink) }
+  .practicedivider{ border-top:1px dashed var(--line); margin:18px 0 16px; padding-top:16px }
+  .prep-tabs{ display:flex; gap:4px; overflow-x:auto; margin-bottom:16px; border-bottom:1px solid var(--line); padding-bottom:2px }
+  .prep-tab{ font-size:12px; font-weight:600; color:var(--mut); padding:6px 10px; white-space:nowrap; border-bottom:2px solid transparent }
+  .prep-tab.active{ color:var(--teal); border-bottom-color:var(--teal) }
+  .practicelegend{ background:#F6F5F1; border-radius:9px; padding:10px 12px; font-size:11.5px; color:var(--mut); margin-bottom:14px; line-height:1.6 }
+  .legend-teal{ color:var(--teal); font-weight:700 }
+  .legend-amber{ color:var(--amber); font-weight:700 }
+  .practicesample{ border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:12.5px; line-height:1.7; margin-bottom:14px }
+  .sample-teal{ color:var(--teal); text-decoration:underline; text-decoration-color:#9ED4C4 }
+  .sample-amber{ color:var(--amber); text-decoration:underline; text-decoration-color:#E8C583 }
+  .qdots{ display:flex; align-items:center; gap:4px; margin-bottom:14px }
+  .qdots i{ width:7px;height:7px;border-radius:50%; background:var(--line); display:block }
+  .qdots i.done{ background:var(--teal) }
+  .qdots span{ font-size:11.5px; color:var(--mut); margin-left:8px }
+  .practicequestion{ font-size:16px; font-weight:700; color:var(--ink); line-height:1.35; margin-bottom:14px }
+  .practicetimer{ font-size:26px; font-weight:800; color:var(--line); letter-spacing:-.01em }
+  .practicetimer-cap{ font-size:11px; color:var(--mut); margin:2px 0 12px }
+  .speakbtn{ display:inline-flex; align-items:center; gap:7px; border:1px solid var(--teal); color:var(--teal); border-radius:100px; padding:8px 16px; font-size:12.5px; font-weight:600; margin-bottom:12px }
+  .transcriptbox{ border:1px solid var(--line); border-radius:10px; min-height:64px; padding:12px; font-size:12.5px; color:#B9BEB4 }
+  .wordcount{ font-size:11px; color:var(--mut); margin-top:6px }
+  .speechcaveat{ font-size:11px; color:var(--amber); margin-top:8px }
+
+  /* Scene 10: tracker */
+  .kanban{ display:flex; gap:8px }
+  .kcol{ flex:1; background:#F6F5F1; border-radius:10px; padding:8px; min-height:110px }
+  .kcol h4{ font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--mut); margin:2px 0 8px }
+  .kcard{ background:#fff; border:1px solid var(--line); border-radius:7px; padding:7px 8px; font-size:11px; margin-bottom:6px; color:var(--ink) }
+
+  /* fictional/sample badge */
+  .sampletag{
+    position:absolute; top:16px; right:20px; z-index:11;
+    font-size:10.5px; color:var(--mut); background:rgba(255,255,255,.85); border:1px solid var(--line);
+    padding:3px 9px; border-radius:100px; backdrop-filter:blur(2px);
+  }
+
+  /* End card */
+  .endcard .scene-inner{ text-align:center; max-width:520px }
+  .endcard-mark{
+    width:52px;height:52px;border-radius:14px; background:var(--teal); color:#fff;
+    display:flex;align-items:center;justify-content:center; font-weight:800; font-size:20px;
+    margin:0 auto 20px;
+  }
+  .endcard h2{ font-size:clamp(22px,3.4vw,30px) }
+  .endcard .tierkey{ display:flex; gap:18px; justify-content:center; margin:22px 0; font-size:12px; color:var(--mut) }
+  .endcard .tierkey span{ display:inline-flex; align-items:center; gap:6px }
+  .replay-btn{
+    background:var(--navy); color:#fff; border:none; border-radius:100px;
+    padding:12px 26px; font-size:14px; font-weight:600; cursor:pointer; margin-top:6px;
+  }
+  .replay-btn:hover{ opacity:.9 }
+
+  /* ---- Controls ---- */
+  .controls{
+    flex:0 0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 22px 18px; background:var(--cream);
+  }
+  .ctrl-btn{
+    background:#fff; border:1px solid var(--line); border-radius:100px;
+    padding:9px 16px; font-size:13px; font-weight:600; color:var(--ink); cursor:pointer;
+    display:flex; align-items:center; gap:6px;
+  }
+  .ctrl-btn:hover{ border-color:var(--teal); color:var(--teal) }
+  .ctrl-btn:disabled{ opacity:.4; cursor:default }
+  .ctrl-main{ background:var(--navy); color:#fff; border-color:var(--navy) }
+  .ctrl-main:hover{ color:#fff; border-color:var(--navy); opacity:.9 }
+  .captiontoggle{ font-size:11.5px; color:var(--mut); display:flex; align-items:center; gap:6px; cursor:pointer; user-select:none }
+  .captiontoggle input{ accent-color:var(--teal) }
+
+  .caption{
+    flex:0 0 auto;
+    padding:6px 22px 0;
+    font-size:12.5px; color:var(--mut); text-align:center; min-height:34px; line-height:1.4;
+    background:var(--cream);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    * { transition-duration: .001ms !important; animation-duration: .001ms !important; }
+  }
+
+  :focus-visible{ outline:2px solid var(--teal); outline-offset:2px }
+
+  @media (max-width:640px){
+    .scene{ padding:14px 18px 6px }
+    .exportrow{ flex-direction:column }
+    .kanban{ flex-wrap:wrap }
+    .kcol{ min-width:44%; }
+    .matchrow{ flex-direction:column; gap:2px }
+    .matchrow small{ margin-top:0 }
+    .browserurl{ font-size:10px }
+    .endcard .tierkey{ flex-direction:column; gap:8px }
+  }
+</style>
+</head>
+<body>
+
+<div class="browserwin">
+  <div class="browserbar">
+    <div class="browserdots"><i></i><i></i><i></i></div>
+    <div class="browserurl" id="browserurl"><span class="lock">&#128274;</span><span id="browserurl-text">rolescout-postaratrend.lovable.app</span></div>
+  </div>
+
+<div class="stage" id="stage">
+
+  <div id="start-overlay">
+    <div class="mark">RS</div>
+    <h1>Role Scout, end to end</h1>
+    <p>A narrated walkthrough of how a seeker actually moves through the product today, from having no resume at all to a tracked, verified application. Fourteen stages, roughly six minutes.</p>
+    <button id="start-btn">Play the walkthrough</button>
+    <div class="foot">Uses your browser's built in voice. No sign up, nothing recorded.</div>
+  </div>
+
+  <div class="mainpanel">
+  <div class="chrome">
+    <div class="brand">Role<span>Scout</span></div>
+    <div class="stagecount" id="stagecount">Stage 1 / 14</div>
+  </div>
+  <div class="progress" id="progress"></div>
+
+  <div class="scenes" id="scenes">
+
+    <!-- 1 --><div class="scene entry-scene" data-title="Where it starts" data-url="rolescout-postaratrend.lovable.app/auth">
+      <div class="entry-split">
+        <div class="entry-photo">
+          <div class="entry-kicker-row"><span class="kicker" style="color:#fff">STAGE 1</span><span class="tier-tag free">Free forever</span></div>
+          <div class="entry-overlay">
+            <h3>Role Scout</h3>
+            <p class="entry-tagline">The honest way from resume to interview room.</p>
+            <div class="entry-check"><span class="entry-check-mark">&#10003;</span>Your resume, read line by line and kept true.</div>
+            <div class="entry-check"><span class="entry-check-mark">&#10003;</span>Real roles in the country you are searching, scored honestly.</div>
+            <div class="entry-check"><span class="entry-check-mark">&#10003;</span>A tailored resume that never invents a word, and refuses rather than lie.</div>
+            <div class="entry-check"><span class="entry-check-mark">&#10003;</span>A tailored cover letter Role Scout writes for each role, verified against your resume, claim by claim.</div>
+            <div class="entry-check"><span class="entry-check-mark">&#10003;</span>A link an employer can open to verify your resume, and you see the opens and whether it earned their trust.</div>
+            <div class="entry-check"><span class="entry-check-mark">&#10003;</span>Lines a former manager or colleague can confirm, so trust is not just your word.</div>
+            <div class="entry-check"><span class="entry-check-mark">&#10003;</span>When you reach an interview, a pack built for that exact role, and a practice mode that checks every answer against what you attested.</div>
+            <div class="entry-check"><span class="entry-check-mark">&#10003;</span>A 30 60 90 day plan for the role, ready to present and edit, in PDF and Word.</div>
+            <div class="entry-links"><a>Watch the demonstration of how Role Scout works</a><a>Works on your phone too. Install Role Scout</a></div>
+          </div>
+        </div>
+        <div class="entry-formside">
+          <div class="entry-formcard">
+            <h2>Welcome</h2>
+            <p>The honest way from resume to interview room. Role Scout matches the resume you upload to real roles in your country, writes tailored resumes and cover letters on request, and offers interview practice checked against your attested resume, with every line kept true and yours.</p>
+            <div class="entry-tabs"><span>Sign in</span><span class="entry-tab-active">Register</span></div>
+            <label class="entry-label">Full name</label><div class="entry-input"></div>
+            <label class="entry-label">Email</label><div class="entry-input"></div>
+            <label class="entry-label">Password</label><div class="entry-input"></div>
+            <div class="entry-submit">Create free account</div>
+            <p class="entry-fine">Your resume stays yours. Every line needs your attestation before anything uses it.</p>
+            <p class="entry-fine">Role Scout serves job seekers in many countries. You choose your country of search.</p>
+            <a class="entry-footlink">Try a free resume check</a>
+            <a class="entry-footlink">Not ready to sign up? Check whether Role Scout can read your resume.</a>
+            <a class="entry-footlink">New to resume writing? Read our free guide</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 --><div class="scene" data-title="No resume yet? Get one written" data-url="rolescout-postaratrend.lovable.app/resume-writing-checkout/success">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 2</div><span class="tier-tag paid">Paid</span></div>
+        <h2>No resume yet? Get one written</h2>
+        <p class="sub">A one time payment, no account required. Fill in a short form with real facts, employer, dates, achievements, and Role Scout writes and verifies a resume from that alone.</p>
+        <div class="frame">
+          <div class="checkbox">
+            <div class="filetag" style="background:#E3F3F0;color:var(--teal)">$</div>
+            <div class="checkline">Resume Writing &middot; CA$14.99, one time<b>Paid, verified line by line, delivered as a PDF and by email</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 --><div class="scene" data-title="Check your resume, free" data-url="rolescout-postaratrend.lovable.app/check">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 3</div><span class="tier-tag free">Free forever</span></div>
+        <h2>Check your resume, free</h2>
+        <p class="sub">No account, no cost. Upload a PDF, a Word file, or a LinkedIn export and get an honest read on it in seconds.</p>
+        <div class="frame">
+          <div class="checkbox">
+            <div class="filetag">PDF</div>
+            <div class="checkline">resume_celestine.pdf<b>6 pages, 85 lines, text layer readable</b></div>
+            <div class="checkbadge" id="s1badge">Readable</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 --><div class="scene" data-title="Confirm every line is true" data-url="rolescout-postaratrend.lovable.app/resume">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 4</div><span class="tier-tag free">Free forever</span></div>
+        <h2>Confirm every line is true</h2>
+        <p class="sub">Creating an account is free, permanently. Role Scout reads your resume line by line and asks you to attest that each one is accurate before it becomes the record everything else is built from.</p>
+        <div class="frame">
+          <div class="stepwizard">
+            <div class="stepcircle done">&#10003;</div><div class="stepline done"></div>
+            <div class="stepcircle done">&#10003;</div><div class="stepline done"></div>
+            <div class="stepcircle done">&#10003;</div><div class="stepline done"></div>
+            <div class="stepcircle now">4</div><div class="stepline"></div>
+            <div class="stepcircle">5</div>
+          </div>
+          <div class="truthbanner"><div class="icon-tile">&#10003;</div><div><b>We only show what's true.</b><span>Role Scout reads your resume. You confirm what's accurate.</span></div></div>
+          <div class="attest-line"><div class="dot on"></div><div>Service Desk Manager, Shell &mdash; led a team of 25 technical analysts</div></div>
+          <div class="attest-line"><div class="dot on"></div><div>Managed major incident response using ITIL practice</div></div>
+          <div class="attest-line" id="s2last"><div class="dot" id="s2dot"></div><div>ServiceNow administration across enterprise environments</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 --><div class="scene" data-title="Get matched to real, open roles" data-url="rolescout-postaratrend.lovable.app/matches">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 5</div><span class="tier-tag free">Free forever</span></div>
+        <h2>Get matched, or bring your own</h2>
+        <p class="sub">Role Scout continuously scans employer career pages and public job boards in your country, and tags Canadian postings by NOC code with an Express Entry level badge where it applies. If you already found something yourself, on LinkedIn, Indeed, anywhere, "Tailor for a posting you found" brings it in, no scraping involved.</p>
+        <div class="frame">
+          <div class="loading-state" id="s4loading"><div class="spinner"></div>Scanning postings in your country&hellip;</div>
+          <div class="result-content" id="s4result">
+            <p style="font-size:13px;color:var(--mut);margin:0 0 12px"><b style="color:var(--navy);font-size:15px">20</b> roles match your profile</p>
+            <div class="tipbanner">&#128161; These are roles that fit what you attested to. Tap any match to see why it fits and what to do next.</div>
+            <div class="matchcontrols"><a href="#">Edit preferences</a><select class="noc-select" disabled><option>All NOC codes</option></select><div class="findbtn">Tailor for a posting you found</div></div>
+
+            <div class="matchcard">
+              <div class="matchcard-top">
+                <div>
+                  <div class="matchcard-title">Team Lead, Enterprise Service Desk</div>
+                  <div class="matchcard-sub">Jobgether, Canada</div>
+                  <div class="matchmeta"><span class="noc-chip">NOC 12010 Supervisors</span><span class="ee-chip">Express Entry level</span></div>
+                  <div class="source-line">Source: Techmap</div>
+                </div>
+                <div class="scorering">
+                  <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="#E4E1D8" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#14663F" stroke-width="4" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="27.1"/></svg>
+                  <div class="ring-num"><b>82</b><span>SCORE</span></div>
+                </div>
+              </div>
+              <p class="rationale">Celestine brings over 10 years of directly relevant experience spanning service desk team leadership, major incident management, ITIL practice, and ServiceNow administration, aligning strongly with the core requirements of this role.</p>
+              <div class="matchbtns"><div class="matchbtn outline">View the posting</div><div class="matchbtn solid">Tailor my resume</div></div>
+            </div>
+
+            <div class="matchcard">
+              <div class="matchcard-top">
+                <div>
+                  <div class="matchcard-title">Service Desk Analyst</div>
+                  <div class="matchcard-sub">Location not specified</div>
+                </div>
+                <div class="scorering">
+                  <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="#E4E1D8" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#14663F" stroke-width="4" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="42.2"/></svg>
+                  <div class="ring-num"><b>72</b><span>SCORE</span></div>
+                </div>
+              </div>
+              <span class="matchtag own">&#9733; Your posting</span>
+              <p class="rationale" style="margin-top:6px">Supplied by you. Scored against your attested resume like every other match. You can tailor at any score.</p>
+              <div class="matchbtns"><div class="matchbtn outline">View the posting</div><div class="matchbtn solid">Tailor my resume</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 --><div class="scene" data-title="See what you have, honestly" data-url="rolescout-postaratrend.lovable.app/matches/f4c1/coverage">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 6</div><span class="tier-tag free">Free forever</span></div>
+        <h2>See what you have, and what you do not</h2>
+        <p class="sub">Before anything is written, Role Scout shows a coverage report against the posting: attested strengths, and gaps stated plainly rather than glossed over.</p>
+        <div class="frame">
+          <div class="cov-row"><div class="chip have"></div>Major incident management, ITIL practice</div>
+          <div class="cov-row"><div class="chip have"></div>ServiceNow administration</div>
+          <div class="cov-row"><div class="chip gap"></div>Okta, Google Workspace, JAMF, Zoom</div>
+          <div class="cov-row"><div class="chip gap"></div>Hardware procurement and budget forecasting</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 --><div class="scene" data-title="Tailor, checked line by line" data-url="rolescout-postaratrend.lovable.app/matches/f4c1/tailored">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 7</div><span class="tier-tag paid">Paid</span></div>
+        <h2>Tailor, checked line by line</h2>
+        <p class="sub">One AI drafts a tailored version. A second, independent verifier then checks every single rewritten line against your attested resume, on its own, before you ever see it. Where nothing supports a claim, it is refused, not invented.</p>
+        <div class="frame">
+          <div class="pipeline">
+            <div class="pipestep done"><span class="pipedot"></span>Drafted</div>
+            <div class="pipearrow">&rarr;</div>
+            <div class="pipestep active" id="s6verifystep"><span class="pipedot"></span>Independent verifier</div>
+            <div class="pipearrow">&rarr;</div>
+            <div class="pipestep" id="s6approvedstep"><span class="pipedot"></span>Approved</div>
+          </div>
+          <div class="claimcard" id="s6line1">
+            <div class="icon-tile">&#9733;</div>
+            <div class="claim-body"><span class="used-tag">Used</span><div class="claim-text">Led major incident response across enterprise ServiceNow environments</div><div class="claim-caption">From your attested resume, work history</div></div>
+            <div class="check-circle" id="s6v1">&#10003;</div>
+          </div>
+          <div class="claimcard" id="s6line2">
+            <div class="icon-tile">&#10003;</div>
+            <div class="claim-body"><span class="used-tag">Used</span><div class="claim-text">Directed a 25 person technical analyst team through SLA critical escalations</div><div class="claim-caption">From your attested resume, work history</div></div>
+            <div class="check-circle" id="s6v2">&#10003;</div>
+          </div>
+          <div class="refuse-card" id="s5refuse">
+            <span class="refuse-icon">&#9888;</span>
+            <div><b>Refused, not in the attested resume</b><p>This posting asks for hands on JAMF administration. Role Scout will not add or imply a claim you did not attest to.</p></div>
+          </div>
+          <div class="statband" id="s6statband">
+            <div class="statband-head"><span>&#9989;</span>Verified, nothing invented</div>
+            <div class="statband-grid">
+              <div><b>3</b><span>lines used</span></div>
+              <div><b>2</b><span>verified</span></div>
+              <div><b>1</b><span>refused</span></div>
+              <div><b>0</b><span>invented</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 --><div class="scene" data-title="A 30, 60, 90 day plan" data-url="rolescout-postaratrend.lovable.app/matches/f4c1/work-plan">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 8</div><span class="tier-tag paid">Paid</span></div>
+        <h2>A plan for your first 90 days</h2>
+        <p class="sub">For a role you are serious about, Role Scout builds a 30, 60, 90 day plan grounded in that posting and your attested resume, so you can walk into an interview already thinking like the person doing the job.</p>
+        <div class="frame">
+          <div class="loading-state" id="s7loading"><div class="spinner"></div>Building your plan from this posting and your attested resume&hellip;</div>
+          <div class="result-content" id="s7result">
+            <div class="cov-row"><div class="chip have"></div>Days 1 to 30: learn the incident process, meet the team</div>
+            <div class="cov-row"><div class="chip have"></div>Days 31 to 60: own first major incident end to end</div>
+            <div class="cov-row"><div class="chip have"></div>Days 61 to 90: propose one process improvement</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 --><div class="scene" data-title="Export, ATS safe" data-url="rolescout-postaratrend.lovable.app/matches/f4c1/tailored">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 9</div><span class="tier-tag paid">Paid</span></div>
+        <h2>Export, ATS safe</h2>
+        <p class="sub">A clean PDF or Word file, in the layout that fits your experience. Nothing is added in the export that was not already verified.</p>
+        <div class="exportrow">
+          <div class="exportcard"><b>Classic</b>Default layout</div>
+          <div class="exportcard"><b>Compact</b>Fits more on a page</div>
+          <div class="exportcard"><b>Plain</b>Times, most conservative</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 --><div class="scene" data-title="A link an employer can check" data-url="rolescout-postaratrend.lovable.app/verify/a7x92k">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 10</div><span class="tier-tag paid">Paid</span></div>
+        <h2>A link an employer can check</h2>
+        <p class="sub">Share a verification link. An employer opens it and sees the resume was checked line by line, not just your word for it. No other resume tool has anything to point to here.</p>
+        <div class="frame">
+          <span class="vbadge">&#10003; Verified resume</span>
+          <div class="identitycard" style="margin-top:14px">
+            <div class="avatar-circle">CO</div>
+            <div><b>Celestine O.</b><span>Applying for <span class="role">Business Systems Analyst</span></span></div>
+          </div>
+          <div class="stat4grid">
+            <div class="stat4tile"><b>6</b><span>Used</span></div>
+            <div class="stat4tile"><b>6</b><span>Verified</span></div>
+            <div class="stat4tile"><b>1</b><span>Refused</span></div>
+            <div class="stat4tile"><b>0</b><span>Invented</span></div>
+          </div>
+          <div class="matchtag verified" style="margin-bottom:10px">&#10003; 4 of 5 references confirmed</div>
+          <div class="viewedpill">&#128340; Viewed 3 times, last viewed today</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW --><div class="scene" data-title="A reference can confirm it too" data-url="rolescout-postaratrend.lovable.app/reference/8kq2m">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 11</div><span class="tier-tag paid">Paid</span></div>
+        <h2>A reference can confirm it too</h2>
+        <p class="sub">Trust does not have to stop at your own word. Any line on your resume can be sent to a former manager or colleague, who confirms that one line directly, without seeing the rest of your resume.</p>
+        <div class="frame">
+          <div class="refline">
+            <div class="claim-text">Led major incident response across enterprise ServiceNow environments</div>
+            <a class="reflink">Request a reference for this line.</a>
+          </div>
+          <div class="refline">
+            <div class="claim-text">Problem and Knowledge Management Lead, Sep 2021 to present</div>
+            <span class="refawait" id="s10await">Awaiting response</span>
+          </div>
+          <div class="refline">
+            <div class="claim-text">Governed and enhanced the entire problem management practice</div>
+            <span class="refconfirmed-pill" id="s10confirmed">&#10003; Confirmed by Clara Omon, personal email</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 --><div class="scene" data-title="A cover letter, same discipline" data-url="rolescout-postaratrend.lovable.app/matches/f4c1/cover">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 12</div><span class="tier-tag paid">Paid</span></div>
+        <h2>A cover letter, same discipline</h2>
+        <p class="sub">Written from the same attested resume, with every claim checked before delivery. Traceable phrases are marked right inside the letter, not hidden in a separate report.</p>
+        <div class="frame">
+          <div class="lettervbanner"><span class="lettervbanner-check">&#10003;</span><div><b>Verified against Version 1 of your attested resume.</b><span>Verified on September 2, 2026.</span></div></div>
+          <div class="letteractions">
+            <div class="mockbtn dark" style="font-size:11.5px;padding:8px 14px">Download PDF</div>
+            <div class="mockbtn outline" style="font-size:11.5px;padding:8px 14px">Download Word</div>
+          </div>
+          <div class="lettertracker">Applied for this role? Add it to your tracker. <span class="lettertracker-btn">I applied</span></div>
+          <div class="letterheadrow"><span class="letter-kicker">LETTER</span><label class="letter-sources"><input type="checkbox" checked disabled> Show sources</label></div>
+          <p class="lettertext">I am writing to express my interest in the Team Lead, Enterprise Service Desk role at your company. I have held <span class="letterhl">supervisory and lead roles across service desk and IT service delivery environments</span>, and <span class="letterhl">led multiple major and high impact incident bridges as a Major Incident Coordinator</span>. I welcome the opportunity to discuss how my experience aligns with the needs of this role.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11 --><div class="scene" data-title="Prepare for the interview" data-url="rolescout-postaratrend.lovable.app/matches/f4c1/pack">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 13</div><span class="tier-tag paid">Paid</span></div>
+        <h2>Prepare, grounded in your real gaps</h2>
+        <p class="sub">Interview prep is built from your actual coverage gaps for that specific role, not a generic question bank. And you can practice out loud, checked the same way as everything else.</p>
+        <div class="frame">
+          <div class="prep-tabs">
+            <div class="prep-tab">Questions</div>
+            <div class="prep-tab">Talking points</div>
+            <div class="prep-tab">Honest gaps</div>
+            <div class="prep-tab">Ask them</div>
+            <div class="prep-tab active">Practise</div>
+            <div class="prep-tab">Mock</div>
+            <div class="prep-tab">Work plan</div>
+          </div>
+          <div class="qcard">"Tell me about a major incident you led end to end."<small>Supported by your attested resume.</small></div>
+          <div class="qcard gapq">"How comfortable are you administering JAMF day to day?"<small>You cannot claim this yet. Nothing on your attested resume supports it.</small></div>
+
+          <div class="practicelegend"><span class="legend-teal">Teal</span> marks a sentence that stands on your attested resume. <span class="legend-amber">Amber</span> marks one that does not. Plain sentences carry no claim.</div>
+          <div class="practicesample">In my last role I <span class="sample-teal">led the team through several major incident bridges as the coordinator</span>, and I also <span class="sample-amber">managed a full cloud migration project end to end</span>, which is not something I can back up yet.</div>
+
+          <div class="mocklabel">How do you want to answer?</div>
+          <div class="optionrow">
+            <div class="optioncard selected"><b>Typed</b><span>Write each answer in the box.</span></div>
+            <div class="optioncard"><b>Spoken</b><span>Speak each answer and review the transcript.</span></div>
+          </div>
+          <div class="mocklabel">Which questions?</div>
+          <div class="optionrow">
+            <div class="optionpill selected">All 13 questions in order</div>
+            <div class="optionpill">Five at random</div>
+          </div>
+          <div class="mockreassure">Each answer is checked against your attested resume as you go. Nothing is written for you.</div>
+          <div class="mockbtns"><div class="mockbtn dark">Begin</div><div class="mockbtn outline">Not now</div></div>
+
+          <div class="practicedivider">
+            <div class="qdots">
+              <i class="done"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+              <span>Question 1 of 13</span>
+            </div>
+            <div class="practicequestion">Tell us about your experience leading and managing IT operations teams across multiple locations or sites.</div>
+            <div class="practicetimer">0:55</div>
+            <div class="practicetimer-cap">A common guide for a spoken answer is one to two minutes.</div>
+            <div class="speakbtn">Speak your answer</div>
+            <div class="transcriptbox">Your words appear here as you speak.</div>
+            <div class="wordcount">0 words</div>
+            <div class="speechcaveat">Read the transcript before you continue. Speech recognition can mishear names and numbers.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12 --><div class="scene" data-title="Track it through to offer" data-url="rolescout-postaratrend.lovable.app/applications">
+      <div class="scene-inner">
+        <div class="kicker-row"><div class="kicker">STAGE 14</div><span class="tier-tag free">Free forever</span></div>
+        <h2>Track it through to offer</h2>
+        <p class="sub">One board for every application, applied through to offer, so nothing is managed across a dozen browser tabs.</p>
+        <div class="kanban">
+          <div class="kcol"><h4>Applied</h4><div class="kcard">Service Delivery Mgr</div><div class="kcard">Major Incident Lead</div></div>
+          <div class="kcol"><h4>Interview</h4><div class="kcard">IT Service Manager</div></div>
+          <div class="kcol"><h4>Offer</h4></div>
+          <div class="kcol"><h4>Closed</h4></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene endcard" data-title="That's Role Scout" id="endcard-scene">
+      <div class="scene-inner">
+        <div class="endcard-mark">RS</div>
+        <h2>The resume an employer can actually trust.</h2>
+        <p class="sub" style="margin:0 auto 6px;text-align:center">Verified at every single step. Never inventing anything along the way.</p>
+        <div class="tierkey">
+          <span><span class="tier-tag free">Free forever</span> upload, attest, match, coverage, tracking</span>
+          <span><span class="tier-tag paid">Paid</span> tailor, export, verify link, reference, cover letter, prep</span>
+        </div>
+        <button class="replay-btn" id="replayBtn">Watch it again</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sampletag">Sample data, not a real seeker</div>
+  <div class="caption" id="caption"></div>
+
+  <div class="controls">
+    <button class="ctrl-btn" id="backBtn">&larr; Back</button>
+    <label class="captiontoggle"><input type="checkbox" id="capToggle" checked> Captions</label>
+    <button class="ctrl-btn ctrl-main" id="nextBtn">Next &rarr;</button>
+  </div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+(function(){
+  var scenes = Array.prototype.slice.call(document.querySelectorAll('.scene'));
+  var contentScenes = scenes.filter(function(s){ return !s.classList.contains('endcard'); });
+  var N = scenes.length;
+  var CONTENT_N = contentScenes.length;
+  var ENDCARD_INDEX = scenes.indexOf(document.getElementById('endcard-scene'));
+  var progressWrap = document.getElementById('progress');
+  var stagecount = document.getElementById('stagecount');
+  var caption = document.getElementById('caption');
+  var capToggle = document.getElementById('capToggle');
+  var nextBtn = document.getElementById('nextBtn');
+  var backBtn = document.getElementById('backBtn');
+  var current = -1;
+  var speaking = false;
+  var utter = null;
+
+  var narration = [
+    "This is Role Scout, end to end. Fourteen stages, from the first screen a seeker sees to a tracked, verified application. Every screen you are about to see reflects how the product actually works today, not a mockup.",
+    "This is where it starts. The same list of claims sits on the sign up page itself, nothing softer here than what the product actually promises: your resume kept true, real roles scored honestly, nothing invented, and even a former manager able to confirm a line directly.",
+    "If you do not have a resume yet, that is not a dead end. A one time payment, no account required, gets you a short form asking for real facts, your employer, dates, and achievements. Role Scout writes a resume from that alone, checks it against what you actually typed, and emails it to you as a PDF.",
+    "For everyone else, it starts with a free resume check. No account, no cost. Upload a PDF, a Word file, or a LinkedIn export, and Role Scout tells you honestly whether it can read it. This is just the door in.",
+    "Creating an account is free, and it stays free. Role Scout reads your resume line by line and asks you to confirm each one is true. This attested resume becomes the single source everything downstream is built from.",
+    "From there, Role Scout continuously scans employer career pages and public job boards in your country, and for Canadian roles, tags them with a NOC code and an Express Entry level badge where it qualifies. If you have already found something yourself, on LinkedIn, on Indeed, anywhere, the 'Tailor for a posting you found' button brings it in, scored the same as every other match. Role Scout does not scrape those sites on its own, but nothing stops you from bringing what you found there.",
+    "Before anything is written for a specific role, you see a coverage report. Strengths that are already supported by your attested resume, and gaps, stated plainly. Nothing is glossed over here.",
+    "Now the tailoring happens. An AI drafts a version aimed at the posting. An independent verifier then checks every rewritten line against your attested resume. Where nothing supports a claim, it is refused, not invented. That refusal, right there, is the whole difference between Role Scout and everything else in this market.",
+    "For a role you are serious about, Role Scout also builds a thirty, sixty, ninety day plan, grounded in that posting and your attested resume, so you can walk into an interview already thinking like the person doing the job.",
+    "Once a tailored version is approved, you can export it as a clean, ATS safe PDF or Word file, in whichever layout fits your experience best.",
+    "Here is the other thing nobody else in this space has. You can share a verification link. An employer opens it and sees, for themselves, that the resume was checked line by line. Not your word for it. You even see when they've looked at it.",
+    "And trust does not have to stop at your own word. Any line on your resume can be sent to a former manager or colleague, who confirms that one line directly, without ever seeing the rest of your resume. Some lines are still awaiting a response, some already have a name behind them. That is a second, independent voice behind your claim, not just Role Scout's.",
+    "The same discipline carries into the cover letter. It opens with the same verified banner as everything else, the traceable phrases are underlined right inside the letter itself, and you can mark it applied straight from that page without leaving to find your tracker.",
+    "Interview preparation is grounded in your actual coverage gaps for that specific role, not a generic list of questions anyone could get anywhere. It is actually a whole hub, questions, talking points, honest gaps, even questions to ask them. In practice mode you answer in your own words and Role Scout marks each sentence as you go, teal where it stands on your attested resume, amber where it does not. And the mock interview runs that same check across a full session, typed or spoken, staying honest about its own limits too: it tells you plainly that speech recognition can mishear names and numbers, so you read the transcript before moving on.",
+    "And finally, everything is tracked on one board, from applied through to offer, so nothing gets lost across a dozen open tabs. That's Role Scout, end to end. Verified at every single step, and never inventing anything along the way."
+  ];
+
+  contentScenes.forEach(function(_, idx){
+    var bar = document.createElement('i');
+    bar.innerHTML = '<b></b>';
+    bar.setAttribute('title', contentScenes[idx].getAttribute('data-title'));
+    bar.addEventListener('click', function(){ goTo(idx, true); });
+    progressWrap.appendChild(bar);
+  });
+  var bars = progressWrap.children;
+
+  function pickVoice(){
+    var voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+    var preferred = voices.find(function(v){ return /en-(US|GB|CA)/i.test(v.lang) && /female|Google US English|Samantha|Victoria|Zira/i.test(v.name); });
+    return preferred || voices.find(function(v){ return /en-(US|GB|CA)/i.test(v.lang); }) || voices[0];
+  }
+
+  function speak(text, onend){
+    if (!('speechSynthesis' in window)) { onend(); return; }
+    window.speechSynthesis.cancel();
+    utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 0.98;
+    utter.pitch = 1;
+    var v = pickVoice();
+    if (v) utter.voice = v;
+    utter.onend = onend;
+    utter.onerror = onend;
+    speaking = true;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function setProgress(i, animate){
+    for (var k=0;k<bars.length;k++){
+      var b = bars[k].querySelector('b');
+      bars[k].classList.toggle('done', k < i);
+      if (k === i && animate){
+        b.style.transition = 'none';
+        b.style.width = '0%';
+        void bars[k].offsetWidth;
+        b.style.transition = 'width linear';
+      } else if (k !== i) {
+        b.style.transition = 'none';
+        b.style.width = k < i ? '100%' : '0%';
+      }
+    }
+  }
+
+  function triggerSceneEffects(i){
+    if (i === 2) setTimeout(function(){ var e=document.getElementById('s1badge'); if(e) e.classList.add('show'); }, 1200);
+    if (i === 3) setTimeout(function(){
+      var d=document.getElementById('s2dot');
+      if(d){ d.classList.add('on'); }
+    }, 1400);
+    if (i === 4){
+      var l=document.getElementById('s4loading'), r=document.getElementById('s4result');
+      setTimeout(function(){
+        if(l) l.style.display='none';
+        if(r) r.classList.add('show');
+      }, 900);
+    }
+    if (i === 6){
+      var l1=document.getElementById('s6line1'), v1=document.getElementById('s6v1');
+      var l2=document.getElementById('s6line2'), v2=document.getElementById('s6v2');
+      var refuse=document.getElementById('s5refuse');
+      var approved=document.getElementById('s6approvedstep');
+      var verifying=document.getElementById('s6verifystep');
+      var statband=document.getElementById('s6statband');
+      setTimeout(function(){ if(l1) l1.classList.add('show'); }, 500);
+      setTimeout(function(){ if(v1) v1.classList.add('show'); }, 1100);
+      setTimeout(function(){ if(l2) l2.classList.add('show'); }, 1700);
+      setTimeout(function(){ if(v2) v2.classList.add('show'); }, 2300);
+      setTimeout(function(){ if(refuse) refuse.classList.add('show'); }, 2900);
+      setTimeout(function(){
+        if(verifying){ verifying.classList.remove('active'); verifying.classList.add('done'); }
+        if(approved) approved.classList.add('done');
+        if(statband) statband.classList.add('show');
+      }, 3800);
+    }
+    if (i === 7){
+      var l7=document.getElementById('s7loading'), r7=document.getElementById('s7result');
+      setTimeout(function(){
+        if(l7) l7.style.display='none';
+        if(r7) r7.classList.add('show');
+      }, 800);
+    }
+  }
+
+  // Restores every one-time reveal animation to its untriggered starting
+  // state, so pressing "Watch it again" replays cleanly instead of showing
+  // everything already finished from the previous run.
+  function resetAnimationState(){
+    var ids = ['s1badge','s4result','s6line1','s6v1','s6line2','s6v2','s5refuse','s6approvedstep','s6statband','s7result'];
+    ids.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.classList.remove('show','done');
+    });
+    var dot = document.getElementById('s2dot');
+    if (dot) dot.classList.remove('on');
+    var verifying = document.getElementById('s6verifystep');
+    if (verifying) { verifying.classList.remove('done'); verifying.classList.add('active'); }
+    var l4 = document.getElementById('s4loading'); if (l4) l4.style.display = '';
+    var l7 = document.getElementById('s7loading'); if (l7) l7.style.display = '';
+  }
+
+  function showScene(i){
+    scenes.forEach(function(s, idx){ s.classList.toggle('active', idx === i); });
+  }
+
+  function goTo(i, autoplay){
+    if (i < 0 || i >= N) return;
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    var previous = current;
+    current = i;
+
+    // Fade the outgoing scene fully to transparent BEFORE the incoming one
+    // starts fading in. A true simultaneous crossfade briefly shows both
+    // scenes at once, which reads as overlapping, illegible text, exactly
+    // the bug this deck already had once. Sequential fades cannot do that:
+    // at no point is more than one scene above zero opacity.
+    if (previous >= 0 && previous !== i){
+      scenes[previous].classList.remove('active');
+      setTimeout(function(){ showScene(i); }, 220);
+    } else {
+      showScene(i);
+    }
+
+    var isEndcard = (i === ENDCARD_INDEX);
+    backBtn.disabled = (i === 0);
+    nextBtn.style.visibility = isEndcard ? 'hidden' : 'visible';
+
+    if (isEndcard){
+      caption.textContent = '';
+      triggerSceneEffects(i);
+      return;
+    }
+
+    stagecount.textContent = 'Stage ' + (i+1) + ' / ' + CONTENT_N;
+    setProgress(i, true);
+    caption.textContent = capToggle.checked ? narration[i+1] : '';
+    triggerSceneEffects(i);
+
+    var urlEl = document.getElementById('browserurl-text');
+    if (urlEl) urlEl.textContent = scenes[i].getAttribute('data-url') || 'rolescout-postaratrend.lovable.app';
+
+    var text = i === 0 ? narration[0] + ' ' + narration[1] : narration[i+1];
+    if (autoplay){
+      var estMs = Math.max(4000, text.split(' ').length * 360);
+      var startedAt = Date.now();
+      var advanced = false;
+      var doAdvance = function(){
+        if (advanced) return;
+        advanced = true;
+        speaking = false;
+        setTimeout(function(){ if (current === i) goTo(i+1, true); }, 500);
+      };
+      // Floor: never advance faster than the estimated reading time, even if
+      // the browser's speech engine errors or finishes instantly (no voice
+      // installed, synthesis blocked, etc). This keeps the deck watchable
+      // and in sync with the on screen captions no matter what.
+      speak(text, function(){
+        var elapsed = Date.now() - startedAt;
+        var remaining = Math.max(0, estMs - elapsed);
+        setTimeout(doAdvance, remaining);
+      });
+      bars[i].querySelector('b').style.transitionDuration = estMs + 'ms';
+      requestAnimationFrame(function(){ bars[i].querySelector('b').style.width = '100%'; });
+    }
+  }
+
+  nextBtn.addEventListener('click', function(){
+    goTo(Math.min(current+1, N-1), true);
+  });
+  backBtn.addEventListener('click', function(){
+    goTo(Math.max(current-1, 0), true);
+  });
+  capToggle.addEventListener('change', function(){
+    if (current === ENDCARD_INDEX) return;
+    caption.textContent = capToggle.checked && current >= 0 ? narration[current === 0 ? 1 : current+1] : '';
+  });
+
+  document.getElementById('replayBtn').addEventListener('click', function(){
+    resetAnimationState();
+    goTo(0, true);
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (document.getElementById('start-overlay').style.display === 'none'){
+      if (e.key === 'ArrowRight') { nextBtn.click(); }
+      if (e.key === 'ArrowLeft') { backBtn.click(); }
+    }
+  });
+
+  document.getElementById('start-btn').addEventListener('click', function(){
+    document.getElementById('start-overlay').style.display = 'none';
+    if (window.speechSynthesis) window.speechSynthesis.getVoices();
+    goTo(0, true);
+  });
+
+  if ('speechSynthesis' in window){
+    window.speechSynthesis.onvoiceschanged = function(){};
+  }
+})();
+</script>
+
+</body>
+</html>
