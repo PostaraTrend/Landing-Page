@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TraceScout: Find the job. Prove the resume.</title>
+<meta name="description" content="TraceScout matches your resume to real open roles and tailors it without inventing a word. Every line traces back to what you attested. Nothing invented, ever.">
+<meta property="og:title" content="TraceScout: Find the job. Prove the resume.">
+<meta property="og:description" content="The honest way from resume to interview room.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tracescout.ca/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%231f2a44%22/><text x=%2232%22 y=%2242%22 font-family=%22Arial%2C sans-serif%22 font-weight=%22700%22 font-size=%2224%22 fill=%22%23fafaf7%22 text-anchor=%22middle%22>TS</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1F2A44;
+    --navy-dark: #16203A;
+    --teal: #1D7A6B;
+    --teal-light: #5FBFAE;
+    --amber: #C98A2B;
+    --amber-bg: #3A2E14;
+    --white: #FFFFFF;
+    --grey: #6B7690;
+    --grey-light: #9AA5B8;
+    --card: #F3F5F8;
+    --card-dark: #27334F;
+    --border: #E2E6ED;
+    --max: 1040px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Inter', Arial, sans-serif;
+    color: var(--navy);
+    background: var(--white);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; text-decoration: none; color: var(--navy); }
+  .brand-mark {
+    width: 32px; height: 32px; border-radius: 8px; background: var(--navy);
+    color: var(--white); font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; letter-spacing: 0.5px;
+  }
+  .nav-links { display: none; align-items: center; gap: 28px; font-size: 15px; font-weight: 500; }
+  .nav-links a { text-decoration: none; color: var(--navy); }
+  .nav-links a:hover { color: var(--teal); }
+  @media (min-width: 720px) { .nav-links { display: flex; } }
+  .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 8px;
+    font-weight: 600; font-size: 15px; text-decoration: none; border: none; cursor: pointer;
+  }
+  .btn-primary { background: var(--navy); color: var(--white); }
+  .btn-primary:hover { background: var(--navy-dark); }
+  .btn-ghost { background: transparent; color: var(--navy); border: 1px solid var(--border); }
+  .btn-ghost:hover { border-color: var(--navy); }
+  .nav-cta { display: inline-block; padding: 10px 16px; font-size: 14px; }
+  @media (min-width: 720px) { .nav-cta { padding: 12px 22px; font-size: 15px; } }
+
+  /* Hero */
+  .hero { padding: 72px 0 56px; }
+  .hero-eyebrow { color: var(--teal); font-weight: 600; font-size: 15px; margin: 0 0 14px; }
+  .hero h1 {
+    font-size: clamp(34px, 5vw, 54px); font-weight: 800; line-height: 1.08;
+    margin: 0 0 18px; letter-spacing: -0.5px; max-width: 15ch;
+  }
+  .hero p.lede {
+    font-size: 19px; color: var(--grey); max-width: 62ch; margin: 0 0 30px;
+  }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 18px; }
+  .hero-scope { font-size: 14px; color: var(--grey-light); }
+  .hero-inner { display: grid; gap: 40px; grid-template-columns: 1fr; align-items: start; }
+  @media (min-width: 900px) { .hero-inner { grid-template-columns: 1.1fr 0.9fr; } }
+  .hero-copy { min-width: 0; }
+  .trust-card {
+    background: var(--navy-dark); border-radius: 14px; padding: 30px 28px;
+    color: var(--white);
+  }
+  .trust-card h3 { font-size: 15px; font-weight: 700; margin: 0 0 18px; color: var(--teal-light); }
+  .trust-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .trust-list li { display: flex; gap: 10px; font-size: 14px; line-height: 1.5; }
+  .trust-check {
+    flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--teal);
+    color: var(--white); font-size: 12px; display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+
+  /* Problem */
+  .section { padding: 56px 0; }
+  .section-alt { background: var(--card); }
+  .section h2 {
+    font-size: clamp(24px, 3vw, 32px); font-weight: 800; margin: 0 0 16px; max-width: 22ch;
+  }
+  .section p.intro { font-size: 17px; color: var(--grey); max-width: 68ch; margin: 0 0 32px; }
+  .problem-list { display: grid; gap: 16px; max-width: 720px; }
+  .problem-list li { list-style: none; padding: 18px 20px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; font-size: 16px; }
+  .problem-note { margin-top: 20px; font-size: 14px; color: var(--grey-light); font-style: italic; }
+
+  /* Steps */
+  .steps { display: grid; gap: 20px; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .steps { grid-template-columns: repeat(5, 1fr); } }
+  .step { padding: 22px 18px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; }
+  .step-num { color: var(--teal); font-weight: 800; font-size: 20px; margin-bottom: 10px; }
+  .step h3 { font-size: 16px; margin: 0 0 8px; }
+  .step p { font-size: 14px; color: var(--grey); margin: 0; }
+
+  /* Moat */
+  .moat-grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .moat-grid { grid-template-columns: 1fr 1fr; } }
+  .moat-item { padding: 24px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; }
+  .moat-item h3 { font-size: 17px; margin: 0 0 8px; color: var(--teal); }
+  .moat-item p { font-size: 15px; color: var(--grey); margin: 0; }
+
+  /* Mock cards */
+  .mock-frame {
+    background: var(--navy-dark); border-radius: 14px; padding: 32px;
+    color: var(--white); max-width: 640px;
+  }
+  .mock-note { font-size: 13px; color: var(--grey-light); font-style: italic; margin-bottom: 18px; }
+  .mock-label { font-size: 13px; color: var(--grey-light); margin-bottom: 6px; }
+  .mock-req { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+  .refusal-box { background: var(--amber-bg); border: 1px solid var(--amber); border-radius: 8px; padding: 18px 20px; }
+  .refusal-box strong { color: var(--amber); display: block; margin-bottom: 8px; font-size: 15px; }
+  .refusal-box span { font-size: 14px; color: var(--white); }
+  .verified-pill {
+    display: inline-block; background: #153A33; color: var(--teal-light);
+    padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-bottom: 16px;
+  }
+  .verified-stats { font-size: 14px; color: var(--grey-light); margin-bottom: 8px; }
+
+  /* Honest status */
+  .status-card {
+    background: var(--card-dark); color: var(--white); border-radius: 14px;
+    padding: 36px; max-width: 780px;
+  }
+  .status-card p { font-size: 16px; margin: 0 0 16px; }
+  .status-card p:last-child { margin-bottom: 0; color: var(--teal-light); font-style: italic; }
+
+  /* FAQ */
+  .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+  .faq-item h3 { font-size: 16px; margin: 0 0 8px; }
+  .faq-item p { font-size: 15px; color: var(--grey); margin: 0; }
+
+  /* Closing */
+  .closing { text-align: left; padding: 64px 0; }
+  .closing h2 { max-width: 20ch; }
+  .closing .hero-ctas { margin-top: 22px; }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--border); padding: 36px 0; }
+  .footer-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 14px; color: var(--grey-light); }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { text-decoration: none; }
+  .footer-links a:hover { color: var(--teal); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <span class="brand-mark">TS</span>
+      TraceScout
+    </a>
+    <nav class="nav-links">
+      <a href="#how-it-works">How it works</a>
+      <a href="#why">Why it works</a>
+      <a href="#faq">Questions</a>
+    </nav>
+    <a class="btn btn-primary nav-cta" href="https://tracescout.app/auth">Get started</a>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <p class="hero-eyebrow">A PostaraTrend product</p>
+      <h1>Find the job. Prove the resume.</h1>
+      <p class="lede">TraceScout matches the resume you upload to real, currently open roles, then tailors it for a specific posting without inventing a word. Every line traces back to something you confirmed yourself. When there is nothing to back a claim, TraceScout refuses to invent one, and records the refusal instead.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="https://tracescout.app/auth">Get started free</a>
+        <a class="btn btn-ghost" href="#how-it-works">See how it works</a>
+      </div>
+      <p class="hero-scope">TraceScout serves job seekers in many countries. You choose your country of search.</p>
+    </div>
+    <div class="trust-card">
+      <h3>What TraceScout will not do</h3>
+      <ul class="trust-list">
+        <li><span class="trust-check">&#10003;</span>Invent a skill, a title, or a year of experience you did not attest to.</li>
+        <li><span class="trust-check">&#10003;</span>Show an employer a claim with no line behind it.</li>
+        <li><span class="trust-check">&#10003;</span>Share your resume with anyone unless you turn sharing on yourself.</li>
+        <li><span class="trust-check">&#10003;</span>Hide a refusal to make the tailored version look stronger than it is.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <h2>The resume pile has stopped working, for everyone</h2>
+    <p class="intro">Employers are fighting a flood of AI written applications, most saying whatever the posting wants to hear. Ghosting is common on both sides. Job seekers respond by inflating claims to compete, which makes every resume harder to believe, including the honest ones.</p>
+    <ul class="problem-list">
+      <li>An employer reading your resume has no way to tell what is true and what is optimized.</li>
+      <li>A generic AI resume builder makes this worse, not better, since it can write a confident claim for anything.</li>
+      <li>Nobody wins a race to sound the most impressive. Somebody has to be verifiably believable instead.</li>
+    </ul>
+    <p class="problem-note">No invented statistics here by design. These are widely reported, qualitative trends, not numbers we made up to sound impressive.</p>
+  </div>
+</section>
+
+<section class="section" id="how-it-works">
+  <div class="wrap">
+    <h2>Five steps, from upload to a resume an employer can check</h2>
+    <p class="intro">This is the whole process. Nothing happens to your resume that you have not confirmed yourself.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Upload</h3>
+        <p>Bring your resume as it is. Nothing is rewritten yet.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Attest</h3>
+        <p>Confirm, line by line, that each claim is true. This is the foundation everything else stands on.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Match</h3>
+        <p>TraceScout finds real, currently open roles from employer career pages and public job boards.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Tailor</h3>
+        <p>A version is built for a specific posting, using only what you attested to. Nothing invented, ever.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <h3>Verify</h3>
+        <p>A shareable link shows the employer exactly which lines are backed, with a banner they can trust.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="why">
+  <div class="wrap">
+    <h2>Why this is not something a competitor can copy overnight</h2>
+    <p class="intro">Most resume tools compete on how confidently they can write a sentence. TraceScout competes on whether the sentence is true, and shows its work.</p>
+    <div class="moat-grid">
+      <div class="moat-item">
+        <h3>Attestation</h3>
+        <p>Every claim is confirmed by you before it is ever used, not assumed true by a parser reading a PDF.</p>
+      </div>
+      <div class="moat-item">
+        <h3>Line provenance</h3>
+        <p>Each line of a tailored resume traces back to an attested source. An employer can see exactly where a claim came from.</p>
+      </div>
+      <div class="moat-item">
+        <h3>The refusal ledger</h3>
+        <p>When there is no attested basis for a claim a posting wants, TraceScout refuses to invent one, and records the refusal rather than hiding it.</p>
+      </div>
+      <div class="moat-item">
+        <h3>Independent verification</h3>
+        <p>A link an employer can open on their own, outside your control, showing the same honest picture every time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>What a refusal actually looks like</h2>
+    <p class="intro">Fictional sample data, shown for illustration only.</p>
+    <div class="mock-frame">
+      <p class="mock-label">Posting requirement</p>
+      <p class="mock-req">5+ years leading a ServiceNow implementation</p>
+      <div class="refusal-box">
+        <strong>Refused. Not in the attested resume.</strong>
+        <span>The attested resume shows 2 years of ServiceNow administration, not implementation leadership. TraceScout will not stretch that claim to fit the posting. This refusal is recorded rather than hidden.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <h2>What the employer sees on the other end</h2>
+    <p class="intro">Fictional sample data, shown for illustration only.</p>
+    <div class="mock-frame">
+      <span class="verified-pill">Verified by TraceScout</span>
+      <p class="verified-stats">6 / 6 lines backed &nbsp;·&nbsp; 1 refusal recorded &nbsp;·&nbsp; 0 inventions</p>
+      <p class="verified-stats">Viewed 3 times since sharing</p>
+      <p style="font-size:15px; color:var(--white); margin-top:16px;">The employer can click through every line to see its source, with no ability to edit what they are shown. You see when the link has been opened, the signal against being ghosted that a plain PDF cannot offer.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Where things stand, honestly</h2>
+    <div class="status-card">
+      <p>TraceScout is newly launched. We are not showing you user counts, because we will not invent numbers to look bigger than we are.</p>
+      <p>The live job posting pool is still growing as more sources come online, so matches may be limited right now. That is a fact about where we are, not a flaw we are hiding.</p>
+      <p>The same discipline that keeps a resume honest applies to how we talk about our own product.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="faq">
+  <div class="wrap">
+    <h2>Fair questions</h2>
+    <div class="faq-item">
+      <h3>Does TraceScout verify that my career facts are true?</h3>
+      <p>No. Verification here means provenance, showing that a claim traces back to something you attested, not an independent check on whether the underlying fact itself is true. You own the truth of your own attestation.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What happens if a posting wants something I have not done?</h3>
+      <p>TraceScout tells you honestly, and will not invent experience to close the gap. The refusal is recorded rather than papered over.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Is my resume shared with anyone without my say?</h3>
+      <p>No. A verification link is only created and shared when you choose to share it, and you can disable it at any time.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Where is my resume stored?</h3>
+      <p>In Canada. Data residency stays true regardless of which country you are searching in.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What does TraceScout cost?</h3>
+      <p>Free during launch. Any future pricing will be published plainly, not buried in a checkout page.</p>
+    </div>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="wrap">
+    <h2>Bring the resume you actually mean, and let it prove itself</h2>
+    <p class="intro">No card required to start. No invented claims, ever.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="https://tracescout.app/auth">Get started free</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>TraceScout, a PostaraTrend product. Built in Calgary, made for job seekers everywhere.</span>
+    <span class="footer-links">
+      <a href="https://postaratrend.ca">postaratrend.ca</a>
+      <a href="https://tracescout.app/auth">Get started</a>
+    </span>
+  </div>
+</footer>
+
+</body>
+</html>
