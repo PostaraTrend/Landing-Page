@@ -448,9 +448,11 @@
   .practicesample{ border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:12.5px; line-height:1.7; margin-bottom:14px }
   .sample-teal{ color:var(--teal); text-decoration:underline; text-decoration-color:#9ED4C4 }
   .sample-amber{ color:var(--amber); text-decoration:underline; text-decoration-color:#E8C583 }
-  .qdots{ display:flex; align-items:center; gap:4px; margin-bottom:14px }
-  .qdots i{ width:7px;height:7px;border-radius:50%; background:var(--line); display:block }
+  .qdots{ display:flex; align-items:center; gap:4px; margin-bottom:14px; flex-wrap:wrap }
+  .qdots i{ width:7px;height:7px;border-radius:50%; background:var(--line); display:block; cursor:pointer; transition:all .2s ease }
   .qdots i.done{ background:var(--teal) }
+  .qdots i.current{ width:9px; height:9px; background:var(--navy) }
+  .qdots i:hover{ background:var(--teal-l) }
   .qdots span{ font-size:11.5px; color:var(--mut); margin-left:8px }
   .practicequestion{ font-size:16px; font-weight:700; color:var(--ink); line-height:1.35; margin-bottom:14px }
   .practicetimer{ font-size:26px; font-weight:800; color:var(--line); letter-spacing:-.01em }
@@ -878,11 +880,8 @@
           <div class="mockbtns"><div class="mockbtn dark">Begin</div><div class="mockbtn outline">Not now</div></div>
 
           <div class="practicedivider">
-            <div class="qdots">
-              <i class="done"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-              <span>Question 1 of 13</span>
-            </div>
-            <div class="practicequestion">Tell us about your experience leading and managing IT operations teams across multiple locations or sites.</div>
+            <div class="qdots" id="mockDots"></div>
+            <div class="practicequestion" id="mockQuestionText">Tell us about your experience leading and managing IT operations teams across multiple locations or sites.</div>
             <div class="practicetimer">0:55</div>
             <div class="practicetimer-cap">A common guide for a spoken answer is one to two minutes.</div>
             <div class="speakbtn">Speak your answer</div>
@@ -890,9 +889,9 @@
             <div class="wordcount">0 words</div>
             <div class="speechcaveat">Read the transcript before you continue. Speech recognition can mishear names and numbers.</div>
             <div class="practicenav">
-              <div class="mockbtn dark" style="padding:9px 16px">Next question</div>
-              <div class="mockbtn outline" style="padding:9px 16px">Skip this one</div>
-              <div class="mockbtn outline" style="padding:9px 16px;opacity:.5">Finish</div>
+              <div class="mockbtn dark" style="padding:9px 16px" id="mockNextBtn">Next question</div>
+              <div class="mockbtn outline" style="padding:9px 16px" id="mockSkipBtn">Skip this one</div>
+              <div class="mockbtn outline" style="padding:9px 16px" id="mockFinishBtn">Finish</div>
               <a class="endmocklink">End mock interview</a>
             </div>
           </div>
@@ -1064,6 +1063,57 @@
     }
   }
 
+  // Mock interview session: real forward and backward navigation, both via
+  // the Next/Skip/Finish controls and by clicking any dot directly.
+  var mockQuestions = [
+    "Tell us about your experience leading and managing IT operations teams across multiple locations or sites.",
+    "Walk us through a major incident you owned from detection to resolution.",
+    "How do you decide when a problem needs to become a formal problem management case?",
+    "Describe a time you had to bring a difficult stakeholder onside during an escalation.",
+    "What would your first 30 days look like in this role?"
+  ];
+  var mockTotal = 13;
+  var mockIndex = 0;
+
+  function renderMockDots(){
+    var wrap = document.getElementById('mockDots');
+    if (!wrap) return;
+    var html = '';
+    for (var k = 0; k < mockTotal; k++){
+      var cls = k < mockIndex ? 'done' : (k === mockIndex ? 'current' : '');
+      html += '<i class="' + cls + '" data-mi="' + k + '"></i>';
+    }
+    html += '<span>Question ' + (mockIndex + 1) + ' of ' + mockTotal + '</span>';
+    wrap.innerHTML = html;
+    wrap.querySelectorAll('i').forEach(function(dot){
+      dot.addEventListener('click', function(){
+        goToMockQuestion(parseInt(dot.getAttribute('data-mi'), 10));
+      });
+    });
+  }
+
+  function goToMockQuestion(idx){
+    mockIndex = Math.max(0, Math.min(mockTotal - 1, idx));
+    var qEl = document.getElementById('mockQuestionText');
+    if (qEl) qEl.textContent = mockQuestions[mockIndex % mockQuestions.length];
+    // A fresh question means a fresh answer: reset the transcript and word count.
+    var box = document.querySelector('.transcriptbox');
+    if (box) box.textContent = 'Your words appear here as you speak.';
+    var wc = document.querySelector('.wordcount');
+    if (wc) wc.textContent = '0 words';
+    renderMockDots();
+  }
+
+  function wireMockControls(){
+    var next = document.getElementById('mockNextBtn');
+    var skip = document.getElementById('mockSkipBtn');
+    var finish = document.getElementById('mockFinishBtn');
+    if (next) next.addEventListener('click', function(){ goToMockQuestion(mockIndex + 1); });
+    if (skip) skip.addEventListener('click', function(){ goToMockQuestion(mockIndex + 1); });
+    if (finish) finish.addEventListener('click', function(){ goToMockQuestion(mockTotal - 1); });
+    renderMockDots();
+  }
+
   // Restores every one-time reveal animation to its untriggered starting
   // state, so pressing "Watch it again" replays cleanly instead of showing
   // everything already finished from the previous run.
@@ -1079,6 +1129,7 @@
     if (verifying) { verifying.classList.remove('done'); verifying.classList.add('active'); }
     var l4 = document.getElementById('s4loading'); if (l4) l4.style.display = '';
     var l7 = document.getElementById('s7loading'); if (l7) l7.style.display = '';
+    goToMockQuestion(0);
   }
 
   function showScene(i){
@@ -1174,6 +1225,8 @@
     if (window.speechSynthesis) window.speechSynthesis.getVoices();
     goTo(0, true);
   });
+
+  wireMockControls();
 
   if ('speechSynthesis' in window){
     window.speechSynthesis.onvoiceschanged = function(){};
