@@ -510,7 +510,7 @@ function filterQuery(){
 
 /* Fetch one page of rows. On the first page (reset) also read the exact total from Content-Range. */
 async function fetchPage(reset){
-  const base = CFG.SUPABASE_URL.replace(//+$/,"");
+  const base = CFG.SUPABASE_URL.replace(/\/+$/,"");
   const url = base + "/rest/v1/postings?select=" + COLS + "&" + filterQuery() +
               "&order=posted_date.desc.nullslast&limit=" + PAGE + "&offset=" + state.offset;
   const headers = { apikey: CFG.SUPABASE_ANON_KEY, Authorization: "Bearer " + CFG.SUPABASE_ANON_KEY };
