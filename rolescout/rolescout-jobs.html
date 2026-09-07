@@ -205,6 +205,17 @@
   .jb-frame iframe{display:block;}
   .jb-note{font-size:12.5px;color:var(--ink-faint);margin:12px 0 0;}
 
+  /* ---------- Indeed outbound panel ---------- */
+  .idx-panel{border-top-color:var(--forest);}
+  .idx-tag{background:var(--amber-soft);color:var(--forest-deep);border-color:var(--line-strong);}
+  .idx-btn{
+    display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:700;color:#fff;
+    background:var(--forest-deep);border:1px solid var(--forest-deep);border-radius:999px;padding:12px 22px;
+    cursor:pointer;transition:background .15s;
+  }
+  .idx-btn:hover{background:var(--forest);}
+  .idx-btn svg{flex:none;}
+
   /* ---------- Footer ---------- */
   footer.site{margin-top:60px;border-top:1px solid var(--line);background:#fff;}
   .foot-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:30px;padding:40px 0 30px;}
@@ -321,6 +332,23 @@
       <p class="jb-note">This search tool is provided by Job Bank and hosted here unmodified. Hosting it does not indicate endorsement or approval from Job Bank or the Government of Canada.</p>
     </div>
   </section>
+
+  <section class="wrap" aria-labelledby="idxTitle">
+    <div class="jb-panel idx-panel">
+      <div class="jb-head">
+        <div>
+          <h2 id="idxTitle">Also search Indeed</h2>
+          <p>Indeed carries postings this page does not. Use the search above to set a title and market, then open the same search on Indeed in a new tab.</p>
+        </div>
+        <span class="jb-tag idx-tag">External site</span>
+      </div>
+      <button class="idx-btn" id="indeedBtn" type="button">
+        Search Indeed for this role
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M7 17L17 7"/><path d="M9 7h8v8"/></svg>
+      </button>
+      <p class="jb-note">This is a plain link to Indeed's public search page, not an embedded search box. TraceScout has no partnership or data sharing arrangement with Indeed, and Indeed does not review or endorse TraceScout.</p>
+    </div>
+  </section>
 </main>
 
 <footer class="site">
@@ -334,7 +362,7 @@
     </div>
     <div>
       <h4>Where these jobs come from</h4>
-      <p class="attrib">Postings are gathered from several sources, including employer career sites and public job boards. Each posting links to its original source, where you can read the full details and apply. The Job Bank search on this page is provided by the Government of Canada and opens results on jobbank.gc.ca.</p>
+      <p class="attrib">Postings are gathered from several sources, including employer career sites and public job boards. Each posting links to its original source, where you can read the full details and apply. The Job Bank search on this page is provided by the Government of Canada and opens results on jobbank.gc.ca. The Indeed button opens a plain search on indeed.com and does not reflect any partnership between TraceScout and Indeed.</p>
     </div>
   </div>
   <div class="wrap legal">
@@ -381,6 +409,21 @@ function sourceMeta(src){
 }
 
 const MARKET_ORDER = ["Canada","USA","UK","Ireland","UAE","Nigeria","Saudi Arabia","Qatar","Kuwait","Oman","Bahrain","Angola","Global"];
+
+/* market token to the matching Indeed country domain. Markets with no Indeed presence
+   (Angola, Global) fall back to the worldwide www.indeed.com search. */
+const INDEED_DOMAIN = {
+  Canada:"ca.indeed.com", USA:"www.indeed.com", UK:"uk.indeed.com", Ireland:"ie.indeed.com",
+  UAE:"ae.indeed.com", Nigeria:"ng.indeed.com", "Saudi Arabia":"sa.indeed.com",
+  Qatar:"qa.indeed.com", Kuwait:"kw.indeed.com", Oman:"om.indeed.com", Bahrain:"bh.indeed.com"
+};
+function indeedUrl(){
+  const domain = INDEED_DOMAIN[state.market] || "www.indeed.com";
+  const params = new URLSearchParams();
+  if(state.q) params.set("q", state.q);
+  const qs = params.toString();
+  return "https://" + domain + "/jobs" + (qs ? "?" + qs : "");
+}
 
 /* Source filter options: friendly label -> the source values it matches.
    Grouped labels cover several ingest sources at once. */
@@ -435,6 +478,8 @@ function bindEvents(){
   els.more.addEventListener("click", loadMore);
   const retryBtn = document.getElementById("retryLiveBtn");
   if(retryBtn) retryBtn.addEventListener("click", retryLive);
+  const indeedBtn = document.getElementById("indeedBtn");
+  if(indeedBtn) indeedBtn.addEventListener("click", ()=>{ readFilters(); window.open(indeedUrl(), "_blank", "noopener"); });
 }
 
 function readFilters(){
@@ -465,7 +510,7 @@ function filterQuery(){
 
 /* Fetch one page of rows. On the first page (reset) also read the exact total from Content-Range. */
 async function fetchPage(reset){
-  const base = CFG.SUPABASE_URL.replace(/\/+$/,"");
+  const base = CFG.SUPABASE_URL.replace(//+$/,"");
   const url = base + "/rest/v1/postings?select=" + COLS + "&" + filterQuery() +
               "&order=posted_date.desc.nullslast&limit=" + PAGE + "&offset=" + state.offset;
   const headers = { apikey: CFG.SUPABASE_ANON_KEY, Authorization: "Bearer " + CFG.SUPABASE_ANON_KEY };
