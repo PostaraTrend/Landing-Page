@@ -493,7 +493,7 @@ function filterQuery(){
   let p = "active=eq.true";
   if(state.market) p += "&country=eq." + encodeURIComponent(state.market);
   if(state.srcIdx !== ""){
-    const vals = SOURCE_FILTERS[+state.srcIdx].vals;
+    const vals = SOURCE_FILTERS[+state.srcIdx].vals=
     p += vals.length === 1
       ? "&source=eq." + encodeURIComponent(vals[0])
       : "&source=in.(" + vals.map(encodeURIComponent).join(",") + ")";
