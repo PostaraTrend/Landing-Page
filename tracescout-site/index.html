@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TraceScout: The right job for your resume.</title>
-<meta name="description" content="TraceScout matches your resume to real open roles and tailors it without inventing a word. Every line traces back to what you attested. Nothing invented, ever.">
-<meta property="og:title" content="TraceScout: The right job for your resume.">
+<title>TraceScout: Hiring and job matching built on evidence.</title>
+<meta name="description" content="TraceScout matches resumes to real jobs for seekers, compares candidates against real requirements for employers, and gives agencies a structured hiring workspace, all without inventing unsupported claims.">
+<meta property="og:title" content="TraceScout: Hiring and job matching built on evidence.">
 <meta property="og:description" content="The honest way from resume to interview room.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://tracescout.ca/">
@@ -60,10 +60,10 @@
     color: var(--white); font-weight: 700; font-size: 13px;
     display: flex; align-items: center; justify-content: center; letter-spacing: 0.5px;
   }
-  .nav-links { display: none; align-items: center; gap: 28px; font-size: 15px; font-weight: 500; }
+  .nav-links { display: none; align-items: center; gap: 24px; font-size: 15px; font-weight: 500; }
   .nav-links a { text-decoration: none; color: var(--navy); }
   .nav-links a:hover { color: var(--teal); }
-  @media (min-width: 720px) { .nav-links { display: flex; } }
+  @media (min-width: 820px) { .nav-links { display: flex; } }
   .btn {
     display: inline-block; padding: 12px 22px; border-radius: 8px;
     font-weight: 600; font-size: 15px; text-decoration: none; border: none; cursor: pointer;
@@ -79,11 +79,14 @@
   .hero { padding: 72px 0 56px; }
   .hero-eyebrow { color: var(--teal); font-weight: 600; font-size: 15px; margin: 0 0 14px; }
   .hero h1 {
-    font-size: clamp(34px, 5vw, 54px); font-weight: 800; line-height: 1.08;
-    margin: 0 0 18px; letter-spacing: -0.5px; max-width: 15ch;
+    font-size: clamp(32px, 4.6vw, 50px); font-weight: 800; line-height: 1.1;
+    margin: 0 0 14px; letter-spacing: -0.5px; max-width: 18ch;
+  }
+  .hero-tagline {
+    font-weight: 700; font-size: 17px; color: var(--teal); margin: 0 0 18px;
   }
   .hero p.lede {
-    font-size: 19px; color: var(--grey); max-width: 62ch; margin: 0 0 30px;
+    font-size: 18px; color: var(--grey); max-width: 62ch; margin: 0 0 30px;
   }
   .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 18px; }
   .hero-scope { font-size: 14px; color: var(--grey-light); }
@@ -103,24 +106,58 @@
     margin-top: 1px;
   }
 
+  /* Ecosystem mini panel (hero side, replaces the old trust-card content there) */
+  .ecosystem-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; }
+  .ecosystem-item { display: flex; gap: 14px; }
+  .ecosystem-mark {
+    flex: none; width: 34px; height: 34px; border-radius: 9px; background: var(--teal);
+    color: var(--white); font-size: 13px; font-weight: 700; letter-spacing: 0.3px;
+    display: flex; align-items: center; justify-content: center; margin-top: 2px;
+  }
+  .ecosystem-item h4 { margin: 0 0 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.4px; color: var(--teal-light); text-transform: uppercase; }
+  .ecosystem-item p { margin: 0; font-size: 14px; color: var(--white); line-height: 1.5; }
+
   /* Problem */
   .section { padding: 56px 0; }
   .section-alt { background: var(--card); }
   .section h2 {
-    font-size: clamp(24px, 3vw, 32px); font-weight: 800; margin: 0 0 16px; max-width: 22ch;
+    font-size: clamp(24px, 3vw, 32px); font-weight: 800; margin: 0 0 16px; max-width: 26ch;
   }
   .section p.intro { font-size: 17px; color: var(--grey); max-width: 68ch; margin: 0 0 32px; }
   .problem-list { display: grid; gap: 16px; max-width: 720px; }
   .problem-list li { list-style: none; padding: 18px 20px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; font-size: 16px; }
   .problem-note { margin-top: 20px; font-size: 14px; color: var(--grey-light); font-style: italic; }
 
-  /* Steps */
+  /* Audience cards (section 3: TraceScout for every side of hiring) */
+  .audience-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
+  @media (min-width: 860px) { .audience-grid { grid-template-columns: repeat(3, 1fr); } }
+  .audience-card {
+    display: flex; flex-direction: column; padding: 28px 26px; background: var(--white);
+    border: 1px solid var(--border); border-radius: 14px;
+  }
+  .audience-card h3 { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--teal); margin: 0 0 12px; }
+  .audience-card h4 { font-size: 19px; font-weight: 800; margin: 0 0 10px; line-height: 1.3; }
+  .audience-card p.audience-copy { font-size: 15px; color: var(--grey); margin: 0 0 18px; }
+  .audience-caps { list-style: none; margin: 0 0 24px; padding: 0; display: grid; gap: 10px; flex: 1; }
+  .audience-caps li { display: flex; gap: 10px; font-size: 14px; color: var(--navy); line-height: 1.5; }
+  .audience-caps li::before { content: ''; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); margin-top: 8px; }
+  .audience-card .btn { align-self: flex-start; }
+
+  /* Steps (existing five-step seeker walkthrough) */
   .steps { display: grid; gap: 20px; grid-template-columns: 1fr; }
   @media (min-width: 720px) { .steps { grid-template-columns: repeat(5, 1fr); } }
   .step { padding: 22px 18px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; }
   .step-num { color: var(--teal); font-weight: 800; font-size: 20px; margin-bottom: 10px; }
   .step h3 { font-size: 16px; margin: 0 0 8px; }
   .step p { font-size: 14px; color: var(--grey); margin: 0; }
+
+  /* Flow (new universal four-step "How TraceScout works") */
+  .flow { display: grid; gap: 20px; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .flow { grid-template-columns: repeat(4, 1fr); } }
+  .flow-step { padding: 22px 18px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; }
+  .flow-num { color: var(--teal); font-weight: 800; font-size: 20px; margin-bottom: 10px; }
+  .flow-step h3 { font-size: 16px; margin: 0 0 8px; }
+  .flow-step p { font-size: 14px; color: var(--grey); margin: 0; }
 
   /* Moat */
   .moat-grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
@@ -154,6 +191,15 @@
   .status-card p { font-size: 16px; margin: 0 0 16px; }
   .status-card p:last-child { margin-bottom: 0; color: var(--teal-light); font-style: italic; }
 
+  /* Trust section (moved + expanded "what TraceScout will not do") */
+  .trust-section-card {
+    background: var(--navy-dark); color: var(--white); border-radius: 14px;
+    padding: 40px 36px; max-width: 820px;
+  }
+  .trust-section-card .trust-list { gap: 16px; }
+  .trust-section-card .trust-list li { font-size: 15px; }
+  .trust-statement { margin: 26px 0 0; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.14); font-size: 16px; font-weight: 700; color: var(--teal-light); }
+
   /* FAQ */
   .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
   .faq-item h3 { font-size: 16px; margin: 0 0 8px; }
@@ -161,7 +207,7 @@
 
   /* Closing */
   .closing { text-align: left; padding: 64px 0; }
-  .closing h2 { max-width: 20ch; }
+  .closing h2 { max-width: 24ch; }
   .closing .hero-ctas { margin-top: 22px; }
 
   /* Footer */
@@ -182,9 +228,10 @@
     </a>
     <nav class="nav-links">
       <a href="#how-it-works">How it works</a>
-      <a href="#why">Why it works</a>
+      <a href="#for-seekers">For job seekers</a>
+      <a href="#for-hiring-teams">For hiring teams</a>
+      <a href="#for-agencies">For agencies</a>
       <a href="#faq">Questions</a>
-      <a href="https://tracescout.app/agency">For agencies</a>
     </nav>
     <a class="btn btn-primary nav-cta" href="https://tracescout.app/auth">Get started</a>
   </div>
@@ -194,22 +241,122 @@
   <div class="wrap hero-inner">
     <div class="hero-copy">
       <p class="hero-eyebrow">A PostaraTrend product</p>
-      <h1>The right job for your resume.</h1>
-      <p class="lede">TraceScout matches the resume you upload to real, currently open roles, then tailors it for a specific posting without inventing a word. Every line traces back to something you confirmed yourself. When there is nothing to back a claim, TraceScout refuses to invent one, and records the refusal instead.</p>
+      <h1>Hiring and job matching built on evidence.</h1>
+      <p class="hero-tagline">Find the job. Prove the resume.</p>
+      <p class="lede">TraceScout helps job seekers find roles that genuinely match their experience, helps employers evaluate candidates against real job requirements, and gives recruiting agencies a structured workspace for managing candidates and opportunities, all without inventing unsupported claims.</p>
       <div class="hero-ctas">
-        <a class="btn btn-primary" href="https://tracescout.app/auth">Get started free</a>
-        <a class="btn btn-ghost" href="#how-it-works">See how it works</a>
+        <a class="btn btn-primary" href="https://tracescout.app/auth">Get started</a>
+        <a class="btn btn-ghost" href="#for-hiring-teams">For hiring teams</a>
       </div>
       <p class="hero-scope">TraceScout serves job seekers in many countries. You choose your country of search.</p>
     </div>
     <div class="trust-card">
-      <h3>What TraceScout will not do</h3>
-      <ul class="trust-list">
-        <li><span class="trust-check">&#10003;</span>Invent a skill, a title, or a year of experience you did not attest to.</li>
-        <li><span class="trust-check">&#10003;</span>Show an employer a claim with no line behind it.</li>
-        <li><span class="trust-check">&#10003;</span>Share your resume with anyone unless you turn sharing on yourself.</li>
-        <li><span class="trust-check">&#10003;</span>Hide a refusal to make the tailored version look stronger than it is.</li>
+      <h3>The TraceScout ecosystem</h3>
+      <ul class="ecosystem-list">
+        <li class="ecosystem-item">
+          <span class="ecosystem-mark">JS</span>
+          <div>
+            <h4>For job seekers</h4>
+            <p>Find roles that genuinely match your resume.</p>
+          </div>
+        </li>
+        <li class="ecosystem-item">
+          <span class="ecosystem-mark">HT</span>
+          <div>
+            <h4>For hiring teams</h4>
+            <p>Compare candidates with the requirements that matter.</p>
+          </div>
+        </li>
+        <li class="ecosystem-item">
+          <span class="ecosystem-mark">AG</span>
+          <div>
+            <h4>For agencies</h4>
+            <p>Manage jobs, candidates, matching and hiring workflows in one workspace.</p>
+          </div>
+        </li>
       </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <h2>TraceScout for every side of hiring</h2>
+    <div class="audience-grid">
+
+      <div class="audience-card" id="for-seekers">
+        <h3>Job Seekers</h3>
+        <h4>Find roles that fit what you can actually prove.</h4>
+        <p class="audience-copy">Upload your resume, confirm your experience and see how well you match real opportunities.</p>
+        <ul class="audience-caps">
+          <li>Resume-to-job match score</li>
+          <li>Strengths and gaps</li>
+          <li>Evidence-backed resume information</li>
+          <li>Tailored resume support</li>
+          <li>Verification and references</li>
+        </ul>
+        <a class="btn btn-primary" href="https://tracescout.app/auth">Find my match</a>
+      </div>
+
+      <div class="audience-card" id="for-hiring-teams">
+        <h3>Employers &amp; Hiring Teams</h3>
+        <h4>Turn a job requirement into a clearer candidate decision.</h4>
+        <p class="audience-copy">Create a role, invite candidates, compare evidence-backed matches and move candidates through your hiring workflow.</p>
+        <ul class="audience-caps">
+          <li>Create hiring opportunities</li>
+          <li>Invite candidates securely</li>
+          <li>Candidate match scoring</li>
+          <li>Strength and gap analysis</li>
+          <li>Hiring pipeline</li>
+          <li>Candidate status management</li>
+        </ul>
+        <a class="btn btn-primary" href="https://tracescout.app/auth">Start hiring</a>
+      </div>
+
+      <div class="audience-card" id="for-agencies">
+        <h3>Recruitment Agencies</h3>
+        <h4>Run candidate and job matching from one workspace.</h4>
+        <p class="audience-copy">Give recruiters a structured way to manage opportunities, candidates, matching and client hiring activity.</p>
+        <ul class="audience-caps">
+          <li>Agency workspace</li>
+          <li>Job/order management</li>
+          <li>Candidate roster</li>
+          <li>Resume matching</li>
+          <li>Candidate scoring</li>
+          <li>Recruiter collaboration</li>
+          <li>Hiring workflow visibility</li>
+        </ul>
+        <a class="btn btn-primary" href="https://tracescout.app/agency">Explore Agency Portal</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how-it-works">
+  <div class="wrap">
+    <h2>How TraceScout works</h2>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <h3>Bring the opportunity</h3>
+        <p>A seeker finds a role, an employer creates one, or an agency manages a client opportunity.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <h3>Bring the resume</h3>
+        <p>Candidates upload their experience and confirm what is accurate.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <h3>TraceScout compares the evidence</h3>
+        <p>TraceScout evaluates the resume against the actual requirements and explains the match.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <h3>Make a better decision</h3>
+        <p>Candidates understand where they fit. Recruiters and employers see strengths, gaps and evidence before moving forward.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -227,9 +374,9 @@
   </div>
 </section>
 
-<section class="section" id="how-it-works">
+<section class="section" id="seeker-steps">
   <div class="wrap">
-    <h2>Five steps, from upload to a resume an employer can check</h2>
+    <h2>For job seekers: five steps, from upload to a resume an employer can check</h2>
     <p class="intro">This is the whole process. Nothing happens to your resume that you have not confirmed yourself.</p>
     <div class="steps">
       <div class="step">
@@ -307,7 +454,7 @@
     <p class="intro">Fictional sample data, shown for illustration only.</p>
     <div class="mock-frame">
       <span class="verified-pill">Verified by TraceScout</span>
-      <p class="verified-stats">6 / 6 lines backed &nbsp;·&nbsp; 1 refusal recorded &nbsp;·&nbsp; 0 inventions</p>
+      <p class="verified-stats">6 / 6 lines backed &nbsp;&middot;&nbsp; 1 refusal recorded &nbsp;&middot;&nbsp; 0 inventions</p>
       <p class="verified-stats">Viewed 3 times since sharing</p>
       <p style="font-size:15px; color:var(--white); margin-top:16px;">The employer can click through every line to see its source, with no ability to edit what they are shown. You see when the link has been opened, the signal against being ghosted that a plain PDF cannot offer.</p>
     </div>
@@ -321,6 +468,21 @@
       <p>TraceScout is newly launched. We are not showing you user counts, because we will not invent numbers to look bigger than we are.</p>
       <p>The live job posting pool is still growing as more sources come online, so matches may be limited right now. That is a fact about where we are, not a flaw we are hiding.</p>
       <p>The same discipline that keeps a resume honest applies to how we talk about our own product.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="trust">
+  <div class="wrap">
+    <h2>Built to tell the truth, not improve the score by inventing experience.</h2>
+    <div class="trust-section-card">
+      <ul class="trust-list">
+        <li><span class="trust-check">&#10003;</span>TraceScout will not invent a skill, title or year of experience that was not supported.</li>
+        <li><span class="trust-check">&#10003;</span>TraceScout will not present an employer with a claim that has no evidence behind it.</li>
+        <li><span class="trust-check">&#10003;</span>TraceScout will not share a resume unless the seeker has enabled sharing.</li>
+        <li><span class="trust-check">&#10003;</span>TraceScout will not hide a refusal simply to make a tailored resume look stronger.</li>
+      </ul>
+      <p class="trust-statement">When the evidence is not there, TraceScout says so.</p>
     </div>
   </div>
 </section>
@@ -353,10 +515,11 @@
 
 <section class="closing">
   <div class="wrap">
-    <h2>Bring the resume you actually mean, and let it prove itself</h2>
-    <p class="intro">No card required to start. No invented claims, ever.</p>
+    <h2>Better matches start with better evidence.</h2>
+    <p class="intro">Whether you're looking for your next role, hiring your next employee or managing candidates for clients, TraceScout gives you a clearer way to move from resume to decision.</p>
     <div class="hero-ctas">
-      <a class="btn btn-primary" href="https://tracescout.app/auth">Get started free</a>
+      <a class="btn btn-primary" href="https://tracescout.app/auth">Get started</a>
+      <a class="btn btn-ghost" href="#top">Explore TraceScout</a>
     </div>
   </div>
 </section>
