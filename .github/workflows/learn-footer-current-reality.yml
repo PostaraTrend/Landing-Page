@@ -1,0 +1,50 @@
+name: Learn footer current reality fix
+
+on:
+  push:
+    branches:
+      - site-learn-footer-fix-2026-10-03
+    paths:
+      - .github/workflows/learn-footer-current-reality.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix-learn-footer:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: site-learn-footer-fix-2026-10-03
+          fetch-depth: 0
+      - name: Fix footer copy and links
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('learn/index.html')
+          text = p.read_text(encoding='utf-8')
+          changes = {
+            '<p>Trend intelligence for the digital age. We help brands, creators, and organisations identify and act on cultural and commercial trends before the competition does.</p>': '<p>PostaraTrend Technologies builds and operates AI products for governed automation, market intelligence and evidence backed career and hiring workflows.</p>',
+            '<a href="products.html">Products</a>': '<a href="/products.html">Products</a>',
+            '<a href="/#how">How It Works</a>': '<a href="/#how">Autopilot Social</a>',
+          }
+          for old, new in changes.items():
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'Expected one footer match, found {count}: {old}')
+              text = text.replace(old, new, 1)
+          p.write_text(text, encoding='utf-8')
+          PY
+          git diff --check
+      - name: Commit and remove one time workflow
+        shell: bash
+        run: |
+          rm .github/workflows/learn-footer-current-reality.yml
+          git config user.name "PostaraTrend Site Refresh"
+          git config user.email "admin@postaratrend.ca"
+          git add learn/index.html .github/workflows/learn-footer-current-reality.yml
+          git commit -m "Align Learn footer with current company scope"
+          git push origin HEAD:site-learn-footer-fix-2026-10-03
