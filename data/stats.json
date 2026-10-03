@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-10-03T10:00:07.295Z",
+  "updated_at": "2026-10-03T12:00:07.998Z",
   "totals": {
     "published": 1878,
     "refused": 106
   },
   "windows": {
-    "published_7d": 86,
+    "published_7d": 85,
     "published_30d": 450
   },
   "period_start": "2026-06-18T19:06:30.422Z",
