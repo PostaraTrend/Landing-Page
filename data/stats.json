@@ -1,7 +1,7 @@
 {
-  "updated_at": "2026-11-19T12:00:09.079Z",
+  "updated_at": "2026-11-19T14:00:08.076Z",
   "totals": {
-    "published": 2339,
+    "published": 2340,
     "refused": 122
   },
   "windows": {
@@ -9,15 +9,15 @@
     "published_30d": 320
   },
   "period_start": "2026-06-18T19:06:30.422Z",
-  "period_end": "2026-11-19T05:11:52.795Z",
-  "last_published": "2026-11-19T05:11:52.795Z",
+  "period_end": "2026-11-19T13:40:11.381Z",
+  "last_published": "2026-11-19T13:40:11.381Z",
   "lanes": [
     {
       "label": "Trend Radar Nigeria",
-      "published": 1845,
+      "published": 1846,
       "refused": 62,
       "first_published": "2026-06-26T21:13:40.872Z",
-      "last_published": "2026-11-19T05:11:52.795Z"
+      "last_published": "2026-11-19T13:40:11.381Z"
     },
     {
       "label": "PostaraTrend",
