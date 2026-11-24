@@ -1,12 +1,12 @@
 {
-  "updated_at": "2026-11-24T10:00:10.091Z",
+  "updated_at": "2026-11-24T12:00:07.984Z",
   "totals": {
     "published": 2383,
     "refused": 122
   },
   "windows": {
     "published_7d": 64,
-    "published_30d": 302
+    "published_30d": 301
   },
   "period_start": "2026-06-18T19:06:30.422Z",
   "period_end": "2026-11-24T05:13:24.416Z",
